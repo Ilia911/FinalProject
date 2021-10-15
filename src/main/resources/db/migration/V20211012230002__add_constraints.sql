@@ -1,6 +1,0 @@
-ALTER TABLE `user_role`
-ADD CONSTRAINT `id`
-  FOREIGN KEY (`id`)
-  REFERENCES `builder_user` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
