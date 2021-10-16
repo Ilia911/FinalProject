@@ -29,6 +29,8 @@ public class Main {
         System.out.println(userList);
         System.out.println("After execution");
 
+        connectionPool.dispose();
+
 
     }
 }

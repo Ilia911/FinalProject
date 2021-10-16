@@ -18,6 +18,4 @@ INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'SecondCustom
 INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'Contractor', 'password', '3', 'contractor@gmail.com' );
 INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'SecondContractor', 'password', '3', 'SecondContractor@gmail.com' );
 
-
-
 COMMIT;

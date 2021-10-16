@@ -2,8 +2,11 @@ package com.itrex.java.lab.repository;
 
 import com.itrex.java.lab.entity.User;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
+
+    Optional<User> find(String email);
 
     List<User> findAll();
 
@@ -11,5 +14,5 @@ public interface UserRepository {
 
     User update(User user);
 
-    User add(User user);
+    Optional<User> add(User user);
 }

@@ -1,3 +1,4 @@
+drop schema if exists builder cascade;
 create schema IF NOT EXISTS `builder`;
 
 CREATE TABLE IF NOT EXISTS `builder`.`role` (
@@ -42,14 +43,14 @@ CREATE TABLE IF NOT EXISTS `builder`.`offer` (
     CONSTRAINT `fk_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `builder`.`contract` (`id`)
 );
 
-CREATE TABLE `builder`.`user_list_certificate` (
+CREATE TABLE IF NOT EXISTS `builder`.`user_list_certificate` (
   `user_id` INT NOT NULL,
   `certificate_id` INT NOT NULL,
   PRIMARY KEY (`user_id`, `certificate_id`),
   CONSTRAINT `fk_certificate_id` FOREIGN KEY (`certificate_id`) REFERENCES `builder`.`certificate` (`id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `builder`.`user` (`id`));
 
-CREATE INDEX fk_user_id ON builder.user_list_certificate(user_id);
-CREATE INDEX fk_certificate_id ON builder.user_list_certificate(certificate_id);
+CREATE INDEX IF NOT EXISTS fk_user_id ON builder.user_list_certificate(user_id);
+CREATE INDEX IF NOT EXISTS fk_certificate_id ON builder.user_list_certificate(certificate_id);
 
 COMMIT;

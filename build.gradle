@@ -11,7 +11,7 @@ ext {
 }
 
 application {
-    mainClassName = javaMainClass;
+    mainClassName = javaMainClass
 }
 
 repositories {
