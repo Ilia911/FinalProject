@@ -18,4 +18,14 @@ INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'SecondCustom
 INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'Contractor', 'password', '3', 'contractor@gmail.com' );
 INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL) VALUES ( 'SecondContractor', 'password', '3', 'SecondContractor@gmail.com' );
 
+INSERT INTO builder.contract (OWNER_ID, DESCRIPTION, START_DATE, END_DATE, START_PRICE)
+VALUES ( '1', 'first contract', '2022-01-01', '2022-12-31', '28000' );
+INSERT INTO builder.contract (OWNER_ID, DESCRIPTION, START_DATE, END_DATE, START_PRICE)
+VALUES ( '2', 'second contract', '2022-03-01', '2022-09-30', '30000' );
+
+INSERT INTO builder.offer (OFFER_OWNER_ID, CONTRACT_ID, PRICE) VALUES ( '3', '1','27500' );
+INSERT INTO builder.offer (OFFER_OWNER_ID, CONTRACT_ID, PRICE) VALUES ( '4', '1','26000' );
+
+
+
 COMMIT;

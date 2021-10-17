@@ -8,12 +8,12 @@ public class Offer {
     private int id;
     private int offerOwnerId;
     private int contractId;
-    private BigDecimal price;
+    private Integer price;
 
     public Offer() {
     }
 
-    public Offer(int id, int offerOwnerId, int contractId, BigDecimal price) {
+    public Offer(int id, int offerOwnerId, int contractId, Integer price) {
         this.id = id;
         this.offerOwnerId = offerOwnerId;
         this.contractId = contractId;
@@ -67,11 +67,11 @@ public class Offer {
         this.contractId = contractId;
     }
 
-    public BigDecimal getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }

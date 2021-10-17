@@ -2,6 +2,7 @@ package com.itrex.java.lab.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class Contract {
@@ -11,12 +12,12 @@ public class Contract {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private BigDecimal startPrice;
+    private Integer startPrice;
 
     public Contract() {
     }
 
-    public Contract(int id, int ownerId, String description, LocalDate startDate, LocalDate endDate, BigDecimal startPrice) {
+    public Contract(int id, int ownerId, String description, LocalDate startDate, LocalDate endDate, Integer startPrice) {
         this.id = id;
         this.ownerId = ownerId;
         this.description = description;
@@ -90,11 +91,11 @@ public class Contract {
         this.endDate = endDate;
     }
 
-    public BigDecimal getStartPrice() {
+    public Integer getStartPrice() {
         return startPrice;
     }
 
-    public void setStartPrice(BigDecimal startPrice) {
+    public void setStartPrice(Integer startPrice) {
         this.startPrice = startPrice;
     }
 }

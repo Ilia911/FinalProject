@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserRepositoryImplTest extends BaseRepositoryTest {
@@ -23,20 +24,19 @@ public class UserRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     public void find_validData_shouldReturnExistUser() {
+        User expectedUser = new User(1, "Customer", "password", 2, "castomer@gmail.com");
 
-        final User expectedUser = new User(1, "Customer", "password", 2, "castomer@gmail.com");
-        final Optional<User> actualUser = repository.find("castomer@gmail.com");
+        Optional<User> actualUser = repository.find("castomer@gmail.com");
 
         assertEquals(expectedUser, actualUser.get());
     }
 
     @Test
     public void findAll_validData_shouldReturnExistUsers() {
-
-        final User expectedUser1 = new User(1, "Customer", null, 2, "castomer@gmail.com");
-        final User expectedUser2 = new User(2, "SecondCustomer", null, 2, "secondCastomer@gmail.com");
-        final User expectedUser3 = new User(3, "Contractor", null, 3, "contractor@gmail.com");
-        final User expectedUser4 = new User(4, "SecondContractor", null, 3, "SecondContractor@gmail.com");
+        User expectedUser1 = new User(1, "Customer", null, 2, "castomer@gmail.com");
+        User expectedUser2 = new User(2, "SecondCustomer", null, 2, "secondCastomer@gmail.com");
+        User expectedUser3 = new User(3, "Contractor", null, 3, "contractor@gmail.com");
+        User expectedUser4 = new User(4, "SecondContractor", null, 3, "SecondContractor@gmail.com");
         List<User> expectedUsers = new ArrayList<>();
         expectedUsers.add(expectedUser1);
         expectedUsers.add(expectedUser2);
@@ -55,9 +55,16 @@ public class UserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
+    void delete_invalidData_shouldDeleteUser() {
+
+        assertFalse(repository.delete(5));
+    }
+
+    @Test
     void update() {
-        final User expectedUser = new User(1, "updatedName", "updatedPassword", 3, "updatedEmail@gmail.com");
-        final User actualUser = repository.update(expectedUser);
+        User expectedUser = new User(1, "updatedName", "updatedPassword", 3, "updatedEmail@gmail.com");
+
+        User actualUser = repository.update(expectedUser);
 
         assertEquals(expectedUser, actualUser);
     }
@@ -65,6 +72,7 @@ public class UserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add() {
         final User expectedUser = new User(5, "newUser", "password", 2, "newUserEmail.@gmail.com");
+
         final Optional<User> actualUser = repository.add(expectedUser);
 
         assertEquals(expectedUser, actualUser.get());

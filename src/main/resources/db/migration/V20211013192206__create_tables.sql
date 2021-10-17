@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `builder`.`contract` (
   `description` VARCHAR(500) NOT NULL,
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
-  `start_price` DECIMAL(15,2) NOT NULL,
+  `start_price` INT NOT NULL,
   CONSTRAINT `fk_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `builder`.`user` (`id`)
 );
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `builder`.`offer` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `offer_owner_id` INT NOT NULL,
     `contract_id` INT NOT NULL,
-    `price` DECIMAL(15,2) NOT NULL,
+    `price` INT NOT NULL,
     PRIMARY KEY (`offer_owner_id`, `contract_id`),
     CONSTRAINT `unique_offer_id` UNIQUE (`id`),
     CONSTRAINT `fk_offer_owner_id` FOREIGN KEY (`offer_owner_id`) REFERENCES `builder`.`user` (`id`),

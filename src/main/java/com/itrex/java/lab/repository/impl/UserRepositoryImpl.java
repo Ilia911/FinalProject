@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -77,8 +77,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean delete(int id) {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY)) {
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -99,7 +99,6 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setInt(5, user.getId());
             preparedStatement.execute();
             updatedUser = find(user.getId(), conn);
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -108,14 +107,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> add(User user) {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setInt(3, user.getRole());
             preparedStatement.setString(4, user.getEmail());
 
-            final int effectiveRows = preparedStatement.executeUpdate();
+            int effectiveRows = preparedStatement.executeUpdate();
 
             if (effectiveRows == 1) {
                 ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -123,15 +122,15 @@ public class UserRepositoryImpl implements UserRepository {
                     return Optional.of(find(generatedKeys.getInt(ID_COLUMN), conn));
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         return Optional.empty();
     }
 
     private User find(int id, Connection conn) throws SQLException {
         User user = new User();
-        final PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_ID_QUERY);
+        PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_ID_QUERY);
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {

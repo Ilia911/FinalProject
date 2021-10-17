@@ -8,13 +8,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class OfferRepositoryImpl implements OfferRepository {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String OFFER_OWNER_ID_COLUMN = "offer_owner_id";
@@ -37,7 +38,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     @Override
     public Optional<Offer> find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            final Offer offerById = findOfferById(conn, id);
+            Offer offerById = findOfferById(conn, id);
             if (offerById != null) {
                 return Optional.of(offerById);
             }
@@ -57,7 +58,7 @@ public class OfferRepositoryImpl implements OfferRepository {
 
             while (resultSet.next()) {
                 Offer offer = new Offer(resultSet.getInt(ID_COLUMN), resultSet.getInt(OFFER_OWNER_ID_COLUMN),
-                        resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getBigDecimal(PRICE_COLUMN));
+                        resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getInt(PRICE_COLUMN));
                 resultList.add(offer);
             }
         } catch (SQLException ex) {
@@ -68,8 +69,8 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public boolean delete(int id) {
-        try (final Connection conn = dataSource.getConnection()) {
-            final PreparedStatement preparedStatement = conn.prepareStatement(DELETE_OFFER_QUERY);
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_OFFER_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
@@ -81,12 +82,13 @@ public class OfferRepositoryImpl implements OfferRepository {
     @Override
     public Offer update(Offer offer) {
         Offer updatedOffer = null;
-        try (final Connection conn = dataSource.getConnection()) {
-            final PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
-            preparedStatement.setBigDecimal(1, offer.getPrice());
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
+            preparedStatement.setInt(1, offer.getPrice());
             preparedStatement.setInt(2, offer.getId());
             preparedStatement.execute();
             updatedOffer = findOfferById(conn, offer.getId());
+            return updatedOffer;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -95,16 +97,18 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public Optional<Offer> add(Offer offer) {
-        try(final Connection conn = dataSource.getConnection()) {
-            final PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY);
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, offer.getOfferOwnerId());
             preparedStatement.setInt(2, offer.getContractId());
-            preparedStatement.setBigDecimal(3, offer.getPrice());
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                final Offer newOffer = new Offer(resultSet.getInt(ID_COLUMN), resultSet.getInt(OFFER_OWNER_ID_COLUMN),
-                        resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getBigDecimal(PRICE_COLUMN));
-                return Optional.of(newOffer);
+            preparedStatement.setInt(3, offer.getPrice());
+            int effectiveRaws = preparedStatement.executeUpdate();
+
+            if (effectiveRaws == 1) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return Optional.of(findOfferById(conn, generatedKeys.getInt(ID_COLUMN)));
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -118,9 +122,10 @@ public class OfferRepositoryImpl implements OfferRepository {
         ResultSet resultSet = preparedStatement.executeQuery();
 
         if (resultSet.next()) {
-            Offer offer = new Offer(resultSet.getInt(ID_COLUMN), resultSet.getInt(OFFER_OWNER_ID_COLUMN),
-                    resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getBigDecimal(PRICE_COLUMN));
-            return offer;
+            return new Offer(resultSet.getInt(ID_COLUMN),
+                    resultSet.getInt(OFFER_OWNER_ID_COLUMN),
+                    resultSet.getInt(CONTRACT_ID_COLUMN),
+                    resultSet.getInt(PRICE_COLUMN));
         } else {
             return null;
         }
