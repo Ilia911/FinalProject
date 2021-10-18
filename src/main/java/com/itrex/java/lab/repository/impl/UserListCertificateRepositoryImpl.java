@@ -54,7 +54,8 @@ public class UserListCertificateRepositoryImpl implements UserListCertificateRep
                 ResultSet resultSet = prepareStatementForCreatedCertificate.executeQuery();
 
                 if (resultSet.next()) {
-                    Certificate certificate = new Certificate(resultSet.getInt(USER_ID_COLUMN), resultSet.getString(CERTIFICATE_NAME_COLUMN));
+                    Certificate certificate = new Certificate(resultSet.getInt(USER_ID_COLUMN),
+                            resultSet.getString(CERTIFICATE_NAME_COLUMN));
                     return Optional.of(certificate);
                 } else {
                     return Optional.empty();
