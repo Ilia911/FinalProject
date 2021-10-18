@@ -29,9 +29,7 @@ CREATE TABLE IF NOT EXISTS `builder`.`contract` (
   `start_date` DATE NOT NULL,
   `end_date` DATE NOT NULL,
   `start_price` INT NOT NULL,
-  CONSTRAINT `fk_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `builder`.`user` (`id`)
-                                                ON DELETE CASCADE
-);
+  CONSTRAINT `fk_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `builder`.`user` (`id`));
 
 CREATE TABLE IF NOT EXISTS `builder`.`offer` (
     `id` INT NOT NULL AUTO_INCREMENT,

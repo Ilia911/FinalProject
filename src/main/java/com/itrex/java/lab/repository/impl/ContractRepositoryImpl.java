@@ -17,6 +17,7 @@ import java.util.Optional;
 
 public class ContractRepositoryImpl implements ContractRepository {
 
+
     private final DataSource dataSource;
 
     private static final String ID_COLUMN = "id";
@@ -34,6 +35,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             = "UPDATE builder.contract SET description = ?, start_date = ?, end_date = ?, start_price = ? WHERE id = ?";
     private static final String ADD_CONTRACT_QUERY
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
+    private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?;";
 
     public ContractRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -79,10 +81,14 @@ public class ContractRepositoryImpl implements ContractRepository {
 
     @Override
     public boolean delete(int id) {
-        try (final Connection conn = dataSource.getConnection()) {
-            final PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            removeAllOffersForContract(conn, id);
+            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
             preparedStatement.setInt(1, id);
-            return 1 == preparedStatement.executeUpdate();
+            boolean result = preparedStatement.executeUpdate() == 1;
+            conn.setAutoCommit(true);
+            return result;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -144,6 +150,19 @@ public class ContractRepositoryImpl implements ContractRepository {
                     resultSet.getInt(START_PRICE_COLUMN));
         } else {
             return null;
+        }
+    }
+
+    private void removeAllOffersForContract(Connection conn, int contractId) throws SQLException {
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY);
+            preparedStatement.setInt(1, contractId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally {
+            conn.setAutoCommit(true);
         }
     }
 }

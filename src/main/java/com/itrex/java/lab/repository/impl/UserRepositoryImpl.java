@@ -32,6 +32,13 @@ public class UserRepositoryImpl implements UserRepository {
             = "UPDATE builder.user SET name = ?, password = ?, role_id = ?, email = ? WHERE id = ?";
     private static final String ADD_USER_QUERY
             = "INSERT INTO builder.user(name, password, role_id, email ) VALUES (?, ?, ?, ?)";
+    private static final String REMOVE_ALL_USER_CONTRACTS_QUERY = "DELETE FROM builder.contract where owner_id = ?";
+    private static final String REMOVE_ALL_USER_OFFERS_QUERY = "DELETE FROM builder.offer where offer_owner_id = ?";
+    private static final String REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY
+            = "DELETE FROM builder.offer where contract_id = any (select contract_id from BUILDER.OFFER " +
+            "join (select id from BUILDER.CONTRACT where OWNER_ID = ?) as ubc on CONTRACT_ID = ubc.id)";
+    private static final String REMOVE_ALL_USER_CERTIFICATES_QUERY = "DELETE FROM builder.user_list_certificate where user_id = ?";
+
 
     public UserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -78,9 +85,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) {
         try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+            removeAllUserCertificates(conn, id);
+            removeAllOffersForUserContract(conn, id);
+            removeAllUserOffers(conn, id);
+            removeAllUserContracts(conn, id);
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY);
             preparedStatement.setInt(1, id);
-            return preparedStatement.executeUpdate() == 1;
+            boolean result = preparedStatement.executeUpdate() == 1;
+            conn.setAutoCommit(true);
+            return result;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -141,5 +155,57 @@ public class UserRepositoryImpl implements UserRepository {
             user.setEmail(resultSet.getString(EMAIL_COLUMN));
         }
         return user;
+    }
+
+    private void removeAllUserContracts(Connection conn, int userId) throws SQLException {
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CONTRACTS_QUERY);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    private void removeAllUserOffers(Connection conn, int offerOwnerId) throws SQLException {
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_OFFERS_QUERY);
+            preparedStatement.setInt(1, offerOwnerId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    private void removeAllOffersForUserContract(Connection conn, int offerOwnerId) throws SQLException {
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY);
+            preparedStatement.setInt(1, offerOwnerId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    private void removeAllUserCertificates(Connection conn, int offerOwnerId) throws SQLException {
+        try {
+            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CERTIFICATES_QUERY);
+            preparedStatement.setInt(1, offerOwnerId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.rollback();
+        } finally {
+            conn.setAutoCommit(true);
+        }
     }
 }
