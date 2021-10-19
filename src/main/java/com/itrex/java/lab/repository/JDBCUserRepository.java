@@ -4,7 +4,7 @@ import com.itrex.java.lab.entity.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+public interface JDBCUserRepository {
 
     Optional<User> find(String email);
 

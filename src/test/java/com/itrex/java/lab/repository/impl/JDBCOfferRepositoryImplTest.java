@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.JDBCOfferRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class OfferRepositoryImplTest extends BaseRepositoryTest {
+class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
 
-    private final OfferRepository repository;
+    private final JDBCOfferRepository repository;
 
-    public OfferRepositoryImplTest() {
+    public JDBCOfferRepositoryImplTest() {
         super();
-        repository = new OfferRepositoryImpl(getConnectionPool());
+        repository = new JDBCOfferRepositoryImpl(getConnectionPool());
     }
 
     @Test

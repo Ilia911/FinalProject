@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.JDBCContractRepository;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ContractRepositoryImplTest extends BaseRepositoryTest {
+class JDBCContractRepositoryImplTest extends BaseRepositoryTest {
 
-    private final ContractRepository repository;
+    private final JDBCContractRepository repository;
 
-    ContractRepositoryImplTest() {
+    JDBCContractRepositoryImplTest() {
         super();
-        repository = new ContractRepositoryImpl(getConnectionPool());
+        repository = new JDBCContractRepositoryImpl(getConnectionPool());
     }
 
     @Test

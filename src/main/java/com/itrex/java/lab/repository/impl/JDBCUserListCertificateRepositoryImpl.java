@@ -1,7 +1,7 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Certificate;
-import com.itrex.java.lab.repository.UserListCertificateRepository;
+import com.itrex.java.lab.repository.JDBCUserListCertificateRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class UserListCertificateRepositoryImpl implements UserListCertificateRepository {
+public class JDBCUserListCertificateRepositoryImpl implements JDBCUserListCertificateRepository {
 
     private final DataSource dataSource;
 
@@ -30,7 +30,7 @@ public class UserListCertificateRepositoryImpl implements UserListCertificateRep
             = "select c.id, c.name from builder.user_list_certificate ulc " +
             "join builder.certificate c on ulc.certificate_id = c.id where user_id = ?";
 
-    public UserListCertificateRepositoryImpl(DataSource dataSource) {
+    public JDBCUserListCertificateRepositoryImpl(DataSource dataSource) {
         super();
         this.dataSource = dataSource;
     }

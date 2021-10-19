@@ -4,7 +4,7 @@ import com.itrex.java.lab.entity.Certificate;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserListCertificateRepository {
+public interface JDBCUserListCertificateRepository {
 
     Optional<Certificate> assignCertificate(int userId, int certificateId);
 

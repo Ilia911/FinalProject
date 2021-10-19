@@ -5,7 +5,7 @@ import com.itrex.java.lab.entity.Contract;
 import java.util.List;
 import java.util.Optional;
 
-public interface ContractRepository {
+public interface JDBCContractRepository {
 
     Optional<Contract> find(int id);
 

@@ -1,7 +1,7 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Offer;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.JDBCOfferRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OfferRepositoryImpl implements OfferRepository {
+public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
 
     private final DataSource dataSource;
 
@@ -31,7 +31,7 @@ public class OfferRepositoryImpl implements OfferRepository {
     private static final String ADD_OFFER_QUERY
             = "INSERT INTO builder.offer(offer_owner_id, contract_id, price) VALUES (?, ?, ?)";
 
-    public OfferRepositoryImpl(DataSource dataSource) {
+    public JDBCOfferRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

@@ -1,7 +1,7 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
-import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.JDBCContractRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ContractRepositoryImpl implements ContractRepository {
+public class JDBCContractRepositoryImpl implements JDBCContractRepository {
 
 
     private final DataSource dataSource;
@@ -37,7 +37,7 @@ public class ContractRepositoryImpl implements ContractRepository {
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
     private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?;";
 
-    public ContractRepositoryImpl(DataSource dataSource) {
+    public JDBCContractRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -83,11 +83,18 @@ public class ContractRepositoryImpl implements ContractRepository {
     public boolean delete(int id) {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
-            removeAllOffersForContract(conn, id);
-            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
-            preparedStatement.setInt(1, id);
-            boolean result = preparedStatement.executeUpdate() == 1;
-            conn.setAutoCommit(true);
+            boolean result = false;
+            try {
+                removeAllOffersForContract(conn, id);
+                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
+                preparedStatement.setInt(1, id);
+                result = preparedStatement.executeUpdate() == 1;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                conn.rollback();
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return result;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -154,15 +161,9 @@ public class ContractRepositoryImpl implements ContractRepository {
     }
 
     private void removeAllOffersForContract(Connection conn, int contractId) throws SQLException {
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY);
-            preparedStatement.setInt(1, contractId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn.rollback();
-        } finally {
-            conn.setAutoCommit(true);
-        }
+        PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY);
+        preparedStatement.setInt(1, contractId);
+        preparedStatement.execute();
+
     }
 }

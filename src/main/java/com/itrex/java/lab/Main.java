@@ -1,7 +1,7 @@
 package com.itrex.java.lab;
 
 import com.itrex.java.lab.entity.User;
-import com.itrex.java.lab.repository.impl.UserRepositoryImpl;
+import com.itrex.java.lab.repository.impl.JDBCUserRepositoryImpl;
 import com.itrex.java.lab.service.FlywayService;
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -21,7 +21,7 @@ public class Main {
 
         JdbcConnectionPool connectionPool = JdbcConnectionPool.create(H2_URL, H2_USER, H2_PASSWORD);
 
-        final UserRepositoryImpl userRepository = new UserRepositoryImpl(connectionPool);
+        final JDBCUserRepositoryImpl userRepository = new JDBCUserRepositoryImpl(connectionPool);
 
         final List<User> userList = userRepository.findAll();
 

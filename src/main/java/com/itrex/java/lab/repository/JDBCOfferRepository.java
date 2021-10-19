@@ -5,7 +5,7 @@ import com.itrex.java.lab.entity.Offer;
 import java.util.List;
 import java.util.Optional;
 
-public interface OfferRepository {
+public interface JDBCOfferRepository {
 
     Optional<Offer> find(int id);
 

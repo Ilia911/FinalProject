@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 
 import com.itrex.java.lab.entity.User;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.JDBCUserRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRepositoryImpl implements UserRepository {
+public class JDBCUserRepositoryImpl implements JDBCUserRepository {
 
     private final DataSource dataSource;
 
@@ -40,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String REMOVE_ALL_USER_CERTIFICATES_QUERY = "DELETE FROM builder.user_list_certificate where user_id = ?";
 
 
-    public UserRepositoryImpl(DataSource dataSource) {
+    public JDBCUserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -85,15 +85,22 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            conn.setAutoCommit(false);
-            removeAllUserCertificates(conn, id);
-            removeAllOffersForUserContract(conn, id);
-            removeAllUserOffers(conn, id);
-            removeAllUserContracts(conn, id);
-            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY);
-            preparedStatement.setInt(1, id);
-            boolean result = preparedStatement.executeUpdate() == 1;
-            conn.setAutoCommit(true);
+            boolean result = false;
+            try {
+                conn.setAutoCommit(false);
+                removeAllUserCertificates(conn, id);
+                removeAllOffersForUserContract(conn, id);
+                removeAllUserOffers(conn, id);
+                removeAllUserContracts(conn, id);
+                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY);
+                preparedStatement.setInt(1, id);
+                result = preparedStatement.executeUpdate() == 1;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                conn.rollback();
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return result;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -158,54 +165,26 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private void removeAllUserContracts(Connection conn, int userId) throws SQLException {
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CONTRACTS_QUERY);
-            preparedStatement.setInt(1, userId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn.rollback();
-        } finally {
-            conn.setAutoCommit(true);
-        }
+        final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CONTRACTS_QUERY);
+        preparedStatement.setInt(1, userId);
+        preparedStatement.execute();
     }
 
     private void removeAllUserOffers(Connection conn, int offerOwnerId) throws SQLException {
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_OFFERS_QUERY);
-            preparedStatement.setInt(1, offerOwnerId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn.rollback();
-        } finally {
-            conn.setAutoCommit(true);
-        }
+        final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_OFFERS_QUERY);
+        preparedStatement.setInt(1, offerOwnerId);
+        preparedStatement.execute();
     }
 
     private void removeAllOffersForUserContract(Connection conn, int offerOwnerId) throws SQLException {
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY);
-            preparedStatement.setInt(1, offerOwnerId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn.rollback();
-        } finally {
-            conn.setAutoCommit(true);
-        }
+        final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY);
+        preparedStatement.setInt(1, offerOwnerId);
+        preparedStatement.execute();
     }
 
     private void removeAllUserCertificates(Connection conn, int offerOwnerId) throws SQLException {
-        try {
-            final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CERTIFICATES_QUERY);
-            preparedStatement.setInt(1, offerOwnerId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            conn.rollback();
-        } finally {
-            conn.setAutoCommit(true);
-        }
+        final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CERTIFICATES_QUERY);
+        preparedStatement.setInt(1, offerOwnerId);
+        preparedStatement.execute();
     }
 }

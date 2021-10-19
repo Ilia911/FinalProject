@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.JDBCUserRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UserRepositoryImplTest extends BaseRepositoryTest {
+public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
 
-    private final UserRepository repository;
+    private final JDBCUserRepository repository;
 
-    public UserRepositoryImplTest() {
+    public JDBCUserRepositoryImplTest() {
         super();
-        repository = new UserRepositoryImpl(getConnectionPool());
+        repository = new JDBCUserRepositoryImpl(getConnectionPool());
     }
 
     @Test
