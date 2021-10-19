@@ -1,9 +1,8 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Offer;
+import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.JDBCOfferRepository;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 
 public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
 
@@ -36,22 +36,20 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
     }
 
     @Override
-    public Optional<Offer> find(int id) {
+    public Optional<Offer> find(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             Offer offerById = findOfferById(conn, id);
-            if (offerById != null) {
-                return Optional.of(offerById);
-            }
+            return Optional.ofNullable(offerById);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't find Offer", ex);
         }
-        return Optional.empty();
     }
 
     @Override
-    public List<Offer> findAll(int contractId) {
-        List<Offer> resultList = new ArrayList<>();
+    public List<Offer> findAll(int contractId) throws RepositoryException {
+
         try (Connection conn = dataSource.getConnection()) {
+            List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_CONTRACT_ID_QUERY);
             preparedStatement.setInt(1, contractId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -61,59 +59,75 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
                         resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getInt(PRICE_COLUMN));
                 resultList.add(offer);
             }
+            return resultList;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't find Offers", ex);
         }
-        return resultList;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_OFFER_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't delete Offers", ex);
         }
-        return false;
     }
 
     @Override
-    public Offer update(Offer offer) {
-        Offer updatedOffer = null;
+    public Offer update(Offer offer) throws RepositoryException {
+
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
-            preparedStatement.setInt(1, offer.getPrice());
-            preparedStatement.setInt(2, offer.getId());
-            preparedStatement.execute();
-            updatedOffer = findOfferById(conn, offer.getId());
+            Offer updatedOffer;
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
+                preparedStatement.setInt(1, offer.getPrice());
+                preparedStatement.setInt(2, offer.getId());
+                preparedStatement.execute();
+                updatedOffer = findOfferById(conn, offer.getId());
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Can't update Offer", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
             return updatedOffer;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't update Offer", ex);
         }
-        return null;
     }
 
     @Override
-    public Optional<Offer> add(Offer offer) {
+    public Optional<Offer> add(Offer offer) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, offer.getOfferOwnerId());
-            preparedStatement.setInt(2, offer.getContractId());
-            preparedStatement.setInt(3, offer.getPrice());
-            int effectiveRaws = preparedStatement.executeUpdate();
+            try {
+                conn.setAutoCommit(false);
+                PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setInt(1, offer.getOfferOwnerId());
+                preparedStatement.setInt(2, offer.getContractId());
+                preparedStatement.setInt(3, offer.getPrice());
+                int effectiveRaws = preparedStatement.executeUpdate();
 
-            if (effectiveRaws == 1) {
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    return Optional.of(findOfferById(conn, generatedKeys.getInt(ID_COLUMN)));
+                Offer newOffer = null;
+                if (effectiveRaws == 1) {
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        newOffer = findOfferById(conn, generatedKeys.getInt(ID_COLUMN));
+                    }
                 }
+                return Optional.ofNullable(newOffer);
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Can't update Offer", ex);
+            } finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't update Offer", ex);
         }
-        return Optional.empty();
     }
 
     private Offer findOfferById(Connection conn, int id) throws SQLException {
@@ -121,13 +135,14 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
 
+        Offer offer = null;
         if (resultSet.next()) {
-            return new Offer(resultSet.getInt(ID_COLUMN),
-                    resultSet.getInt(OFFER_OWNER_ID_COLUMN),
-                    resultSet.getInt(CONTRACT_ID_COLUMN),
-                    resultSet.getInt(PRICE_COLUMN));
-        } else {
-            return null;
+            offer = new Offer();
+            offer.setId(resultSet.getInt(ID_COLUMN));
+            offer.setOfferOwnerId(resultSet.getInt(OFFER_OWNER_ID_COLUMN));
+            offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
+            offer.setPrice(resultSet.getInt(PRICE_COLUMN));
         }
+        return offer;
     }
 }

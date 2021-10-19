@@ -2,9 +2,8 @@ package com.itrex.java.lab.repository.impl;
 
 
 import com.itrex.java.lab.entity.User;
+import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.JDBCUserRepository;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 
 public class JDBCUserRepositoryImpl implements JDBCUserRepository {
 
@@ -45,47 +45,42 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
     }
 
     @Override
-    public Optional<User> find(String email) {
-        try (Connection conn = dataSource.getConnection(); PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY)) {
+    public Optional<User> find(String email) throws RepositoryException {
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
+            User user = null;
             if (resultSet.next()) {
-                User user = new User(resultSet.getInt(ID_COLUMN),
-                        resultSet.getString(NAME_COLUMN),
-                        resultSet.getString(PASSWORD_COLUMN),
-                        resultSet.getInt(ROLE_COLUMN),
-                        resultSet.getString(EMAIL_COLUMN));
-                return Optional.of(user);
+                user = createUser(resultSet, true);
             }
+            return Optional.ofNullable(user);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Something was wrong with the repository", ex);
         }
-        return Optional.empty();
     }
 
+
     @Override
-    public List<User> findAll() {
-        List<User> userList = new ArrayList<>();
+    public List<User> findAll() throws RepositoryException {
         try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
             ResultSet resultSet = st.executeQuery(FIND_ALL_USERS_QUERY);
+            List<User> userList = new ArrayList<>();
             while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(ID_COLUMN));
-                user.setName(resultSet.getString(NAME_COLUMN));
-                user.setRole(resultSet.getInt(ROLE_COLUMN));
-                user.setEmail(resultSet.getString(EMAIL_COLUMN));
+                User user = createUser(resultSet, false);
                 userList.add(user);
             }
+            return userList;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Something was wrong with the repository", ex);
         }
-        return userList;
+
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            boolean result = false;
+            boolean result;
             try {
                 conn.setAutoCommit(false);
                 removeAllUserCertificates(conn, id);
@@ -95,58 +90,78 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
                 PreparedStatement preparedStatement = conn.prepareStatement(DELETE_USER_QUERY);
                 preparedStatement.setInt(1, id);
                 result = preparedStatement.executeUpdate() == 1;
+                conn.commit();
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 conn.rollback();
+                throw new RepositoryException("Something was wrong with the additional operations", ex);
             } finally {
                 conn.setAutoCommit(true);
             }
             return result;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Something was wrong with the connection", ex);
         }
-        return false;
     }
 
     @Override
-    public User update(User user) {
-        User updatedUser = null;
+    public User update(User user) throws RepositoryException {
+
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_USER_QUERY);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole());
-            preparedStatement.setString(4, user.getEmail());
-            preparedStatement.setInt(5, user.getId());
-            preparedStatement.execute();
-            updatedUser = find(user.getId(), conn);
+            User updatedUser;
+            conn.setAutoCommit(false);
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_USER_QUERY);
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getPassword());
+                preparedStatement.setInt(3, user.getRole());
+                preparedStatement.setString(4, user.getEmail());
+                preparedStatement.setInt(5, user.getId());
+                preparedStatement.execute();
+                updatedUser = find(user.getId(), conn);
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Something was wrong with the additional operations", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return updatedUser;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Something was wrong with the connection", ex);
         }
-        return updatedUser;
     }
 
     @Override
-    public Optional<User> add(User user) {
+    public Optional<User> add(User user) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole());
-            preparedStatement.setString(4, user.getEmail());
+            conn.setAutoCommit(false);
+            try {
+                User newUser = null;
+                PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getPassword());
+                preparedStatement.setInt(3, user.getRole());
+                preparedStatement.setString(4, user.getEmail());
 
-            int effectiveRows = preparedStatement.executeUpdate();
+                int effectiveRows = preparedStatement.executeUpdate();
 
-            if (effectiveRows == 1) {
-                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    return Optional.of(find(generatedKeys.getInt(ID_COLUMN), conn));
+                if (effectiveRows == 1) {
+                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        newUser = find(generatedKeys.getInt(ID_COLUMN), conn);
+                    }
                 }
+                conn.commit();
+                return Optional.ofNullable(newUser);
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Something was wrong with the additional operations", ex);
+            } finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Something was wrong with the connection", ex);
         }
-        return Optional.empty();
     }
 
     private User find(int id, Connection conn) throws SQLException {
@@ -155,12 +170,21 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            user.setId(resultSet.getInt(ID_COLUMN));
-            user.setName(resultSet.getString(NAME_COLUMN));
-            user.setPassword(resultSet.getString(PASSWORD_COLUMN));
-            user.setRole(resultSet.getInt(ROLE_COLUMN));
-            user.setEmail(resultSet.getString(EMAIL_COLUMN));
+            user = createUser(resultSet, true);
         }
+        return user;
+    }
+
+    private User createUser(ResultSet rs, boolean isSetPassword) throws SQLException {
+        User user = new User();
+
+        user.setId(rs.getInt(ID_COLUMN));
+        user.setName(rs.getString(NAME_COLUMN));
+        if (isSetPassword) {
+            user.setPassword(rs.getString(PASSWORD_COLUMN));
+        }
+        user.setRole(rs.getInt(ROLE_COLUMN));
+        user.setEmail(rs.getString(EMAIL_COLUMN));
         return user;
     }
 

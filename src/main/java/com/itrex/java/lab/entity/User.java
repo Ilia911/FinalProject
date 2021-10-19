@@ -1,5 +1,6 @@
 package com.itrex.java.lab.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class User {
@@ -9,16 +10,18 @@ public class User {
     private String password;
     private int role;
     private String email;
+    private List<Certificate> certificates;
 
     public User() {
     }
 
-    public User(int id, String name, String password, int role, String email) {
+    public User(int id, String name, String password, int role, String email, List<Certificate> certificates) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.role = role;
         this.email = email;
+        this.certificates = certificates;
     }
 
     public int getId() {
@@ -61,18 +64,12 @@ public class User {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && role == user.role && Objects.equals(name, user.name)
-                && Objects.equals(password, user.password) && Objects.equals(email, user.email);
+    public List<Certificate> getCertificates() {
+        return certificates;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, password, role, email);
+    public void setCertificates(List<Certificate> certificates) {
+        this.certificates = certificates;
     }
 
     @Override
@@ -83,6 +80,20 @@ public class User {
                 ", password='" + password + '\'' +
                 ", role=" + role +
                 ", email='" + email + '\'' +
+                ", certificates=" + certificates +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && role == user.role && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(certificates, user.certificates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, password, role, email, certificates);
     }
 }

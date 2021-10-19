@@ -1,6 +1,7 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.JDBCUserListCertificateRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,54 +37,49 @@ public class JDBCUserListCertificateRepositoryImpl implements JDBCUserListCertif
     }
 
     @Override
-    public Optional<Certificate> assignCertificate(int userId, int certificateId) {
+    public Optional<Certificate> assignCertificate(int userId, int certificateId) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedStatement
-                    = conn.prepareStatement(ASSIGN_CERTIFICATE_BY_USER_ID_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, certificateId);
+            Certificate certificate = null;
+            try {
+                conn.setAutoCommit(false);
+                PreparedStatement preparedStatement
+                        = conn.prepareStatement(ASSIGN_CERTIFICATE_BY_USER_ID_QUERY, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, certificateId);
 
-            int effectiveRaws = preparedStatement.executeUpdate();
-
-            if (effectiveRaws == 1) {
-
-                PreparedStatement prepareStatementForCreatedCertificate
-                        = conn.prepareStatement(FIND_CERTIFICATE_BY_USER_ID_AND_CERTIFICATE_ID_QUERY);
-                prepareStatementForCreatedCertificate.setInt(1, userId);
-                prepareStatementForCreatedCertificate.setInt(2, certificateId);
-                ResultSet resultSet = prepareStatementForCreatedCertificate.executeQuery();
-
-                if (resultSet.next()) {
-                    Certificate certificate = new Certificate(resultSet.getInt(USER_ID_COLUMN),
-                            resultSet.getString(CERTIFICATE_NAME_COLUMN));
-                    return Optional.of(certificate);
-                } else {
-                    return Optional.empty();
+                int effectiveRaws = preparedStatement.executeUpdate();
+                if (effectiveRaws == 1) {
+                    certificate = findCertificate(conn, userId, certificateId);
                 }
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Can't assign certificate", ex);
+            } finally {
+                conn.setAutoCommit(true);
             }
+            return Optional.ofNullable(certificate);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't assign certificate", ex);
         }
-        return Optional.empty();
     }
 
     @Override
-    public boolean removeCertificate(int userId, int certificateId) {
+    public boolean removeCertificate(int userId, int certificateId) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_CERTIFICATE_BY_USER_ID_QUERY);
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, certificateId);
             return 1 == preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't remove certificate", ex);
         }
-        return false;
     }
 
     @Override
-    public List<Certificate> findAllForUser(int userId) {
-        List<Certificate> certificateList = new ArrayList<>();
+    public List<Certificate> findAllForUser(int userId) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
+            List<Certificate> certificateList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CERTIFICATES_FOR_USER_QUERY);
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -93,9 +89,25 @@ public class JDBCUserListCertificateRepositoryImpl implements JDBCUserListCertif
                         resultSet.getString(CERTIFICATE_NAME_COLUMN));
                 certificateList.add(certificate);
             }
+            return certificateList;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't find certificates", ex);
         }
-        return certificateList;
+    }
+
+    private Certificate findCertificate(Connection conn, int userId, int certificateId) throws SQLException {
+        PreparedStatement preparedStatement
+                = conn.prepareStatement(FIND_CERTIFICATE_BY_USER_ID_AND_CERTIFICATE_ID_QUERY);
+        preparedStatement.setInt(1, userId);
+        preparedStatement.setInt(2, certificateId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        Certificate certificate = null;
+
+        if (resultSet.next()) {
+            certificate = new Certificate(resultSet.getInt(USER_ID_COLUMN),
+                    resultSet.getString(CERTIFICATE_NAME_COLUMN));
+        }
+        return certificate;
     }
 }

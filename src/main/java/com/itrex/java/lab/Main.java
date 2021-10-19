@@ -1,11 +1,8 @@
 package com.itrex.java.lab;
 
-import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.repository.impl.JDBCUserRepositoryImpl;
 import com.itrex.java.lab.service.FlywayService;
 import org.h2.jdbcx.JdbcConnectionPool;
-
-import java.util.List;
 
 import static com.itrex.java.lab.properties.H2Properties.H2_PASSWORD;
 import static com.itrex.java.lab.properties.H2Properties.H2_URL;
@@ -23,11 +20,11 @@ public class Main {
 
         final JDBCUserRepositoryImpl userRepository = new JDBCUserRepositoryImpl(connectionPool);
 
-        final List<User> userList = userRepository.findAll();
+/*        final List<User> userList = userRepository.findAll();
 
         System.out.println("Before execution task");
         System.out.println(userList);
-        System.out.println("After execution");
+        System.out.println("After execution");*/
 
         connectionPool.dispose();
 

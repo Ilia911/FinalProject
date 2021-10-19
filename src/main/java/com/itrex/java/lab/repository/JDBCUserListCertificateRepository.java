@@ -1,14 +1,15 @@
 package com.itrex.java.lab.repository;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.exeption.RepositoryException;
 import java.util.List;
 import java.util.Optional;
 
 public interface JDBCUserListCertificateRepository {
 
-    Optional<Certificate> assignCertificate(int userId, int certificateId);
+    Optional<Certificate> assignCertificate(int userId, int certificateId) throws RepositoryException;
 
-    boolean removeCertificate(int userId, int certificateId);
+    boolean removeCertificate(int userId, int certificateId) throws RepositoryException;
 
-    List<Certificate> findAllForUser(int userId);
+    List<Certificate> findAllForUser(int userId) throws RepositoryException;
 }

@@ -1,9 +1,8 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.JDBCContractRepository;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -14,9 +13,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 
 public class JDBCContractRepositoryImpl implements JDBCContractRepository {
-
 
     private final DataSource dataSource;
 
@@ -42,122 +41,135 @@ public class JDBCContractRepositoryImpl implements JDBCContractRepository {
     }
 
     @Override
-    public Optional<Contract> find(int id) {
+    public Optional<Contract> find(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            final Contract contract = findContractById(conn, id);
-
-            if (contract != null) {
-                return Optional.of(contract);
-            }
-
+            return Optional.ofNullable(findContractById(conn, id));
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't find Contracts", ex);
         }
-        return Optional.empty();
     }
 
     @Override
-    public List<Contract> findAll() {
-        List<Contract> resultList = new ArrayList<>();
-
+    public List<Contract> findAll() throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
+            List<Contract> resultList = new ArrayList<>();
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_CONTRACTS_QUERY);
 
             while (resultSet.next()) {
-                Contract contract = new Contract(resultSet.getInt(ID_COLUMN),
-                        resultSet.getInt(OWNER_ID_COLUMN),
-                        resultSet.getString(DESCRIPTION_COLUMN),
-                        LocalDate.parse(resultSet.getDate(START_DATE_COLUMN).toString()),
-                        LocalDate.parse(resultSet.getDate(END_DATE_COLUMN).toString()),
-                        resultSet.getInt(START_PRICE_COLUMN));
+                Contract contract = createContract(resultSet);
                 resultList.add(contract);
             }
+            return resultList;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't find Contracts", ex);
         }
-        return resultList;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
-            boolean result = false;
+            boolean result;
             try {
                 removeAllOffersForContract(conn, id);
                 PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
                 preparedStatement.setInt(1, id);
                 result = preparedStatement.executeUpdate() == 1;
+                conn.commit();
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 conn.rollback();
+                throw new RepositoryException("Can't delete Contracts", ex);
             } finally {
                 conn.setAutoCommit(true);
             }
             return result;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't delete Contracts", ex);
         }
-        return false;
     }
 
     @Override
-    public Contract update(Contract contract) {
-        try (final Connection conn = dataSource.getConnection()) {
-            final PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CONTRACT_QUERY);
-            preparedStatement.setString(1, contract.getDescription());
-            preparedStatement.setDate(2, Date.valueOf(contract.getStartDate().toString()));
-            preparedStatement.setDate(3, Date.valueOf(contract.getEndDate().toString()));
-            preparedStatement.setInt(4, contract.getStartPrice());
-            preparedStatement.setInt(5, contract.getId());
-            preparedStatement.execute();
-
-            return findContractById(conn, contract.getId());
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Optional<Contract> add(Contract contract) {
+    public Contract update(Contract contract) throws RepositoryException {
         try (Connection conn = dataSource.getConnection()) {
-            PreparedStatement preparedSt = conn.prepareStatement(ADD_CONTRACT_QUERY, Statement.RETURN_GENERATED_KEYS);
-            preparedSt.setInt(1, contract.getOwnerId());
-            preparedSt.setString(2, contract.getDescription());
-            preparedSt.setDate(3, Date.valueOf(contract.getStartDate().toString()));
-            preparedSt.setDate(4, Date.valueOf(contract.getEndDate().toString()));
-            preparedSt.setInt(5, contract.getStartPrice());
+            Contract updatedContract;
+            conn.setAutoCommit(false);
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CONTRACT_QUERY);
+                preparedStatement.setString(1, contract.getDescription());
+                preparedStatement.setDate(2, Date.valueOf(contract.getStartDate().toString()));
+                preparedStatement.setDate(3, Date.valueOf(contract.getEndDate().toString()));
+                preparedStatement.setInt(4, contract.getStartPrice());
+                preparedStatement.setInt(5, contract.getId());
+                preparedStatement.execute();
+                updatedContract = findContractById(conn, contract.getId());
+                conn.commit();
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Can't update Contracts", ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+            return updatedContract;
+        } catch (SQLException ex) {
+            throw new RepositoryException("Can't update Contracts", ex);
+        }
+    }
 
-            int effectiveRaws = preparedSt.executeUpdate();
+    @Override
+    public Optional<Contract> add(Contract contract) throws RepositoryException {
+        try (Connection conn = dataSource.getConnection()) {
+            Contract insertedContract = null;
+            conn.setAutoCommit(false);
+            try {
+                PreparedStatement preparedSt = conn.prepareStatement(ADD_CONTRACT_QUERY, Statement.RETURN_GENERATED_KEYS);
+                preparedSt.setInt(1, contract.getOwnerId());
+                preparedSt.setString(2, contract.getDescription());
+                preparedSt.setDate(3, Date.valueOf(contract.getStartDate().toString()));
+                preparedSt.setDate(4, Date.valueOf(contract.getEndDate().toString()));
+                preparedSt.setInt(5, contract.getStartPrice());
 
-            if (effectiveRaws == 1) {
-                ResultSet generatedKeys = preparedSt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    return Optional.of(findContractById(conn, generatedKeys.getInt(ID_COLUMN)));
+                int effectiveRaws = preparedSt.executeUpdate();
+
+                if (effectiveRaws == 1) {
+                    ResultSet generatedKeys = preparedSt.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        insertedContract = findContractById(conn, generatedKeys.getInt(ID_COLUMN));
+                    }
                 }
+                conn.commit();
+                return Optional.ofNullable(insertedContract);
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw new RepositoryException("Can't add Contract", ex);
+            } finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            throw new RepositoryException("Can't add Contract", ex);
         }
-        return Optional.empty();
     }
 
     private Contract findContractById(Connection conn, int id) throws SQLException {
         PreparedStatement preparedStatement = conn.prepareStatement(FIND_CONTRACT_BY_ID_QUERY);
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
+        Contract contract = null;
         if (resultSet.next()) {
-            return new Contract(resultSet.getInt(ID_COLUMN),
-                    resultSet.getInt(OWNER_ID_COLUMN),
-                    resultSet.getString(DESCRIPTION_COLUMN),
-                    LocalDate.parse(resultSet.getDate(START_DATE_COLUMN).toString()),
-                    LocalDate.parse(resultSet.getDate(END_DATE_COLUMN).toString()),
-                    resultSet.getInt(START_PRICE_COLUMN));
-        } else {
-            return null;
+            contract = createContract(resultSet);
         }
+        return contract;
+    }
+
+    private Contract createContract(ResultSet resultSet) throws SQLException {
+        Contract contract = new Contract();
+        contract.setId(resultSet.getInt(ID_COLUMN));
+        contract.setOwnerId(resultSet.getInt(OWNER_ID_COLUMN));
+        contract.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
+        contract.setStartDate(LocalDate.parse(resultSet.getDate(START_DATE_COLUMN).toString()));
+        contract.setEndDate(LocalDate.parse(resultSet.getDate(END_DATE_COLUMN).toString()));
+        contract.setStartPrice(resultSet.getInt(START_PRICE_COLUMN));
+        return contract;
     }
 
     private void removeAllOffersForContract(Connection conn, int contractId) throws SQLException {
