@@ -1,12 +1,10 @@
 package com.itrex.java.lab;
 
-import com.itrex.java.lab.repository.impl.JDBCUserRepositoryImpl;
+import com.itrex.java.lab.repository.impl.HibernateUserRepositoryImpl;
 import com.itrex.java.lab.service.FlywayService;
-import org.h2.jdbcx.JdbcConnectionPool;
-
-import static com.itrex.java.lab.properties.H2Properties.H2_PASSWORD;
-import static com.itrex.java.lab.properties.H2Properties.H2_URL;
-import static com.itrex.java.lab.properties.H2Properties.H2_USER;
+import com.itrex.java.lab.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 
 public class Main {
@@ -16,18 +14,15 @@ public class Main {
         FlywayService flywayService = new FlywayService();
         flywayService.migrate();
 
-        JdbcConnectionPool connectionPool = JdbcConnectionPool.create(H2_URL, H2_USER, H2_PASSWORD);
+        SessionFactory sessionFactory = HibernateUtil.INSTANCE.getSessionFactory();
 
-        final JDBCUserRepositoryImpl userRepository = new JDBCUserRepositoryImpl(connectionPool);
-
-/*        final List<User> userList = userRepository.findAll();
-
-        System.out.println("Before execution task");
-        System.out.println(userList);
-        System.out.println("After execution");*/
-
-        connectionPool.dispose();
+        Session session = sessionFactory.openSession();
+        HibernateUserRepositoryImpl repository = new HibernateUserRepositoryImpl(session);
 
 
+
+
+
+        session.close();
     }
 }

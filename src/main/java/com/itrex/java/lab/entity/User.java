@@ -1,21 +1,48 @@
 package com.itrex.java.lab.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class User {
+@Entity
+@Table (name = "user", schema = "builder")
+public class User implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column (name = "name", nullable = false)
     private String name;
+    @Column (name = "password", nullable = false)
     private String password;
-    private int role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Role role;
+    @Column (name = "email", nullable = false, unique = true)
     private String email;
+    @ManyToMany (fetch = FetchType.LAZY)
+    @JoinTable (name = "user_certificate", schema = "builder", joinColumns = {@JoinColumn(name = ("user_id"))},
+     inverseJoinColumns = {@JoinColumn(name = ("certificate_id"))})
     private List<Certificate> certificates;
 
     public User() {
     }
 
-    public User(int id, String name, String password, int role, String email, List<Certificate> certificates) {
+    public User(int id, String name, String password, Role role, String email, List<Certificate> certificates) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -48,11 +75,11 @@ public class User {
         this.password = password;
     }
 
-    public int getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -73,6 +100,19 @@ public class User {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(role, user.role) && Objects.equals(email, user.email) && Objects.equals(certificates, user.certificates);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, password, role, email, certificates);
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -82,18 +122,5 @@ public class User {
                 ", email='" + email + '\'' +
                 ", certificates=" + certificates +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && role == user.role && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(certificates, user.certificates);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, password, role, email, certificates);
     }
 }

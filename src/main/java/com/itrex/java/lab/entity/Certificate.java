@@ -1,9 +1,15 @@
 package com.itrex.java.lab.entity;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table (name = "certificate", schema = "builder")
 public class Certificate {
 
+    @Id
     private int id;
     private String name;
 

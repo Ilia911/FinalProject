@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.JDBCOfferRepository;
+import com.itrex.java.lab.repository.OfferRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
+public class JDBCOfferRepositoryImpl implements OfferRepository {
 
     private final DataSource dataSource;
 
@@ -55,8 +55,7 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Offer offer = new Offer(resultSet.getInt(ID_COLUMN), resultSet.getInt(OFFER_OWNER_ID_COLUMN),
-                        resultSet.getInt(CONTRACT_ID_COLUMN), resultSet.getInt(PRICE_COLUMN));
+                Offer offer = createOffer(resultSet);
                 resultList.add(offer);
             }
             return resultList;
@@ -78,6 +77,8 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
 
     @Override
     public Offer update(Offer offer) throws RepositoryException {
+
+        validateOfferData(offer);
 
         try (Connection conn = dataSource.getConnection()) {
             Offer updatedOffer;
@@ -102,6 +103,9 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
 
     @Override
     public Optional<Offer> add(Offer offer) throws RepositoryException {
+
+        validateOfferData(offer);
+
         try (Connection conn = dataSource.getConnection()) {
             try {
                 conn.setAutoCommit(false);
@@ -137,12 +141,23 @@ public class JDBCOfferRepositoryImpl implements JDBCOfferRepository {
 
         Offer offer = null;
         if (resultSet.next()) {
-            offer = new Offer();
-            offer.setId(resultSet.getInt(ID_COLUMN));
-            offer.setOfferOwnerId(resultSet.getInt(OFFER_OWNER_ID_COLUMN));
-            offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
-            offer.setPrice(resultSet.getInt(PRICE_COLUMN));
+            offer = createOffer(resultSet);
         }
         return offer;
+    }
+
+    private Offer createOffer(ResultSet resultSet) throws SQLException {
+        Offer offer = new Offer();
+        offer.setId(resultSet.getInt(ID_COLUMN));
+        offer.setOfferOwnerId(resultSet.getInt(OFFER_OWNER_ID_COLUMN));
+            offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
+        offer.setPrice(resultSet.getInt(PRICE_COLUMN));
+        return offer;
+    }
+
+    private void validateOfferData(Offer offer) throws RepositoryException {
+        if (offer.getPrice() == null || offer.getPrice() <= 0) {
+            throw new RepositoryException("Offer field 'price' must not be null or empty!");
+        }
     }
 }

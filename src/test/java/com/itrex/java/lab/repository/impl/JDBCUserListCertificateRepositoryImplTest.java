@@ -3,7 +3,7 @@ package com.itrex.java.lab.repository.impl;
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.JDBCUserListCertificateRepository;
+import com.itrex.java.lab.repository.UserListCertificateRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JDBCUserListCertificateRepositoryImplTest extends BaseRepositoryTest {
 
-    private final JDBCUserListCertificateRepository repository;
+    private final UserListCertificateRepository repository;
 
     public JDBCUserListCertificateRepositoryImplTest() {
         super();
-        this.repository = new JDBCUserListCertificateRepositoryImpl(getConnectionPool());
+        this.repository = new JDBCUserCertificateRepositoryImpl(getConnectionPool());
     }
 
     @Test

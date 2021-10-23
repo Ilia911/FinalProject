@@ -5,9 +5,9 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import java.util.List;
 import java.util.Optional;
 
-public interface JDBCUserRepository {
+public interface UserRepository {
 
-    Optional<User> find(String email) throws RepositoryException;
+    Optional<User> findByEmail(String email) throws RepositoryException;
 
     List<User> findAll() throws RepositoryException;
 

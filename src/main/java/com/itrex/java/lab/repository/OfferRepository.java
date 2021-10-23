@@ -5,7 +5,7 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import java.util.List;
 import java.util.Optional;
 
-public interface JDBCOfferRepository {
+public interface OfferRepository {
 
     Optional<Offer> find(int id) throws RepositoryException;
 

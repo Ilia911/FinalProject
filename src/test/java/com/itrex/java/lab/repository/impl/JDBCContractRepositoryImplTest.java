@@ -1,9 +1,10 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.JDBCContractRepository;
+import com.itrex.java.lab.repository.ContractRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JDBCContractRepositoryImplTest extends BaseRepositoryTest {
 
-    private final JDBCContractRepository repository;
+    private final ContractRepository repository;
 
     JDBCContractRepositoryImplTest() {
         super();

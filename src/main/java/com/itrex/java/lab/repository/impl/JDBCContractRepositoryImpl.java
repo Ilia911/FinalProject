@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.JDBCContractRepository;
+import com.itrex.java.lab.repository.ContractRepository;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class JDBCContractRepositoryImpl implements JDBCContractRepository {
+public class JDBCContractRepositoryImpl implements ContractRepository {
 
     private final DataSource dataSource;
 
@@ -91,6 +91,9 @@ public class JDBCContractRepositoryImpl implements JDBCContractRepository {
 
     @Override
     public Contract update(Contract contract) throws RepositoryException {
+
+        validateContractData(contract);
+
         try (Connection conn = dataSource.getConnection()) {
             Contract updatedContract;
             conn.setAutoCommit(false);
@@ -118,6 +121,9 @@ public class JDBCContractRepositoryImpl implements JDBCContractRepository {
 
     @Override
     public Optional<Contract> add(Contract contract) throws RepositoryException {
+
+        validateContractData(contract);
+
         try (Connection conn = dataSource.getConnection()) {
             Contract insertedContract = null;
             conn.setAutoCommit(false);
@@ -176,6 +182,29 @@ public class JDBCContractRepositoryImpl implements JDBCContractRepository {
         PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY);
         preparedStatement.setInt(1, contractId);
         preparedStatement.execute();
+    }
 
+    private void validateContractData(Contract contract) throws RepositoryException{
+        if (contract.getId() < 0) {
+            throw new RepositoryException("Contract field 'id' must be positive!");
+        }
+        if (contract.getOwnerId() < 0) {
+            throw new RepositoryException("Contract field 'ownerId' must be positive!");
+        }
+        if (contract.getDescription() == null || contract.getDescription().isEmpty()) {
+            throw new RepositoryException("Contract field 'description' must not be null or empty!");
+        }
+        if (contract.getStartDate() == null || contract.getStartDate().isBefore(LocalDate.now())) {
+            throw new RepositoryException("Contract field 'startDate' must not be null or before today " +
+                    "(" + LocalDate.now() + ")!");
+        }
+        if (contract.getEndDate() == null || contract.getEndDate().isBefore(LocalDate.now())) {
+            throw new RepositoryException("Contract field 'endDate' must not be null or before today " +
+                    "(" + LocalDate.now() + ")!");
+        }
+        if (contract.getStartPrice() == null || contract.getStartPrice() < 0) {
+            throw new RepositoryException("Contract field 'startPrice' must not be null or negative!");
+
+        }
     }
 }

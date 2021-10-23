@@ -1,9 +1,10 @@
 package com.itrex.java.lab.repository.impl;
 
 
+import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.JDBCUserRepository;
+import com.itrex.java.lab.repository.UserRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class JDBCUserRepositoryImpl implements JDBCUserRepository {
+public class JDBCUserRepositoryImpl implements UserRepository {
 
     private final DataSource dataSource;
 
@@ -37,7 +38,10 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
     private static final String REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY
             = "DELETE FROM builder.offer where contract_id = any (select contract_id from BUILDER.OFFER " +
             "join (select id from BUILDER.CONTRACT where OWNER_ID = ?) as ubc on CONTRACT_ID = ubc.id)";
-    private static final String REMOVE_ALL_USER_CERTIFICATES_QUERY = "DELETE FROM builder.user_list_certificate where user_id = ?";
+    private static final String REMOVE_ALL_USER_CERTIFICATES_QUERY = "delete from builder.user_certificate where user_id = ?";
+    private static final String ROLE_ID_IN_ROLE_TABLE_COLUMN = "id";
+    private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
+    private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
 
 
     public JDBCUserRepositoryImpl(DataSource dataSource) {
@@ -45,14 +49,17 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
     }
 
     @Override
-    public Optional<User> find(String email) throws RepositoryException {
+    public Optional<User> findByEmail(String email) throws RepositoryException {
+        if (email == null) {
+            throw new RepositoryException("User field 'email' must not be null!");
+        }
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             User user = null;
             if (resultSet.next()) {
-                user = createUser(resultSet, true);
+                user = createUser(conn, resultSet, true);
             }
             return Optional.ofNullable(user);
         } catch (SQLException ex) {
@@ -67,7 +74,7 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
             ResultSet resultSet = st.executeQuery(FIND_ALL_USERS_QUERY);
             List<User> userList = new ArrayList<>();
             while (resultSet.next()) {
-                User user = createUser(resultSet, false);
+                User user = createUser(conn, resultSet, false);
                 userList.add(user);
             }
             return userList;
@@ -106,6 +113,9 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
     @Override
     public User update(User user) throws RepositoryException {
 
+        validateUserData(user);
+        // todo check user email
+
         try (Connection conn = dataSource.getConnection()) {
             User updatedUser;
             conn.setAutoCommit(false);
@@ -113,7 +123,7 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
                 PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_USER_QUERY);
                 preparedStatement.setString(1, user.getName());
                 preparedStatement.setString(2, user.getPassword());
-                preparedStatement.setInt(3, user.getRole());
+                preparedStatement.setInt(3, user.getRole().getId());
                 preparedStatement.setString(4, user.getEmail());
                 preparedStatement.setInt(5, user.getId());
                 preparedStatement.execute();
@@ -133,6 +143,9 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
 
     @Override
     public Optional<User> add(User user) throws RepositoryException {
+
+        validateUserData(user);
+
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
@@ -140,7 +153,7 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
                 PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, user.getName());
                 preparedStatement.setString(2, user.getPassword());
-                preparedStatement.setInt(3, user.getRole());
+                preparedStatement.setInt(3, user.getRole().getId());
                 preparedStatement.setString(4, user.getEmail());
 
                 int effectiveRows = preparedStatement.executeUpdate();
@@ -165,17 +178,17 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
     }
 
     private User find(int id, Connection conn) throws SQLException {
-        User user = new User();
+        User user = null;
         PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_ID_QUERY);
         preparedStatement.setInt(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            user = createUser(resultSet, true);
+            user = createUser(conn, resultSet, true);
         }
         return user;
     }
 
-    private User createUser(ResultSet rs, boolean isSetPassword) throws SQLException {
+    private User createUser(Connection conn, ResultSet rs, boolean isSetPassword) throws SQLException {
         User user = new User();
 
         user.setId(rs.getInt(ID_COLUMN));
@@ -183,7 +196,7 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
         if (isSetPassword) {
             user.setPassword(rs.getString(PASSWORD_COLUMN));
         }
-        user.setRole(rs.getInt(ROLE_COLUMN));
+        user.setRole(createRoleById(conn, rs.getInt(ROLE_COLUMN)));
         user.setEmail(rs.getString(EMAIL_COLUMN));
         return user;
     }
@@ -210,5 +223,39 @@ public class JDBCUserRepositoryImpl implements JDBCUserRepository {
         final PreparedStatement preparedStatement = conn.prepareStatement(REMOVE_ALL_USER_CERTIFICATES_QUERY);
         preparedStatement.setInt(1, offerOwnerId);
         preparedStatement.execute();
+    }
+
+    private void validateUserData(User user) throws RepositoryException {
+        if (user == null) {
+            throw new RepositoryException("User can not be 'null'");
+        }
+        if (user.getName() == null || user.getName().isEmpty()) {
+            throw new RepositoryException("User field 'name' mustn't be null or empty");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new RepositoryException("User field 'password' mustn't be null or empty");
+        }
+        if (user.getRole().getId() <= 0) {
+            throw new RepositoryException("User field 'role' must be more then 0");
+        }
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            throw new RepositoryException("User field 'email' mustn't be null or empty");
+        }
+    }
+
+    private Role createRoleById(Connection conn, int id) throws SQLException {
+        PreparedStatement preparedStatement = conn.prepareStatement(FIND_ROLE_BY_ID_QUERY);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        Role role;
+        if (resultSet.next()) {
+            role = new Role();
+            role.setId(resultSet.getInt(ROLE_ID_IN_ROLE_TABLE_COLUMN));
+            role.setName(resultSet.getString(ROLE_NAME_IN_ROLE_TABLE_COLUMN));
+        } else {
+            role = new Role(2, "customer");
+        }
+        return role;
     }
 }

@@ -36,20 +36,19 @@ CREATE TABLE IF NOT EXISTS `builder`.`offer` (
     `offer_owner_id` INT NOT NULL,
     `contract_id` INT NOT NULL,
     `price` INT NOT NULL,
-    PRIMARY KEY (`offer_owner_id`, `contract_id`),
-    CONSTRAINT `unique_offer_id` UNIQUE (`id`),
+    PRIMARY KEY (`id`),
     CONSTRAINT `fk_offer_owner_id` FOREIGN KEY (`offer_owner_id`) REFERENCES `builder`.`user` (`id`),
     CONSTRAINT `fk_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `builder`.`contract` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `builder`.`user_list_certificate` (
+CREATE TABLE IF NOT EXISTS `builder`.`user_certificate` (
   `user_id` INT NOT NULL,
   `certificate_id` INT NOT NULL,
   PRIMARY KEY (`user_id`, `certificate_id`),
   CONSTRAINT `fk_certificate_id` FOREIGN KEY (`certificate_id`) REFERENCES `builder`.`certificate` (`id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `builder`.`user` (`id`));
 
-CREATE INDEX IF NOT EXISTS fk_user_id ON builder.user_list_certificate(user_id);
-CREATE INDEX IF NOT EXISTS fk_certificate_id ON builder.user_list_certificate(certificate_id);
+CREATE INDEX IF NOT EXISTS fk_user_id ON builder.user_certificate(user_id);
+CREATE INDEX IF NOT EXISTS fk_certificate_id ON builder.user_certificate(certificate_id);
 
 COMMIT;

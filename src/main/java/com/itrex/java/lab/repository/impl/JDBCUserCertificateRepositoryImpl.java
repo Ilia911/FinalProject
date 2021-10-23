@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.JDBCUserListCertificateRepository;
+import com.itrex.java.lab.repository.UserListCertificateRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class JDBCUserListCertificateRepositoryImpl implements JDBCUserListCertificateRepository {
+public class JDBCUserCertificateRepositoryImpl implements UserListCertificateRepository {
 
     private final DataSource dataSource;
 
@@ -21,17 +21,17 @@ public class JDBCUserListCertificateRepositoryImpl implements JDBCUserListCertif
     private static final String CERTIFICATE_ID_COLUMN = "id";
     private static final String CERTIFICATE_NAME_COLUMN = "name";
     private static final String FIND_CERTIFICATE_BY_USER_ID_AND_CERTIFICATE_ID_QUERY
-            = "select c.id, c.name from builder.user_list_certificate ulc " +
+            = "select c.id, c.name from builder.user_certificate ulc " +
             "join builder.certificate c on ulc.certificate_id = c.id where user_id = ? and certificate_id = ?";
     private static final String ASSIGN_CERTIFICATE_BY_USER_ID_QUERY
-            = "insert into builder.user_list_certificate (user_id, certificate_id) values (?, ?);";
+            = "insert into builder.user_certificate (user_id, certificate_id) values (?, ?);";
     private static final String REMOVE_CERTIFICATE_BY_USER_ID_QUERY
-            = "delete from builder.user_list_certificate where user_id = ? and certificate_id = ?;";
+            = "delete from builder.user_certificate where user_id = ? and certificate_id = ?;";
     private static final String FIND_ALL_CERTIFICATES_FOR_USER_QUERY
-            = "select c.id, c.name from builder.user_list_certificate ulc " +
+            = "select c.id, c.name from builder.user_certificate ulc " +
             "join builder.certificate c on ulc.certificate_id = c.id where user_id = ?";
 
-    public JDBCUserListCertificateRepositoryImpl(DataSource dataSource) {
+    public JDBCUserCertificateRepositoryImpl(DataSource dataSource) {
         super();
         this.dataSource = dataSource;
     }

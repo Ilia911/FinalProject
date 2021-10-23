@@ -26,11 +26,11 @@ VALUES ( '2', 'second contract', '2022-03-01', '2022-09-30', '30000' );
 INSERT INTO builder.offer (OFFER_OWNER_ID, CONTRACT_ID, PRICE) VALUES ( '3', '1','27500' );
 INSERT INTO builder.offer (OFFER_OWNER_ID, CONTRACT_ID, PRICE) VALUES ( '4', '1','26000' );
 
-INSERT INTO builder.user_list_certificate (user_id, certificate_id) VALUES ('3', '1');
-INSERT INTO builder.user_list_certificate (user_id, certificate_id) VALUES ('3', '6');
-INSERT INTO builder.user_list_certificate (user_id, certificate_id) VALUES ('3', '7');
-INSERT INTO builder.user_list_certificate (user_id, certificate_id) VALUES ('4', '4');
-INSERT INTO builder.user_list_certificate (user_id, certificate_id) VALUES ('4', '5');
+INSERT INTO builder.user_certificate (user_id, certificate_id) VALUES ('3', '1');
+INSERT INTO builder.user_certificate (user_id, certificate_id) VALUES ('3', '6');
+INSERT INTO builder.user_certificate (user_id, certificate_id) VALUES ('3', '7');
+INSERT INTO builder.user_certificate (user_id, certificate_id) VALUES ('4', '4');
+INSERT INTO builder.user_certificate (user_id, certificate_id) VALUES ('4', '5');
 
 
 

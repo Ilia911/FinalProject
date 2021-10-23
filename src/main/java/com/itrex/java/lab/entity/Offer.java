@@ -1,13 +1,26 @@
 package com.itrex.java.lab.entity;
 
-import java.math.BigDecimal;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "offer", schema = "builder")
 public class Offer {
 
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "id")
     private int id;
+    @Column (name = "offer_owner_id")
     private int offerOwnerId;
+    @Column (name = "contract_id")
     private int contractId;
+    @Column (name = "price")
     private Integer price;
 
     public Offer() {
