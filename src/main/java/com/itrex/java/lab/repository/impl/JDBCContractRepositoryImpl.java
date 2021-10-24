@@ -34,7 +34,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
             = "UPDATE builder.contract SET description = ?, start_date = ?, end_date = ?, start_price = ? WHERE id = ?";
     private static final String ADD_CONTRACT_QUERY
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
-    private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?;";
+    private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?";
 
     public JDBCContractRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -184,12 +184,9 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
         preparedStatement.execute();
     }
 
-    private void validateContractData(Contract contract) throws RepositoryException{
-        if (contract.getId() < 0) {
-            throw new RepositoryException("Contract field 'id' must be positive!");
-        }
-        if (contract.getOwnerId() < 0) {
-            throw new RepositoryException("Contract field 'ownerId' must be positive!");
+    private void validateContractData(Contract contract) throws RepositoryException {
+        if (contract == null) {
+            throw new RepositoryException("Contract can not be 'null'!");
         }
         if (contract.getDescription() == null || contract.getDescription().isEmpty()) {
             throw new RepositoryException("Contract field 'description' must not be null or empty!");
@@ -204,7 +201,9 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
         }
         if (contract.getStartPrice() == null || contract.getStartPrice() < 0) {
             throw new RepositoryException("Contract field 'startPrice' must not be null or negative!");
-
+        }
+        if (contract.getEndDate().isBefore(contract.getStartDate())) {
+            throw new RepositoryException("Contract start date should be before end date!");
         }
     }
 }

@@ -36,8 +36,7 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void find_null_shouldThrowRepositoryException() throws RepositoryException {
-
+    public void find_null_shouldThrowRepositoryException() {
         //given && when
         String nullableEmail = null;
         //then
@@ -107,7 +106,7 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void update_null_shouldThrowRepositoryException() throws RepositoryException {
+    void update_null_shouldThrowRepositoryException() {
         //given && when
         User nullUser = null;
         //then
@@ -125,9 +124,41 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void add_userWithNotUniqueEmail_shouldThrowRepositoryException() throws RepositoryException {
+    void add_userWithNotUniqueEmail_shouldThrowRepositoryException() {
         //given && when
         User userWithNotUniqueEmail = new User(5, "newUser", "password", new Role(2, "customer"), "castomer@gmail.com", null);
+        //then
+        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
+    }
+
+    @Test
+    void add_userWithNullName_shouldThrowRepositoryException() {
+        //given && when
+        User userWithNotUniqueEmail = new User(5, null, "password", new Role(2, "customer"), "nullName@gmail.com", null);
+        //then
+        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
+    }
+
+    @Test
+    void add_userWithNullPassword_shouldThrowRepositoryException() {
+        //given && when
+        User userWithNotUniqueEmail = new User(5, "newUser", null, new Role(2, "customer"), "castomer@gmail.com", null);
+        //then
+        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
+    }
+
+    @Test
+    void add_userWithNullRole_shouldThrowRepositoryException() {
+        //given && when
+        User userWithNotUniqueEmail = new User(5, "newUser", "password", null, "castomer@gmail.com", null);
+        //then
+        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
+    }
+
+    @Test
+    void add_userWithNullEmail_shouldThrowRepositoryException() {
+        //given && when
+        User userWithNotUniqueEmail = new User(5, "newUser", "password", new Role(2, "customer"), null, null);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
     }

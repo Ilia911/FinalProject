@@ -2,14 +2,9 @@ package com.itrex.java.lab.entity;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,15 +13,15 @@ public class Contract {
 
     @Id
     private int id;
-    @Column(name = "owner_id")
+    @Column(name = "owner_id", nullable = false)
     private int ownerId;
-    @Column (name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
-    @Column (name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
-    @Column (name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
-    @Column (name = "start_price")
+    @Column(name = "start_price", nullable = false)
     private Integer startPrice;
 
     public Contract() {

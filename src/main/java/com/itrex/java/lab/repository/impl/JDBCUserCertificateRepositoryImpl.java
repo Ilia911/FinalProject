@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.UserListCertificateRepository;
+import com.itrex.java.lab.repository.UserCertificateRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-public class JDBCUserCertificateRepositoryImpl implements UserListCertificateRepository {
+public class JDBCUserCertificateRepositoryImpl implements UserCertificateRepository {
 
     private final DataSource dataSource;
 

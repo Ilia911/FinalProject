@@ -14,6 +14,11 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     private static final String REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY
             = "DELETE FROM builder.offer where contract_id = any (select contract_id from BUILDER.OFFER " +
             "join (select id from BUILDER.CONTRACT where OWNER_ID = ?) as ubc on CONTRACT_ID = ubc.id)";
+    private static final String REMOVE_USER_OFFERS_QUERY = "delete from Offer o where o.offerOwnerId = :ownerId";
+    private static final String REMOVE_USER_CONTRACTS_QUERY = "delete from Contract c where c.ownerId = :ownerId";
+    private static final String REMOVE_USER_QUERY = "delete from User u where id = :id";
+    private static final String FIND_USERS_QUERY = "select u from User u ";
+    private static final String FIND_USER_BY_EMAIL_QUERY = "select u from User u where email = ?0";
 
 
     public HibernateUserRepositoryImpl(Session session) {
@@ -24,7 +29,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     public Optional<User> findByEmail(String email) throws RepositoryException {
         User user;
         try {
-            user = session.createQuery("select u from User u where email = ?0", User.class)
+            user = session.createQuery(FIND_USER_BY_EMAIL_QUERY, User.class)
                     .setParameter(0, email).uniqueResult();
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
@@ -37,7 +42,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
         List<User> userList;
         try {
-            userList = session.createQuery("select u from User u ", User.class).list();
+            userList = session.createQuery(FIND_USERS_QUERY, User.class).list();
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
@@ -47,16 +52,15 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) throws RepositoryException {
 
-        int effectedRows = 0;
+        int effectedRows;
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.createQuery("delete from Offer o where o.offerOwnerId = :ownerId")
-                    .setParameter("ownerId", id).executeUpdate();
+            session.createQuery(REMOVE_USER_OFFERS_QUERY).setParameter("ownerId", id).executeUpdate();
             session.createSQLQuery(REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY).setParameter(1, id).executeUpdate();
-            session.createQuery("delete from Contract c where c.ownerId = :ownerId")
+            session.createQuery(REMOVE_USER_CONTRACTS_QUERY)
                     .setParameter("ownerId", id).executeUpdate();
-            effectedRows = session.createQuery("delete from User u where id = :id")
+            effectedRows = session.createQuery(REMOVE_USER_QUERY)
                     .setParameter("id", id).executeUpdate();
             transaction.commit();
         } catch (Exception ex) {

@@ -4,7 +4,6 @@ import com.itrex.java.lab.service.FlywayService;
 import com.itrex.java.lab.util.HibernateUtil;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 

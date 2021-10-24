@@ -150,12 +150,15 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
         Offer offer = new Offer();
         offer.setId(resultSet.getInt(ID_COLUMN));
         offer.setOfferOwnerId(resultSet.getInt(OFFER_OWNER_ID_COLUMN));
-            offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
+        offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
         offer.setPrice(resultSet.getInt(PRICE_COLUMN));
         return offer;
     }
 
     private void validateOfferData(Offer offer) throws RepositoryException {
+        if (offer == null) {
+            throw new RepositoryException("Offer can not be null!");
+        }
         if (offer.getPrice() == null || offer.getPrice() <= 0) {
             throw new RepositoryException("Offer field 'price' must not be null or empty!");
         }

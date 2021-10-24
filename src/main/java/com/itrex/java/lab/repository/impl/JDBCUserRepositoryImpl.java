@@ -1,6 +1,5 @@
 package com.itrex.java.lab.repository.impl;
 
-
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
@@ -235,7 +234,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new RepositoryException("User field 'password' mustn't be null or empty");
         }
-        if (user.getRole().getId() <= 0) {
+        if (user.getRole() == null) {
             throw new RepositoryException("User field 'role' must be more then 0");
         }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {

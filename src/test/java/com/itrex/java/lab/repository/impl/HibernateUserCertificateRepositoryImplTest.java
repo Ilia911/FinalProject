@@ -3,7 +3,7 @@ package com.itrex.java.lab.repository.impl;
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.UserListCertificateRepository;
+import com.itrex.java.lab.repository.UserCertificateRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+class HibernateUserCertificateRepositoryImplTest extends BaseRepositoryTest {
 
-class JDBCUserListCertificateRepositoryImplTest extends BaseRepositoryTest {
+    private final UserCertificateRepository repository;
 
-    private final UserListCertificateRepository repository;
-
-    public JDBCUserListCertificateRepositoryImplTest() {
+    public HibernateUserCertificateRepositoryImplTest() {
         super();
-        this.repository = new JDBCUserCertificateRepositoryImpl(getConnectionPool());
+        this.repository = new HibernateUserCertificateRepositoryImpl(getSessionFactory().openSession());
     }
 
     @Test
@@ -37,7 +36,7 @@ class JDBCUserListCertificateRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     void removeCertificate_validData_shouldDeleteUser() throws RepositoryException {
-        //when
+        //given && when
         int userId = 3;
         int certificateId = 1;
         //then

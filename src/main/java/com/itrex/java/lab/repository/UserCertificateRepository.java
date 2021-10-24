@@ -5,7 +5,7 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserListCertificateRepository {
+public interface UserCertificateRepository {
 
     Optional<Certificate> assignCertificate(int userId, int certificateId) throws RepositoryException;
 

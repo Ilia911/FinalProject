@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class JDBCContractRepositoryImplTest extends BaseRepositoryTest {
+class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
     private final ContractRepository repository;
 
-    JDBCContractRepositoryImplTest() {
+    public HibernateContractRepositoryImplTest() {
         super();
-        repository = new JDBCContractRepositoryImpl(getConnectionPool());
+        this.repository = new HibernateContractRepositoryImpl(getSessionFactory().openSession());
     }
 
     @Test

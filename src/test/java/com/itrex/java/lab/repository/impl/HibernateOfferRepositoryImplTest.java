@@ -14,14 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
+class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
 
     private final OfferRepository repository;
 
-    public JDBCOfferRepositoryImplTest() {
+    public HibernateOfferRepositoryImplTest() {
         super();
-        repository = new JDBCOfferRepositoryImpl(getConnectionPool());
+        this.repository = new HibernateOfferRepositoryImpl(getSessionFactory().openSession());
     }
 
     @Test
