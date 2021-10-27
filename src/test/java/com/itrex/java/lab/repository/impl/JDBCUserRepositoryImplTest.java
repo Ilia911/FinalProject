@@ -1,5 +1,6 @@
 package com.itrex.java.lab.repository.impl;
 
+import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
@@ -12,8 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
@@ -26,38 +25,31 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void find_validData_shouldReturnExistUser() throws RepositoryException {
+    public void findByEmail_validData_shouldReturnExistUser() throws RepositoryException {
         //given
-        User expectedUser = new User(1, "Customer", "password", new Role(2, "customer"), "castomer@gmail.com", null);
+        User expectedUser = new User(1, "Customer", "password", new Role(2, "customer"), "castomer@gmail.com", new ArrayList<>());
         //when
-        Optional<User> actualUser = repository.findByEmail("castomer@gmail.com");
+        User actualUser = repository.findByEmail("castomer@gmail.com").get();
         //then
-        assertEquals(expectedUser, actualUser.get());
-    }
-
-    @Test
-    public void find_null_shouldThrowRepositoryException() {
-        //given && when
-        String nullableEmail = null;
-        //then
-        assertThrows(RepositoryException.class, () -> repository.findByEmail(nullableEmail));
-    }
-
-    @Test
-    public void find_nonExistsUserId_shouldReturnExistUser() throws RepositoryException {
-        //given && when
-        Optional<User> actualUser = repository.findByEmail("noneExist@gmail.com");
-        //then
-        assertTrue(actualUser.isEmpty());
+        assertUserEquals(expectedUser, actualUser);
     }
 
     @Test
     public void findAll_validData_shouldReturnExistUsers() throws RepositoryException {
         //given
-        User expectedUser1 = new User(1, "Customer", null, new Role(2, "customer"), "castomer@gmail.com", null);
-        User expectedUser2 = new User(2, "SecondCustomer", null, new Role(2, "customer"), "secondCastomer@gmail.com", null);
-        User expectedUser3 = new User(3, "Contractor", null, new Role(3, "contractor"), "contractor@gmail.com", null);
-        User expectedUser4 = new User(4, "SecondContractor", null, new Role(3, "contractor"), "SecondContractor@gmail.com", null);
+        //todo remove unnecessary code
+        List<Certificate> user3Certificates = new ArrayList<>();
+        user3Certificates.add(new Certificate(1, "Filling window and door openings"));
+        user3Certificates.add(new Certificate(6, "Execution of work on the arrangement of foundations, foundations of buildings and structures"));
+        user3Certificates.add(new Certificate(7, "Performing work on the installation of thermal insulation of the enclosing structures of buildings and structures"));
+        List<Certificate> user4Certificates = new ArrayList<>();
+        user4Certificates.add(new Certificate(4, "Execution of works on the arrangement of road surfaces of pedestrian zones from sidewalk slabs"));
+        user4Certificates.add(new Certificate(5, "Execution of works on the construction of insulating coatings"));
+        User expectedUser1 = new User(1, "Customer", "password", new Role(2, "customer"), "castomer@gmail.com", new ArrayList<>());
+        User expectedUser2 = new User(2, "SecondCustomer", "password", new Role(2, "customer"), "secondCastomer@gmail.com", new ArrayList<>());
+        User expectedUser3 = new User(3, "Contractor", "password", new Role(3, "contractor"), "contractor@gmail.com", user3Certificates);
+        User expectedUser4 = new User(4, "SecondContractor", "password", new Role(3, "contractor"), "SecondContractor@gmail.com", user4Certificates);
+
         List<User> expectedUsers = new ArrayList<>();
         expectedUsers.add(expectedUser1);
         expectedUsers.add(expectedUser2);
@@ -66,12 +58,14 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
         //when
         List<User> actualUsers = repository.findAll();
         //then
-        assertEquals(expectedUsers, actualUsers);
+        for (int i = 0; i < expectedUsers.size(); i++) {
+            assertUserEquals(expectedUsers.get(i), actualUsers.get(i));
+        }
     }
 
     @Test
     void delete_validData_shouldDeleteUser() throws RepositoryException {
-        //when
+        //given && when
         int userId = 1;
         //then
         assertTrue(repository.delete(userId));
@@ -79,7 +73,7 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     void delete_invalidData_shouldDeleteUser() throws RepositoryException {
-        //when
+        //given && when
         int userId = 5;
         //then
         assertFalse(repository.delete(userId));
@@ -88,29 +82,11 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void update_validData_shouldReturnUpdatedUser() throws RepositoryException {
         //given
-        User expectedUser = new User(1, "updatedName", "updatedPassword", new Role(3, "contractor"), "updatedEmail@gmail.com", null);
+        User expectedUser = new User(1, "updatedName", "updatedPassword", new Role(3, "contractor"), "updatedEmail@gmail.com", new ArrayList<>());
         //when
         User actualUser = repository.update(expectedUser);
         //then
-        assertEquals(expectedUser, actualUser);
-    }
-
-    @Test
-    void update_nonExistsUser_shouldReturnNull() throws RepositoryException {
-        //given
-        User expectedUser = new User(5, "updatedName", "updatedPassword", new Role(3, "contractor"), "updatedEmail@gmail.com", null);
-        //when
-        User actualUser = repository.update(expectedUser);
-        //then
-        assertNull(actualUser);
-    }
-
-    @Test
-    void update_null_shouldThrowRepositoryException() {
-        //given && when
-        User nullUser = null;
-        //then
-        assertThrows(RepositoryException.class, () -> repository.update(nullUser));
+        assertUserEquals(expectedUser, actualUser);
     }
 
     @Test
@@ -120,46 +96,13 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
         //when
         Optional<User> actualUser = repository.add(expectedUser);
         //then
-        assertEquals(expectedUser, actualUser.get());
+        assertUserEquals(expectedUser, actualUser.get());
     }
 
-    @Test
-    void add_userWithNotUniqueEmail_shouldThrowRepositoryException() {
-        //given && when
-        User userWithNotUniqueEmail = new User(5, "newUser", "password", new Role(2, "customer"), "castomer@gmail.com", null);
-        //then
-        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
-    }
-
-    @Test
-    void add_userWithNullName_shouldThrowRepositoryException() {
-        //given && when
-        User userWithNotUniqueEmail = new User(5, null, "password", new Role(2, "customer"), "nullName@gmail.com", null);
-        //then
-        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
-    }
-
-    @Test
-    void add_userWithNullPassword_shouldThrowRepositoryException() {
-        //given && when
-        User userWithNotUniqueEmail = new User(5, "newUser", null, new Role(2, "customer"), "castomer@gmail.com", null);
-        //then
-        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
-    }
-
-    @Test
-    void add_userWithNullRole_shouldThrowRepositoryException() {
-        //given && when
-        User userWithNotUniqueEmail = new User(5, "newUser", "password", null, "castomer@gmail.com", null);
-        //then
-        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
-    }
-
-    @Test
-    void add_userWithNullEmail_shouldThrowRepositoryException() {
-        //given && when
-        User userWithNotUniqueEmail = new User(5, "newUser", "password", new Role(2, "customer"), null, null);
-        //then
-        assertThrows(RepositoryException.class, () -> repository.add(userWithNotUniqueEmail));
+    private void assertUserEquals(User expectedUser, User actualUser) {
+        assertEquals(expectedUser.getId(), actualUser.getId());
+        assertEquals(expectedUser.getName(), actualUser.getName());
+        assertEquals(expectedUser.getRole(), actualUser.getRole());
+        assertEquals(expectedUser.getEmail(), actualUser.getEmail());
     }
 }

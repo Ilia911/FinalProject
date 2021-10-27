@@ -34,14 +34,6 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
         assertUserEquals(expectedUser, actualUser);
     }
 
-    private void assertUserEquals(User expectedUser, User actualUser) {
-        assertEquals(expectedUser.getId(), actualUser.getId());
-        assertEquals(expectedUser.getName(), actualUser.getName());
-        assertEquals(expectedUser.getPassword(), actualUser.getPassword());
-        assertEquals(expectedUser.getRole(), actualUser.getRole());
-        assertEquals(expectedUser.getEmail(), actualUser.getEmail());
-    }
-
     @Test
     public void findAll_validData_shouldReturnExistUsers() throws RepositoryException {
         //given
@@ -81,7 +73,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     void delete_invalidData_shouldDeleteUser() throws RepositoryException {
-        //when
+        //given && when
         int userId = 5;
         //then
         assertFalse(repository.delete(userId));
@@ -94,7 +86,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
         //when
         User actualUser = repository.update(expectedUser);
         //then
-        assertEquals(expectedUser, actualUser);
+        assertUserEquals(expectedUser, actualUser);
     }
 
     @Test
@@ -104,6 +96,13 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
         //when
         Optional<User> actualUser = repository.add(expectedUser);
         //then
-        assertEquals(expectedUser, actualUser.get());
+        assertUserEquals(expectedUser, actualUser.get());
+    }
+
+    private void assertUserEquals(User expectedUser, User actualUser) {
+        assertEquals(expectedUser.getId(), actualUser.getId());
+        assertEquals(expectedUser.getName(), actualUser.getName());
+        assertEquals(expectedUser.getRole(), actualUser.getRole());
+        assertEquals(expectedUser.getEmail(), actualUser.getEmail());
     }
 }

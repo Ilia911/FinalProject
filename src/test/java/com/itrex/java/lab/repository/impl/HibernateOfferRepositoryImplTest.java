@@ -117,21 +117,21 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void update_validData_shouldUpdateOffer() throws RepositoryException {
         //given
-        Offer expectedUpdatedOffer = new Offer(1, firstCustomer, firstContract, 24000);
+        Offer expectedUpdatedOffer = firstOffer;
         //when
         Offer actualUpdatedOffer = repository.update(expectedUpdatedOffer);
         //then
-        assertEquals(expectedUpdatedOffer, actualUpdatedOffer);
+        assertOfferEquals(expectedUpdatedOffer, actualUpdatedOffer);
     }
 
     @Test
     void add_validData_shouldCreateOffer() throws RepositoryException {
         //given
-        Offer expectedNewOffer = new Offer(3, secondCustomer, secondContract, 27000);
+        Offer expectedNewOffer = new Offer(3, secondContractor, secondContract, 27000);
         //when
         Optional<Offer> actualNewOffer = repository.add(expectedNewOffer);
         //then
-        assertEquals(expectedNewOffer, actualNewOffer.get());
+        assertOfferEquals(expectedNewOffer, actualNewOffer.get());
     }
 
     @Test
@@ -145,7 +145,7 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_offerWithNullPrice_shouldThrowRepositoryException() {
         //given && when
-        Offer offer = new Offer(3, secondCustomer, secondContract, null);
+        Offer offer = new Offer(3, secondContractor, secondContract, null);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(offer));
     }
@@ -153,7 +153,7 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_offerWithZeroPrice_shouldThrowRepositoryException() {
         //given && when
-        Offer offer = new Offer(3, secondCustomer, secondContract, 0);
+        Offer offer = new Offer(3, secondContractor, secondContract, 0);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(offer));
     }
