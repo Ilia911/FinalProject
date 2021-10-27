@@ -42,7 +42,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
     private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
 
-
     public JDBCUserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -66,7 +65,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         }
     }
 
-
     @Override
     public List<User> findAll() throws RepositoryException {
         try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
@@ -80,7 +78,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             throw new RepositoryException("Something was wrong with the repository", ex);
         }
-
     }
 
     @Override

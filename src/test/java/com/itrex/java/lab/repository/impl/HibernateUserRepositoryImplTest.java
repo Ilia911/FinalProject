@@ -25,18 +25,27 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    public void find_validData_shouldReturnExistUser() throws RepositoryException {
+    public void findByEmail_validData_shouldReturnExistUser() throws RepositoryException {
         //given
         User expectedUser = new User(1, "Customer", "password", new Role(2, "customer"), "castomer@gmail.com", new ArrayList<>());
         //when
-        Optional<User> actualUser = repository.findByEmail("castomer@gmail.com");
+        User actualUser = repository.findByEmail("castomer@gmail.com").get();
         //then
-        assertEquals(expectedUser, actualUser.get());
+        assertUserEquals(expectedUser, actualUser);
+    }
+
+    private void assertUserEquals(User expectedUser, User actualUser) {
+        assertEquals(expectedUser.getId(), actualUser.getId());
+        assertEquals(expectedUser.getName(), actualUser.getName());
+        assertEquals(expectedUser.getPassword(), actualUser.getPassword());
+        assertEquals(expectedUser.getRole(), actualUser.getRole());
+        assertEquals(expectedUser.getEmail(), actualUser.getEmail());
     }
 
     @Test
     public void findAll_validData_shouldReturnExistUsers() throws RepositoryException {
         //given
+        //todo remove unnecessary code
         List<Certificate> user3Certificates = new ArrayList<>();
         user3Certificates.add(new Certificate(1, "Filling window and door openings"));
         user3Certificates.add(new Certificate(6, "Execution of work on the arrangement of foundations, foundations of buildings and structures"));
@@ -48,6 +57,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
         User expectedUser2 = new User(2, "SecondCustomer", "password", new Role(2, "customer"), "secondCastomer@gmail.com", new ArrayList<>());
         User expectedUser3 = new User(3, "Contractor", "password", new Role(3, "contractor"), "contractor@gmail.com", user3Certificates);
         User expectedUser4 = new User(4, "SecondContractor", "password", new Role(3, "contractor"), "SecondContractor@gmail.com", user4Certificates);
+
         List<User> expectedUsers = new ArrayList<>();
         expectedUsers.add(expectedUser1);
         expectedUsers.add(expectedUser2);
@@ -56,7 +66,9 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
         //when
         List<User> actualUsers = repository.findAll();
         //then
-        assertEquals(expectedUsers, actualUsers);
+        for (int i = 0; i < expectedUsers.size(); i++) {
+            assertUserEquals(expectedUsers.get(i), actualUsers.get(i));
+        }
     }
 
     @Test

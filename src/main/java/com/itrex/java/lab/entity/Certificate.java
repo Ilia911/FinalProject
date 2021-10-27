@@ -1,16 +1,20 @@
 package com.itrex.java.lab.entity;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "certificate", schema = "builder")
+@Table(name = "certificate", schema = "builder")
 public class Certificate {
 
     @Id
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "name")
     private String name;
 
     public Certificate() {

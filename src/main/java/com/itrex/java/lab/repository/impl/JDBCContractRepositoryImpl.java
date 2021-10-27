@@ -1,6 +1,7 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.ContractRepository;
 import java.sql.Connection;
@@ -129,7 +130,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
             conn.setAutoCommit(false);
             try {
                 PreparedStatement preparedSt = conn.prepareStatement(ADD_CONTRACT_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedSt.setInt(1, contract.getOwnerId());
+                preparedSt.setInt(1, contract.getOwner().getId());
                 preparedSt.setString(2, contract.getDescription());
                 preparedSt.setDate(3, Date.valueOf(contract.getStartDate().toString()));
                 preparedSt.setDate(4, Date.valueOf(contract.getEndDate().toString()));
@@ -170,12 +171,18 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
     private Contract createContract(ResultSet resultSet) throws SQLException {
         Contract contract = new Contract();
         contract.setId(resultSet.getInt(ID_COLUMN));
-        contract.setOwnerId(resultSet.getInt(OWNER_ID_COLUMN));
+        contract.setOwner(createEmptyUserWithId(resultSet.getInt(OWNER_ID_COLUMN)));
         contract.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
         contract.setStartDate(LocalDate.parse(resultSet.getDate(START_DATE_COLUMN).toString()));
         contract.setEndDate(LocalDate.parse(resultSet.getDate(END_DATE_COLUMN).toString()));
         contract.setStartPrice(resultSet.getInt(START_PRICE_COLUMN));
         return contract;
+    }
+
+    private User createEmptyUserWithId(int id) {
+        User user = new User();
+        user.setId(id);
+        return user;
     }
 
     private void removeAllOffersForContract(Connection conn, int contractId) throws SQLException {

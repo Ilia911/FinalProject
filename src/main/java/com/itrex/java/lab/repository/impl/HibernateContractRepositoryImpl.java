@@ -13,8 +13,6 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
 
     private final Session session;
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
-    private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY
-            = "DELETE FROM builder.offer where contract_id = ?";
 
     public HibernateContractRepositoryImpl(Session session) {
         this.session = session;
@@ -48,7 +46,6 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.createSQLQuery(REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY).setParameter(1, id).executeUpdate();
             Contract contract = session.find(Contract.class, id);
             if (contract != null) {
                 session.delete(contract);
@@ -114,12 +111,9 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
             throw new RepositoryException("Contract field 'startDate' must not be null or before today " +
                     "(" + LocalDate.now() + ")!");
         }
-        if (contract.getEndDate() == null || contract.getEndDate().isBefore(LocalDate.now())) {
+        if (contract.getEndDate() == null || contract.getEndDate().isBefore(contract.getStartDate())) {
             throw new RepositoryException("Contract field 'endDate' must not be null or before today " +
                     "(" + LocalDate.now() + ")!");
-        }
-        if (contract.getEndDate().isBefore(contract.getStartDate())) {
-            throw new RepositoryException("Contract start date should be before end date!");
         }
     }
 }

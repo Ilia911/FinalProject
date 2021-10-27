@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,32 +15,41 @@ import javax.persistence.Table;
 public class Offer {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
-    @Column (name = "offer_owner_id")
-    private int offerOwnerId;
-    @Column (name = "contract_id")
-    private int contractId;
-    @Column (name = "price")
+
+    @ManyToOne
+    @JoinColumn(name = "offer_owner_id")
+    private User offerOwner;
+
+    @ManyToOne
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
+
+    @Column(name = "price")
     private Integer price;
 
     public Offer() {
     }
 
-    public Offer(int id, int offerOwnerId, int contractId, Integer price) {
+    public Offer(int id, User offerOwner, Contract contract, Integer price) {
         this.id = id;
-        this.offerOwnerId = offerOwnerId;
-        this.contractId = contractId;
+        this.offerOwner = offerOwner;
+        this.contract = contract;
         this.price = price;
+    }
+
+    public void removeContract() {
+        this.contract = null;
     }
 
     @Override
     public String toString() {
         return "Offer{" +
                 "id=" + id +
-                ", offerOwnerId=" + offerOwnerId +
-                ", contractId=" + contractId +
+                ", offerOwner=" + offerOwner +
+                ", contract=" + contract +
                 ", price=" + price +
                 '}';
     }
@@ -48,12 +59,12 @@ public class Offer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offer = (Offer) o;
-        return id == offer.id && offerOwnerId == offer.offerOwnerId && contractId == offer.contractId && Objects.equals(price, offer.price);
+        return id == offer.id && Objects.equals(offerOwner, offer.offerOwner) && Objects.equals(contract, offer.contract) && Objects.equals(price, offer.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, offerOwnerId, contractId, price);
+        return Objects.hash(id, offerOwner, contract, price);
     }
 
     public int getId() {
@@ -64,20 +75,20 @@ public class Offer {
         this.id = id;
     }
 
-    public int getOfferOwnerId() {
-        return offerOwnerId;
+    public User getOfferOwner() {
+        return offerOwner;
     }
 
-    public void setOfferOwnerId(int offerOwnerId) {
-        this.offerOwnerId = offerOwnerId;
+    public void setOfferOwner(User offerOwner) {
+        this.offerOwner = offerOwner;
     }
 
-    public int getContractId() {
-        return contractId;
+    public Contract getContract() {
+        return contract;
     }
 
-    public void setContractId(int contractId) {
-        this.contractId = contractId;
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
 
     public Integer getPrice() {

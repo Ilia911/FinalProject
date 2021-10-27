@@ -11,15 +11,8 @@ import org.hibernate.Transaction;
 public class HibernateUserRepositoryImpl implements UserRepository {
 
     private final Session session;
-    private static final String REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY
-            = "DELETE FROM builder.offer where contract_id = any (select contract_id from BUILDER.OFFER " +
-            "join (select id from BUILDER.CONTRACT where OWNER_ID = ?) as ubc on CONTRACT_ID = ubc.id)";
-    private static final String REMOVE_USER_OFFERS_QUERY = "delete from Offer o where o.offerOwnerId = :ownerId";
-    private static final String REMOVE_USER_CONTRACTS_QUERY = "delete from Contract c where c.ownerId = :ownerId";
-    private static final String REMOVE_USER_QUERY = "delete from User u where id = :id";
     private static final String FIND_USERS_QUERY = "select u from User u ";
     private static final String FIND_USER_BY_EMAIL_QUERY = "select u from User u where email = ?0";
-
 
     public HibernateUserRepositoryImpl(Session session) {
         this.session = session;
@@ -52,16 +45,15 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) throws RepositoryException {
 
-        int effectedRows;
+        boolean result = false;
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.createQuery(REMOVE_USER_OFFERS_QUERY).setParameter("ownerId", id).executeUpdate();
-            session.createSQLQuery(REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY).setParameter(1, id).executeUpdate();
-            session.createQuery(REMOVE_USER_CONTRACTS_QUERY)
-                    .setParameter("ownerId", id).executeUpdate();
-            effectedRows = session.createQuery(REMOVE_USER_QUERY)
-                    .setParameter("id", id).executeUpdate();
+            User user = session.find(User.class, id);
+            if (user != null) {
+                session.delete(user);
+                result = session.find(User.class, id) == null;
+            }
             transaction.commit();
         } catch (Exception ex) {
             if (transaction != null) {
@@ -69,7 +61,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
             }
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
-        return effectedRows  > 0;
+        return result;
     }
 
     @Override

@@ -31,11 +31,12 @@ CREATE TABLE IF NOT EXISTS `builder`.`contract` (
   `start_price` INT NOT NULL,
   CONSTRAINT `fk_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `builder`.`user` (`id`));
 
-CREATE TABLE IF NOT EXISTS `builder`.`offer` (
-    `id` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `builder`.`offer`
+(
+    `id`             INT NOT NULL AUTO_INCREMENT,
     `offer_owner_id` INT NOT NULL,
-    `contract_id` INT NOT NULL,
-    `price` INT NOT NULL,
+    `contract_id`    INT,
+    `price`          INT NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_offer_owner_id` FOREIGN KEY (`offer_owner_id`) REFERENCES `builder`.`user` (`id`),
     CONSTRAINT `fk_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `builder`.`contract` (`id`)

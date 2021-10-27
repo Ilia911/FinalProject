@@ -12,7 +12,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
 
     private final Session session;
     private static final String FIND_OFFERS_BY_CONTRACT_ID_QUERY
-            = "select o from Offer o where o.contractId = :contractId";
+            = "select o from Offer o where o.contract.id = :contractId";
 
     public HibernateOfferRepositoryImpl(Session session) {
         this.session = session;
@@ -33,7 +33,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     public List<Offer> findAll(int contractId) throws RepositoryException {
         List<Offer> offers;
         try {
-            offers = session.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY)
+            offers = session.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY, Offer.class)
                     .setParameter("contractId", contractId).getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);

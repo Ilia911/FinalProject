@@ -1,6 +1,8 @@
 package com.itrex.java.lab.repository.impl;
 
+import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.Offer;
+import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.OfferRepository;
 import java.sql.Connection;
@@ -110,8 +112,8 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
             try {
                 conn.setAutoCommit(false);
                 PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setInt(1, offer.getOfferOwnerId());
-                preparedStatement.setInt(2, offer.getContractId());
+                preparedStatement.setInt(1, offer.getOfferOwner().getId());
+                preparedStatement.setInt(2, offer.getContract().getId());
                 preparedStatement.setInt(3, offer.getPrice());
                 int effectiveRaws = preparedStatement.executeUpdate();
 
@@ -149,10 +151,22 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
     private Offer createOffer(ResultSet resultSet) throws SQLException {
         Offer offer = new Offer();
         offer.setId(resultSet.getInt(ID_COLUMN));
-        offer.setOfferOwnerId(resultSet.getInt(OFFER_OWNER_ID_COLUMN));
-        offer.setContractId(resultSet.getInt(CONTRACT_ID_COLUMN));
+        offer.setOfferOwner(createEmptyUserWithId(resultSet.getInt(OFFER_OWNER_ID_COLUMN)));
+        offer.setContract(createEmptyContractWithId(resultSet.getInt(CONTRACT_ID_COLUMN)));
         offer.setPrice(resultSet.getInt(PRICE_COLUMN));
         return offer;
+    }
+
+    private User createEmptyUserWithId(int id) {
+        User user = new User();
+        user.setId(id);
+        return user;
+    }
+
+    private Contract createEmptyContractWithId(int id) {
+        Contract contract = new Contract();
+        contract.setId(id);
+        return contract;
     }
 
     private void validateOfferData(Offer offer) throws RepositoryException {
