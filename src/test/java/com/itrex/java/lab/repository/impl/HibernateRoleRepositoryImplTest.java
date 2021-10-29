@@ -4,7 +4,6 @@ import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.RoleRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -24,12 +23,13 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void find_validData_shouldReturnRole() throws RepositoryException {
         //given
-        int roleId = 2;
-        Role expectedRole = new Role(2, "customer");
+        int expectedRoleId = 2;
+        String expectedRoleName = "customer";
         // when
-        Role actualRole = repository.find(roleId).get();
+        Role actualRole = repository.find(expectedRoleId).get();
         // then
-        assertRoleEquals(expectedRole, actualRole);
+        assertEquals(expectedRoleId, actualRole.getId());
+        assertEquals(expectedRoleName, actualRole.getName());
     }
 
     @Test
@@ -44,22 +44,10 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void findAll_validData_shouldReturnRoleList() throws RepositoryException {
         //given
-        List<Role> expectedRoles = new ArrayList<>();
-        Role expectedRole1 = new Role(2, "customer");
-        Role expectedRole2 = new Role(3, "contractor");
-        expectedRoles.add(expectedRole1);
-        expectedRoles.add(expectedRole2);
+        int expectedListSize = 2;
         //when
-        final List<Role> actualRoles = repository.findAll();
+        List<Role> actualRoles = repository.findAll();
         //then
-        assertEquals(expectedRoles.size(), actualRoles.size());
-        for (int i = 1; i < expectedRoles.size(); i++) {
-            assertRoleEquals(expectedRoles.get(i), actualRoles.get(i));
-        }
-    }
-
-    private void assertRoleEquals(Role expectedRole, Role actualRole) {
-        assertEquals(expectedRole.getId(), actualRole.getId());
-        assertEquals(expectedRole.getName(), actualRole.getName());
+        assertEquals(expectedListSize, actualRoles.size());
     }
 }

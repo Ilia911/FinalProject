@@ -1,13 +1,11 @@
 package com.itrex.java.lab.repository.impl;
 
 import com.itrex.java.lab.entity.Contract;
-import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.ContractRepository;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
     private final ContractRepository repository;
-    private final Role customer = new Role(1, "customer");
-    private final User firstContractOwner = new User(1, "Customer", "password", customer, "castomer@gmail.com", new ArrayList<>());
-    private final User secondContractOwner = new User(2, "SecondCustomer", "password", customer, "secondCastomer@gmail.com", new ArrayList<>());
 
     public HibernateContractRepositoryImplTest() {
         super();
@@ -31,31 +26,31 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void find_validData_shouldReturnContract() throws RepositoryException {
         //given
-        Contract expectedContract = new Contract(1, firstContractOwner, "first contract",
-                LocalDate.parse("2022-01-01"), LocalDate.parse("2022-12-31"), 28000);
+        int expectedContractId = 1;
+        int expectedOwnerId = 1;
+        String expectedDescription = "first contract";
+        LocalDate expectedStartDate = LocalDate.parse("2022-01-01");
+        LocalDate expectedEndDate = LocalDate.parse("2022-12-31");
+        Integer expectedPrice = 28000;
         //when
-        int contractId = 1;
-        Contract actualContract = repository.find(contractId).get();
+        Contract actualContract = repository.find(expectedContractId).get();
         //then
-        assertContractEquals(expectedContract, actualContract);
+        assertEquals(expectedContractId, actualContract.getId());
+        assertEquals(expectedOwnerId, actualContract.getOwner().getId());
+        assertEquals(expectedDescription, actualContract.getDescription());
+        assertEquals(expectedStartDate, actualContract.getStartDate());
+        assertEquals(expectedEndDate, actualContract.getEndDate());
+        assertEquals(expectedPrice, actualContract.getStartPrice());
     }
 
     @Test
     void findAll_validData_shouldReturnContractList() throws RepositoryException {
         //given
-        List<Contract> expectedList = new ArrayList<>();
-        Contract expectedContract1 = new Contract(1, firstContractOwner, "first contract",
-                LocalDate.parse("2022-01-01"), LocalDate.parse("2022-12-31"), 28000);
-        Contract expectedContract2 = new Contract(2, secondContractOwner, "second contract",
-                LocalDate.parse("2022-03-01"), LocalDate.parse("2022-09-30"), 30000);
-        expectedList.add(expectedContract1);
-        expectedList.add(expectedContract2);
+        int expectedContractListSize = 2;
         //when
         List<Contract> actualList = repository.findAll();
         //then
-        for (int i = 0; i < expectedList.size(); i++) {
-            assertContractEquals(expectedList.get(i), actualList.get(i));
-        }
+        assertEquals(expectedContractListSize, actualList.size());
     }
 
     @Test
@@ -77,8 +72,11 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void update_validData_shouldUpdateExistedContract() throws RepositoryException {
         //given
-        Contract expectedContract = new Contract(1, firstContractOwner, "edited contract",
-                LocalDate.now(), LocalDate.now(), 50000);
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract expectedContract = new Contract(1, contractOwner, "edited contract",
+                LocalDate.now().plusDays(2L), LocalDate.now().plusDays(5L), 50000);
         //when
         Contract actualContract = repository.update(expectedContract);
         //then
@@ -88,7 +86,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_validData_shouldReturnNewCreatedContract() throws RepositoryException {
         //given
-        Contract expectedContract = new Contract(3, firstContractOwner, "new contract",
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract expectedContract = new Contract(3, contractOwner, "new contract",
                 LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
         //when
         Contract actualContract = repository.add(expectedContract).get();
@@ -107,7 +108,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_contractWithNullDescription_shouldThrowsRepositoryException() {
         //given && when
-        Contract invalidContract = new Contract(3, firstContractOwner, null,
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract invalidContract = new Contract(3, contractOwner, null,
                 LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
@@ -116,7 +120,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_contractWithNullStartDate_shouldThrowsRepositoryException() {
         //given && when
-        Contract invalidContract = new Contract(3, firstContractOwner, "null",
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract invalidContract = new Contract(3, contractOwner, "null",
                 null, LocalDate.now().plusDays(1L), 50000);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
@@ -125,7 +132,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_contractWithNullEndDate_shouldThrowsRepositoryException() {
         //given && when
-        Contract invalidContract = new Contract(3, firstContractOwner, "null",
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract invalidContract = new Contract(3, contractOwner, "null",
                 LocalDate.now().plusDays(2L), null, 50000);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
@@ -134,7 +144,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_contractWithNullStartPrice_shouldThrowsRepositoryException() {
         //given && when
-        Contract invalidContract = new Contract(3, firstContractOwner, "null",
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract invalidContract = new Contract(3, contractOwner, "null",
                 LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), null);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
@@ -143,7 +156,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_contractWithEndDateBeforeStartDate_shouldThrowsRepositoryException() {
         //given && when
-        Contract invalidContract = new Contract(3, firstContractOwner, "null",
+        User contractOwner = new User();
+        contractOwner.setId(1);
+
+        Contract invalidContract = new Contract(3, contractOwner, "null",
                 LocalDate.now().plusDays(10L), LocalDate.now().plusDays(5L), 50000);
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
@@ -151,7 +167,10 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
     private void assertContractEquals(Contract expectedContract, Contract actualContract) {
         assertEquals(expectedContract.getId(), actualContract.getId());
+        assertEquals(expectedContract.getOwner().getId(), actualContract.getOwner().getId());
         assertEquals(expectedContract.getDescription(), actualContract.getDescription());
+        assertEquals(expectedContract.getStartDate(), actualContract.getStartDate());
+        assertEquals(expectedContract.getEndDate(), actualContract.getEndDate());
         assertEquals(expectedContract.getStartPrice(), actualContract.getStartPrice());
     }
 }

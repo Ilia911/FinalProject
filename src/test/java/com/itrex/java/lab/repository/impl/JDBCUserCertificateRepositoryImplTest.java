@@ -4,7 +4,6 @@ import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.UserCertificateRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -26,13 +25,14 @@ class JDBCUserCertificateRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void assignCertificate_validDate_shouldReturnNewCertificate() throws RepositoryException {
         //given
-        Certificate expected = new Certificate(2, "Installation of external networks and structures");
-        //when
         int userId = 3;
         int certificateId = 2;
+        String certificateName = "Installation of external networks and structures";
+        //when
         Optional<Certificate> actual = repository.assignCertificate(userId, certificateId);
         //then
-        assertEquals(expected, actual.get());
+        assertEquals(certificateId, actual.get().getId());
+        assertEquals(certificateName, actual.get().getName());
     }
 
     @Test
@@ -56,15 +56,10 @@ class JDBCUserCertificateRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void findAllForUser_validData_shouldReturnCertificateList() throws RepositoryException {
         //given
-        List<Certificate> expectedList = new ArrayList<>();
-        Certificate expected1 = new Certificate(4, "Execution of works on the arrangement of road surfaces " +
-                "of pedestrian zones from sidewalk slabs");
-        Certificate expected2 = new Certificate(5, "Execution of works on the construction of insulating coatings");
-        expectedList.add(expected1);
-        expectedList.add(expected2);
+        int expectedListSize = 2;
         //when
         List<Certificate> actualList = repository.findAllForUser(4);
         //then
-        assertEquals(expectedList, actualList);
+        assertEquals(expectedListSize, actualList.size());
     }
 }

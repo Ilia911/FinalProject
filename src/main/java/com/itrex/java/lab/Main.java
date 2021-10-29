@@ -3,6 +3,7 @@ package com.itrex.java.lab;
 import com.itrex.java.lab.repository.impl.HibernateUserRepositoryImpl;
 import com.itrex.java.lab.service.FlywayService;
 import com.itrex.java.lab.util.HibernateUtil;
+import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
