@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JDBCUserRepositoryImpl implements UserRepository {
-
-    private final DataSource dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -41,6 +42,8 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String ROLE_ID_IN_ROLE_TABLE_COLUMN = "id";
     private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
     private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
+    @Autowired
+    private final DataSource dataSource;
 
     public JDBCUserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;

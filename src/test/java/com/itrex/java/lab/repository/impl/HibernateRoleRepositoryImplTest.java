@@ -17,7 +17,7 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     private final RoleRepository repository;
 
     HibernateRoleRepositoryImplTest() {
-        this.repository = new HibernateRoleRepositoryImpl(getSessionFactory().openSession());
+        this.repository = getApplicationContext().getBean(HibernateRoleRepositoryImpl.class);
     }
 
     @Test

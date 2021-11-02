@@ -6,9 +6,13 @@ import com.itrex.java.lab.repository.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class HibernateRoleRepositoryImpl implements RoleRepository {
 
+    @Autowired
     private final Session session;
     private static final String FIND_ROLES_QUERY = "select r from Role r";
 

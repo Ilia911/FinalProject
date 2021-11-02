@@ -20,7 +20,7 @@ class JDBCContractRepositoryImplTest extends BaseRepositoryTest {
 
     JDBCContractRepositoryImplTest() {
         super();
-        repository = new JDBCContractRepositoryImpl(getConnectionPool());
+        repository = getApplicationContext().getBean(JDBCContractRepositoryImpl.class);
     }
 
     @Test

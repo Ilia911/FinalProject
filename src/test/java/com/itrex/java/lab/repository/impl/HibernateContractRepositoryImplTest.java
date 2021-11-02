@@ -20,7 +20,7 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
     public HibernateContractRepositoryImplTest() {
         super();
-        this.repository = new HibernateContractRepositoryImpl(getSessionFactory().openSession());
+        this.repository = getApplicationContext().getBean(HibernateContractRepositoryImpl.class);
     }
 
     @Test

@@ -10,9 +10,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class HibernateUserCertificateRepositoryImpl implements UserCertificateRepository {
 
+    @Autowired
     private final Session session;
 
     public HibernateUserCertificateRepositoryImpl(Session session) {

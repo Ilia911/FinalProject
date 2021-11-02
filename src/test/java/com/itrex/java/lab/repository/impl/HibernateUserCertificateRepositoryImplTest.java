@@ -4,7 +4,6 @@ import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.UserCertificateRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ class HibernateUserCertificateRepositoryImplTest extends BaseRepositoryTest {
 
     public HibernateUserCertificateRepositoryImplTest() {
         super();
-        this.repository = new HibernateUserCertificateRepositoryImpl(getSessionFactory().openSession());
+        this.repository = getApplicationContext().getBean(HibernateUserCertificateRepositoryImpl.class);
     }
 
     @Test

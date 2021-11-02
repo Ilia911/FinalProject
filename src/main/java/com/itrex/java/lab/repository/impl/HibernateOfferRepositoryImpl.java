@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class HibernateOfferRepositoryImpl implements OfferRepository {
 
+    @Autowired
     private final Session session;
     private static final String FIND_OFFERS_BY_CONTRACT_ID_QUERY
             = "select o from Offer o where o.contract.id = :contractId";

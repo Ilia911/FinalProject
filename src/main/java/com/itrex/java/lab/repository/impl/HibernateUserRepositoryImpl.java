@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class HibernateUserRepositoryImpl implements UserRepository {
 
+    @Autowired
     private final Session session;
     private static final String FIND_USERS_QUERY = "select u from User u ";
     private static final String FIND_USER_BY_EMAIL_QUERY = "select u from User u where email = ?0";

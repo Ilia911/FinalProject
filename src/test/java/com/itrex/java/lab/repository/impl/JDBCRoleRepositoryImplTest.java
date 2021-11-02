@@ -16,7 +16,7 @@ class JDBCRoleRepositoryImplTest extends BaseRepositoryTest {
     private final RoleRepository repository;
 
     JDBCRoleRepositoryImplTest() {
-        this.repository = new JDBCRoleRepositoryImpl(getConnectionPool());
+        this.repository = getApplicationContext().getBean(JDBCRoleRepositoryImpl.class);
     }
 
     @Test

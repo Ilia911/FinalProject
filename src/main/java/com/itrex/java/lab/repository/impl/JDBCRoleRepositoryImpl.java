@@ -12,14 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JDBCRoleRepositoryImpl implements RoleRepository {
 
-    private final DataSource dataSource;
     private static final String FIND_ROLE_QUERY = "select * from builder.role where id = ?";
     private static final String FIND_ROLES_QUERY = "select * from builder.role";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
+    @Autowired
+    private final DataSource dataSource;
 
     public JDBCRoleRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;

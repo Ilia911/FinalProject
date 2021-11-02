@@ -22,7 +22,7 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
 
     public JDBCOfferRepositoryImplTest() {
         super();
-        repository = new JDBCOfferRepositoryImpl(getConnectionPool());
+        repository = getApplicationContext().getBean(JDBCOfferRepositoryImpl.class);
     }
 
     @Test

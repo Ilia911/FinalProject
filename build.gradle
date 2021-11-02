@@ -25,6 +25,10 @@ dependencies {
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.12'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.12'
+
 }
 
 test {

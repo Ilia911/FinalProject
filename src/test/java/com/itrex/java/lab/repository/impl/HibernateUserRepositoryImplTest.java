@@ -19,7 +19,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
 
     public HibernateUserRepositoryImplTest() {
         super();
-        repository = new HibernateUserRepositoryImpl(getSessionFactory().openSession());
+        repository = getApplicationContext().getBean(HibernateUserRepositoryImpl.class);
     }
 
     @Test

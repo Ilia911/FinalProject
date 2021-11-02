@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class HibernateContractRepositoryImpl implements ContractRepository {
 
+    @Autowired
     private final Session session;
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
 

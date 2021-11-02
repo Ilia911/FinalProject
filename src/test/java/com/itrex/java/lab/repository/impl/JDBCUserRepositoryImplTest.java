@@ -19,7 +19,7 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
 
     public JDBCUserRepositoryImplTest() {
         super();
-        repository = new JDBCUserRepositoryImpl(getConnectionPool());
+        repository = getApplicationContext().getBean(JDBCUserRepositoryImpl.class);
     }
 
     @Test

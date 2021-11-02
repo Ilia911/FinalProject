@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JDBCUserCertificateRepositoryImpl implements UserCertificateRepository {
-
-    private final DataSource dataSource;
 
     private static final String USER_ID_COLUMN = "id";
     private static final String CERTIFICATE_ID_COLUMN = "id";
@@ -30,6 +31,8 @@ public class JDBCUserCertificateRepositoryImpl implements UserCertificateReposit
     private static final String FIND_ALL_CERTIFICATES_FOR_USER_QUERY
             = "select c.id, c.name from builder.user_certificate ulc " +
             "join builder.certificate c on ulc.certificate_id = c.id where user_id = ?";
+    @Autowired
+    private final DataSource dataSource;
 
     public JDBCUserCertificateRepositoryImpl(DataSource dataSource) {
         super();

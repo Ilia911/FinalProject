@@ -19,7 +19,7 @@ class JDBCUserCertificateRepositoryImplTest extends BaseRepositoryTest {
 
     public JDBCUserCertificateRepositoryImplTest() {
         super();
-        this.repository = new JDBCUserCertificateRepositoryImpl(getConnectionPool());
+        this.repository = getApplicationContext().getBean(JDBCUserCertificateRepositoryImpl.class);
     }
 
     @Test

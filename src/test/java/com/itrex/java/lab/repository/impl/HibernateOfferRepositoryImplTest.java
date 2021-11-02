@@ -21,7 +21,7 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
 
     public HibernateOfferRepositoryImplTest() {
         super();
-        this.repository = new HibernateOfferRepositoryImpl(getSessionFactory().openSession());
+        this.repository = getApplicationContext().getBean(HibernateOfferRepositoryImpl.class);
     }
 
     @Test
