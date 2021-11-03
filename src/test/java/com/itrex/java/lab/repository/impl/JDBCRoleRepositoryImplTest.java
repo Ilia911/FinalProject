@@ -4,20 +4,26 @@ import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.TestRepositoryConfiguration;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestRepositoryConfiguration.class)
 class JDBCRoleRepositoryImplTest extends BaseRepositoryTest {
 
-    private final RoleRepository repository;
-
-    JDBCRoleRepositoryImplTest() {
-        this.repository = getApplicationContext().getBean(JDBCRoleRepositoryImpl.class);
-    }
+    @Qualifier("JDBCRoleRepositoryImpl")
+    @Autowired
+    private RoleRepository repository;
 
     @Test
     void find_validData_shouldReturnRole() throws RepositoryException {

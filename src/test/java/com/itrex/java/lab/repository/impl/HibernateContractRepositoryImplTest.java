@@ -5,23 +5,28 @@ import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.TestRepositoryConfiguration;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringJUnitConfig
+@ContextConfiguration(classes = TestRepositoryConfiguration.class)
 class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
-    private final ContractRepository repository;
+    @Qualifier("hibernateContractRepositoryImpl")
+    @Autowired
+    private ContractRepository repository;
 
-    public HibernateContractRepositoryImplTest() {
-        super();
-        this.repository = getApplicationContext().getBean(HibernateContractRepositoryImpl.class);
-    }
 
     @Test
     void find_validData_shouldReturnContract() throws RepositoryException {

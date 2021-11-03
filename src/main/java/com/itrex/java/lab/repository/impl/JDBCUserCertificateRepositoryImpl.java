@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.sql.DataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,9 +32,9 @@ public class JDBCUserCertificateRepositoryImpl implements UserCertificateReposit
             = "select c.id, c.name from builder.user_certificate ulc " +
             "join builder.certificate c on ulc.certificate_id = c.id where user_id = ?";
     @Autowired
-    private final DataSource dataSource;
+    private final JdbcConnectionPool dataSource;
 
-    public JDBCUserCertificateRepositoryImpl(DataSource dataSource) {
+    public JDBCUserCertificateRepositoryImpl(JdbcConnectionPool dataSource) {
         super();
         this.dataSource = dataSource;
     }

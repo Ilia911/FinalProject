@@ -6,22 +6,30 @@ import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
 import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.TestRepositoryConfiguration;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringJUnitConfig
+@ContextConfiguration(classes = TestRepositoryConfiguration.class)
 class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
 
-    private final OfferRepository repository;
+    @Qualifier("hibernateOfferRepositoryImpl")
+    @Autowired
+    private OfferRepository repository;
 
     public HibernateOfferRepositoryImplTest() {
         super();
-        this.repository = getApplicationContext().getBean(HibernateOfferRepositoryImpl.class);
     }
 
     @Test

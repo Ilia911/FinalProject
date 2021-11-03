@@ -49,7 +49,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) throws RepositoryException {
 
-        boolean result = false;
+        boolean result;
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
@@ -57,6 +57,8 @@ public class HibernateUserRepositoryImpl implements UserRepository {
             if (user != null) {
                 session.delete(user);
                 result = session.find(User.class, id) == null;
+            } else {
+                result = false;
             }
             transaction.commit();
         } catch (Exception ex) {
