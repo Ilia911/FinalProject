@@ -4,23 +4,27 @@ import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
+import com.itrex.java.lab.repository.TestRepositoryConfiguration;
 import com.itrex.java.lab.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringJUnitConfig
+@ContextConfiguration(classes = TestRepositoryConfiguration.class)
 class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
 
-    private final UserRepository repository;
-
-    public HibernateUserRepositoryImplTest() {
-        super();
-        repository = getApplicationContext().getBean(HibernateUserRepositoryImpl.class);
-    }
+    @Qualifier("hibernateUserRepositoryImpl")
+    @Autowired
+    private UserRepository repository;
 
     @Test
     public void findByEmail_validData_shouldReturnExistUser() throws RepositoryException {
@@ -55,7 +59,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void delete_invalidData_shouldDeleteUser() throws RepositoryException {
+    void delete_invalidData_shouldReturnFalse() throws RepositoryException {
         //given && when
         int userId = 5;
         //then

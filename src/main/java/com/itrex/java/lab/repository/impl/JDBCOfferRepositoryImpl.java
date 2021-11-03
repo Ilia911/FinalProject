@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.sql.DataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 public class JDBCOfferRepositoryImpl implements OfferRepository {
 
     @Autowired
-    private final DataSource dataSource;
+    private final JdbcConnectionPool dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String OFFER_OWNER_ID_COLUMN = "offer_owner_id";
@@ -37,7 +37,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
     private static final String ADD_OFFER_QUERY
             = "INSERT INTO builder.offer(offer_owner_id, contract_id, price) VALUES (?, ?, ?)";
 
-    public JDBCOfferRepositoryImpl(DataSource dataSource) {
+    public JDBCOfferRepositoryImpl(JdbcConnectionPool dataSource) {
         this.dataSource = dataSource;
     }
 

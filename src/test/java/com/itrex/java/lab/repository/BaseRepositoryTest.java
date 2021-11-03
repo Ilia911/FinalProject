@@ -1,35 +1,20 @@
 package com.itrex.java.lab.repository;
 
-import com.itrex.java.lab.config.ApplicationContextConfiguration;
-import com.itrex.java.lab.service.FlywayService;
+import org.flywaydb.core.Flyway;
+import org.hibernate.Session;
 import org.junit.jupiter.api.AfterEach;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class BaseRepositoryTest {
 
-    private final FlywayService flywayService;
-    private final ApplicationContext applicationContext;
-
-    public BaseRepositoryTest() {
-        applicationContext = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
-
-        flywayService = applicationContext.getBean(FlywayService.class);
-    }
-
-    // todo delete after review
-//    @BeforeEach
-//    public void initDB() {
-//        flywayService.migrate();
-//    }
+    @Autowired
+    private Flyway flyway;
+    @Autowired
+    private Session session;
 
     @AfterEach
-    public void cleanDB() {
-        flywayService.clean();
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public void clean() {
+        flyway.clean();
+        session.clear();
     }
 }
