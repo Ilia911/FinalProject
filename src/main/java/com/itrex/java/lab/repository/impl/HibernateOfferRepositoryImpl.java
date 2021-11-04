@@ -6,26 +6,30 @@ import com.itrex.java.lab.repository.OfferRepository;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateOfferRepositoryImpl implements OfferRepository {
 
-    @Autowired
-    private final Session session;
     private static final String FIND_OFFERS_BY_CONTRACT_ID_QUERY
             = "select o from Offer o where o.contract.id = :contractId";
+    @Autowired
+    private SessionFactory sessionFactory;
+    private Session session;
 
-    public HibernateOfferRepositoryImpl(Session session) {
-        this.session = session;
+    public HibernateOfferRepositoryImpl() {
     }
 
     @Override
     public Optional<Offer> find(int id) throws RepositoryException {
         Offer offer;
         try {
+            session = sessionFactory.getCurrentSession();
             offer = session.find(Offer.class, id);
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);
@@ -37,6 +41,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     public List<Offer> findAll(int contractId) throws RepositoryException {
         List<Offer> offers;
         try {
+            session = sessionFactory.getCurrentSession();
             offers = session.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY, Offer.class)
                     .setParameter("contractId", contractId).getResultList();
         } catch (Exception ex) {
@@ -48,9 +53,8 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     @Override
     public boolean delete(int id) throws RepositoryException {
         boolean result;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             Offer offer = session.find(Offer.class, id);
 
             if (offer != null) {
@@ -59,11 +63,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
             } else {
                 result = false;
             }
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Can not remove 'Offer'", ex);
         }
         return result;
@@ -74,16 +74,11 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
         validateOfferData(offer);
 
         Offer updatedOffer;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.update("Offer", offer);
             updatedOffer = session.find(Offer.class, offer.getId());
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Can not update offer!", ex);
         }
         return updatedOffer;
@@ -94,16 +89,11 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
         validateOfferData(offer);
 
         Offer createdOffer;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             int newOfferId = (Integer) session.save("Offer", offer);
             createdOffer = session.find(Offer.class, newOfferId);
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Can not add offer", ex);
         }
         return Optional.ofNullable(createdOffer);
@@ -115,6 +105,12 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
         }
         if (offer.getPrice() == null || offer.getPrice() <= 0) {
             throw new RepositoryException("Offer field 'price' must not be null or empty!");
+        }
+    }
+
+    private void fetchSession() {
+        if (session == null) {
+            session = sessionFactory.openSession();
         }
     }
 }

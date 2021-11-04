@@ -3,22 +3,17 @@ package com.itrex.java.lab.repository.impl;
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.TestRepositoryConfiguration;
 import com.itrex.java.lab.repository.UserCertificateRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringJUnitConfig
-@ContextConfiguration(classes = TestRepositoryConfiguration.class)
 class HibernateUserCertificateRepositoryImplTest extends BaseRepositoryTest {
 
     @Qualifier("hibernateUserCertificateRepositoryImpl")

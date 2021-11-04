@@ -7,25 +7,28 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 public class HibernateContractRepositoryImpl implements ContractRepository {
 
-    @Autowired
-    private final Session session;
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    public HibernateContractRepositoryImpl(Session session) {
-        this.session = session;
+    public HibernateContractRepositoryImpl() {
     }
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {
         Contract contract;
         try {
+            Session session = sessionFactory.getCurrentSession();
             contract = session.find(Contract.class, id);
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
@@ -37,6 +40,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     public List<Contract> findAll() throws RepositoryException {
         List<Contract> contracts;
         try {
+            Session session = sessionFactory.getCurrentSession();
             contracts = session.createQuery(FIND_CONTRACTS_QUERY, Contract.class).list();
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
@@ -47,9 +51,8 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     @Override
     public boolean delete(int id) throws RepositoryException {
         boolean result;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            Session session = sessionFactory.getCurrentSession();
             Contract contract = session.find(Contract.class, id);
             if (contract != null) {
                 session.delete(contract);
@@ -57,11 +60,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
             } else {
                 result = false;
             }
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
         return result;
@@ -72,16 +71,11 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
         validateContractData(contract);
 
         Contract updatedContract;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            Session session = sessionFactory.getCurrentSession();
             session.update("Contract", contract);
             updatedContract = session.find(Contract.class, contract.getId());
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
         return updatedContract;
@@ -92,16 +86,11 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
         validateContractData(contract);
 
         Contract createdContract;
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
+            Session session = sessionFactory.getCurrentSession();
             int newContractId = (Integer) session.save("Contract", contract);
             createdContract = session.find(Contract.class, newContractId);
-            transaction.commit();
         } catch (Exception ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
         return Optional.ofNullable(createdContract);
