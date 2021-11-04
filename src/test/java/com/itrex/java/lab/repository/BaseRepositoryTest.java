@@ -1,7 +1,6 @@
 package com.itrex.java.lab.repository;
 
 import org.flywaydb.core.Flyway;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
