@@ -41,10 +41,10 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = ("certificate_id"))})
     private List<Certificate> certificates;
 
-    @OneToMany(mappedBy = "offerOwner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "offerOwner", cascade = CascadeType.REMOVE)
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Contract> contracts;
 
     public User() {

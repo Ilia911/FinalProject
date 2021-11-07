@@ -1,35 +1,41 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.BaseRepositoryTest;
+import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.service.RoleService;
+import com.itrex.java.lab.service.TestServiceConfiguration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestServiceConfiguration.class)
+class RoleServiceImplTest {
 
-    @Qualifier("hibernateRoleRepositoryImpl")
+    @Autowired
+    private RoleService service;
     @Autowired
     private RoleRepository repository;
 
-    HibernateRoleRepositoryImplTest() {
-        super();
-    }
-
     @Test
-    void find_validData_shouldReturnRole() throws RepositoryException {
+    void find_validData_shouldReturnRole() throws RepositoryException, ServiceException {
         //given
         int expectedRoleId = 2;
         String expectedRoleName = "customer";
         // when
-        Role actualRole = repository.find(expectedRoleId).get();
+        Mockito.when(repository.find(expectedRoleId)).thenReturn(Optional.of(new Role(2, expectedRoleName)));
+        Role actualRole = service.find(expectedRoleId).get();
         // then
         assertEquals(expectedRoleId, actualRole.getId());
         assertEquals(expectedRoleName, actualRole.getName());
@@ -37,9 +43,12 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
 
     @Test
     void find_invalidData_shouldReturnEmptyOptional() throws RepositoryException {
-        //given && when
+        //given
         int roleId = -2;
+        //when
+        Mockito.when(repository.find(roleId)).thenReturn(Optional.empty());
         Optional<Role> actualOptionalRole = repository.find(roleId);
+
         // then
         assertTrue(actualOptionalRole.isEmpty());
     }
@@ -49,6 +58,7 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
         //given
         int expectedListSize = 2;
         //when
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Role(), new Role()));
         List<Role> actualRoles = repository.findAll();
         //then
         assertEquals(expectedListSize, actualRoles.size());

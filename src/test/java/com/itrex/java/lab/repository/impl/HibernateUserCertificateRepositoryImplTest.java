@@ -34,7 +34,7 @@ class HibernateUserCertificateRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void removeCertificate_validData_shouldDeleteUser() throws RepositoryException {
+    void removeCertificate_validData_shouldDeleteUserCertificate() throws RepositoryException {
         //given && when
         int userId = 3;
         int certificateId = 1;
@@ -43,8 +43,8 @@ class HibernateUserCertificateRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void removeCertificate_invalidData_shouldDeleteUser() throws RepositoryException {
-        //when
+    void removeCertificate_invalidData_shouldReturnFalse() throws RepositoryException {
+        //given && when
         int userId = 3;
         int certificateId = 2;
         //then

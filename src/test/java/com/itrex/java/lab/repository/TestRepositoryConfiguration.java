@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class TestRepositoryConfiguration {
 
-
     @Value("${database.driver}")
     String driverClassName;
     @Value("${hibernate.hbm2ddl.auto.property}")
@@ -90,8 +89,6 @@ public class TestRepositoryConfiguration {
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
-        // todo it not work. check it
-//        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
         hibernateProperties.setProperty("show_sql", "true");
         hibernateProperties.setProperty("format_sql", "true");
