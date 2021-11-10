@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestServiceConfiguration.class)
+
 class UserServiceImplTest {
 
     @Autowired
@@ -72,8 +73,8 @@ class UserServiceImplTest {
         //given
         int userId = 1;
         String name = "updatedName";
-        Role role = new Role(3, "contractor");
-        User user = new User(userId, name, "pass", role, "email", null);
+        Role role = Role.builder().id(3).name("contractor").build();
+        User user = User.builder().id(userId).name(name).password("pass").role(role).email("email").build();
         //when
         Mockito.when(this.userRepository.update(user)).thenReturn(user);
         UserDTO actualUpdatedUser = service.update(user);
@@ -87,7 +88,7 @@ class UserServiceImplTest {
     @Test
     void register_validData_shouldReturnNewUserDTO() throws RepositoryException, ServiceException {
         //given
-        User user = new User(5, "newUser", "pass", new Role(2, "customer"), "email", null);
+        User user = User.builder().id(5).name("newUser").password("pass").role(Role.builder().id(2).name("customer").build()).email("email").build();
         //when
         Mockito.when(this.userRepository.add(user)).thenReturn(Optional.of(user));
         UserDTO actualUserDTO = service.register(user).get();
@@ -102,7 +103,6 @@ class UserServiceImplTest {
         //given
         int userId = 3;
         int certificateId = 2;
-        String certificateName = "Installation of external networks and structures";
         //when
         Mockito.when(certificateRepository.findById(certificateId))
                 .thenReturn(Optional.of(Certificate.builder().id(certificateId).build()));

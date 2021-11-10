@@ -40,16 +40,14 @@ class OfferServiceImplTest {
     void find_validData_shouldReturnOffer() throws RepositoryException, ServiceException {
         //given
         int expectedOfferId = 1;
-
         int expectedOwnerId = 3;
         int expectedContractId = 1;
         int expectedPrice = 27500;
-        User owner = new User();
-        owner.setId(3);
-        Contract contract = new Contract();
-        contract.setId(expectedContractId);
+        User owner = User.builder().id(expectedOwnerId).build();
+        Contract contract = Contract.builder().id(expectedContractId).build();
         //when
-        Mockito.when(repository.find(expectedOfferId)).thenReturn(Optional.of(new Offer(expectedOfferId, owner, contract, expectedPrice)));
+        Mockito.when(repository.find(expectedOfferId)).thenReturn(Optional.of(Offer.builder()
+                .id(expectedOfferId).offerOwner(owner).contract(contract).price(expectedPrice).build()));
         OfferDTO actualOffer = service.find(expectedOfferId).get();
         //then
         assertAll(
@@ -58,7 +56,6 @@ class OfferServiceImplTest {
                 () -> assertEquals(expectedContractId, actualOffer.getContract().getId()),
                 () -> assertEquals(expectedPrice, actualOffer.getPrice())
         );
-
     }
 
     @Test
@@ -101,20 +98,17 @@ class OfferServiceImplTest {
         int expectedContractId = 1;
         int expectedPrice = 25000;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
 
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        UserDTO expectedOfferOwnerDTO = new UserDTO();
-        expectedOfferOwnerDTO.setId(expectedOfferOwnerId);
-
-        ContractDTO expectedContractDTO = new ContractDTO();
-        expectedContractDTO.setId(expectedContractId);
-
-        Offer expectedUpdatedOffer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
-        OfferDTO expectedUpdatedOfferDTO = new OfferDTO(expectedOfferId, expectedOfferOwnerDTO, expectedContractDTO, expectedPrice);
+        Offer expectedUpdatedOffer = Offer.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
+                .build();
+        OfferDTO expectedUpdatedOfferDTO = OfferDTO.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+                .build();
         //when
         Mockito.when(repository.update(expectedUpdatedOffer)).thenReturn(expectedUpdatedOffer);
         OfferDTO actualUpdatedOffer = service.update(expectedUpdatedOffer);
@@ -130,20 +124,17 @@ class OfferServiceImplTest {
         int expectedContractId = 2;
         int expectedPrice = 27000;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
 
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        UserDTO expectedOfferOwnerDTO = new UserDTO();
-        expectedOfferOwnerDTO.setId(expectedOfferOwnerId);
-
-        ContractDTO expectedContractDTO = new ContractDTO();
-        expectedContractDTO.setId(expectedContractId);
-
-        Offer expectedNewOffer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
-        OfferDTO expectedNewOfferDTO = new OfferDTO(expectedOfferId, expectedOfferOwnerDTO, expectedContractDTO, expectedPrice);
+        Offer expectedNewOffer = Offer.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
+                .build();
+        OfferDTO expectedNewOfferDTO = OfferDTO.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+                .build();
         //when
         Mockito.when(repository.add(expectedNewOffer)).thenReturn(Optional.of(expectedNewOffer));
         Optional<OfferDTO> actualNewOffer = service.add(expectedNewOffer);
@@ -169,13 +160,12 @@ class OfferServiceImplTest {
         int expectedContractId = 2;
         Integer expectedPrice = null;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
 
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer offer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        Offer offer = Offer.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
+                .build();
         //when
         Mockito.when(repository.add(offer)).thenThrow(new RepositoryException());
         //then
@@ -190,13 +180,12 @@ class OfferServiceImplTest {
         int expectedContractId = 2;
         Integer expectedPrice = 0;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
 
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer offer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        Offer offer = Offer.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
+                .build();
         //when
         Mockito.when(repository.add(offer)).thenThrow(new RepositoryException());
         //then

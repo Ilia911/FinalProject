@@ -34,7 +34,8 @@ class RoleServiceImplTest {
         int expectedRoleId = 2;
         String expectedRoleName = "customer";
         // when
-        Mockito.when(repository.find(expectedRoleId)).thenReturn(Optional.of(new Role(2, expectedRoleName)));
+        Mockito.when(repository.find(expectedRoleId))
+                .thenReturn(Optional.of(Role.builder().id(2).name(expectedRoleName).build()));
         Role actualRole = service.find(expectedRoleId).get();
         // then
         assertEquals(expectedRoleId, actualRole.getId());

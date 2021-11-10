@@ -31,7 +31,8 @@ class CertificateServiceImplTest {
         //given
         int expectedListSize = 2;
         //when
-        Mockito.when(repository.findAllForUser(4)).thenReturn(Arrays.asList(new Certificate(), new Certificate()));
+        Mockito.when(repository.findAllForUser(4))
+                .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build()));
         List<Certificate> actualList = service.findAllForUser(4);
         //then
         assertEquals(expectedListSize, actualList.size());

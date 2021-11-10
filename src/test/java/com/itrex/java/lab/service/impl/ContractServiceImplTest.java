@@ -45,9 +45,9 @@ class ContractServiceImplTest {
         LocalDate expectedEndDate = LocalDate.parse("2022-12-31");
         Integer expectedPrice = 28000;
         //when
-
-        Mockito.when(repository.find(expectedContractId)).thenReturn(Optional.of(new Contract(expectedContractId,
-                owner, expectedDescription, expectedStartDate, expectedEndDate, expectedPrice)));
+        Mockito.when(repository.find(expectedContractId)).thenReturn(Optional.of(Contract.builder()
+                .id(expectedContractId).owner(owner).description(expectedDescription).startDate(expectedStartDate)
+                .endDate(expectedEndDate).startPrice(expectedPrice).build()));
         ContractDTO actualContract = service.find(expectedContractId).get();
         //then
         assertEquals(expectedContractId, actualContract.getId());
@@ -82,16 +82,16 @@ class ContractServiceImplTest {
     @Test
     void update_validData_shouldUpdateExistedContract() throws RepositoryException, ServiceException {
         //given
-        User contractOwner = new User();
-        contractOwner.setId(1);
+        User contractOwner = User.builder().id(1).build();
+        UserDTO contractOwnerDTO = UserDTO.builder().id(1).build();
 
-        UserDTO contractOwnerDTO = new UserDTO();
-        contractOwnerDTO.setId(1);
+        Contract expectedContract = Contract.builder()
+                .id(1).owner(contractOwner).description("edited contract").startDate(LocalDate.now().plusDays(2L))
+                .endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder()
+                .id(1).owner(contractOwnerDTO).description("edited contract").startDate(LocalDate.now().plusDays(2L))
+                .endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
 
-        Contract expectedContract = new Contract(1, contractOwner, "edited contract",
-                LocalDate.now().plusDays(2L), LocalDate.now().plusDays(5L), 50000);
-        ContractDTO expectedContractDTO = new ContractDTO(1, contractOwnerDTO, "edited contract",
-                LocalDate.now().plusDays(2L), LocalDate.now().plusDays(5L), 50000);
         //when
         Mockito.when(repository.update(expectedContract)).thenReturn(expectedContract);
         ContractDTO actualContractDTO = service.update(expectedContract);
@@ -102,16 +102,15 @@ class ContractServiceImplTest {
     @Test
     void add_validData_shouldReturnNewCreatedContract() throws RepositoryException, ServiceException {
         //given
-        User contractOwner = new User();
-        contractOwner.setId(1);
+        User contractOwner = User.builder().id(1).build();
+        UserDTO contractOwnerDTO = UserDTO.builder().id(1).build();
 
-        UserDTO contractOwnerDTO = new UserDTO();
-        contractOwnerDTO.setId(1);
-
-        Contract expectedContract = new Contract(3, contractOwner, "new contract",
-                LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
-        ContractDTO expectedContractDTO = new ContractDTO(3, contractOwnerDTO, "new contract",
-                LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
+        Contract expectedContract = Contract.builder()
+                .id(3).owner(contractOwner).description("new contract").startDate(LocalDate.now().plusDays(1L))
+                .endDate(LocalDate.now().plusDays(2L)).startPrice(50000).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder()
+                .id(3).owner(contractOwnerDTO).description("new contract").startDate(LocalDate.now().plusDays(1L))
+                .endDate(LocalDate.now().plusDays(2L)).startPrice(50000).build();
         //when
         Mockito.when(repository.add(expectedContract)).thenReturn(Optional.of(expectedContract));
         ContractDTO actualContract = service.add(expectedContract).get();
