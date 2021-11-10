@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,10 +34,12 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
         //when
         Offer actualOffer = repository.find(expectedOfferId).get();
         //then
-        assertEquals(expectedOfferId, actualOffer.getId());
-        assertEquals(expectedOwnerId, actualOffer.getOfferOwner().getId());
-        assertEquals(expectedContractId, actualOffer.getContract().getId());
-        assertEquals(expectedPrice, actualOffer.getPrice());
+        assertAll(
+                () -> assertEquals(expectedOfferId, actualOffer.getId()),
+                () -> assertEquals(expectedOwnerId, actualOffer.getOfferOwner().getId()),
+                () -> assertEquals(expectedContractId, actualOffer.getContract().getId()),
+                () -> assertEquals(expectedPrice, actualOffer.getPrice())
+        );
     }
 
     @Test
@@ -82,13 +85,9 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
         int expectedContractId = 1;
         int expectedPrice = 25000;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
-
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer expectedUpdatedOffer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        Offer expectedUpdatedOffer = Offer.builder().id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice).build();
         //when
         Offer actualUpdatedOffer = repository.update(expectedUpdatedOffer);
         //then
@@ -103,13 +102,9 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
         int expectedContractId = 2;
         int expectedPrice = 27000;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
-
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer expectedNewOffer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        Offer expectedNewOffer = Offer.builder().id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice).build();
         //when
         Optional<Offer> actualNewOffer = repository.add(expectedNewOffer);
         //then
@@ -132,13 +127,9 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
         int expectedContractId = 2;
         Integer expectedPrice = null;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
-
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer offer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        Offer offer = Offer.builder().id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(offer));
     }
@@ -151,21 +142,19 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
         int expectedContractId = 2;
         Integer expectedPrice = 0;
 
-        User expectedOfferOwner = new User();
-        expectedOfferOwner.setId(expectedOfferOwnerId);
-
-        Contract expectedContract = new Contract();
-        expectedContract.setId(expectedContractId);
-
-        Offer offer = new Offer(expectedOfferId, expectedOfferOwner, expectedContract, expectedPrice);
+        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
+        Contract expectedContract = Contract.builder().id(expectedContractId).build();
+        Offer offer = Offer.builder().id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(offer));
     }
 
     private void assertOfferEquals(Offer expected, Offer actualOffer) {
-        assertEquals(expected.getId(), actualOffer.getId());
-        assertEquals(expected.getOfferOwner().getId(), actualOffer.getOfferOwner().getId());
-        assertEquals(expected.getContract().getId(), actualOffer.getContract().getId());
-        assertEquals(expected.getPrice(), actualOffer.getPrice());
+        assertAll(
+                () -> assertEquals(expected.getId(), actualOffer.getId()),
+                () -> assertEquals(expected.getOfferOwner().getId(), actualOffer.getOfferOwner().getId()),
+                () -> assertEquals(expected.getContract().getId(), actualOffer.getContract().getId()),
+                () -> assertEquals(expected.getPrice(), actualOffer.getPrice())
+        );
     }
 }

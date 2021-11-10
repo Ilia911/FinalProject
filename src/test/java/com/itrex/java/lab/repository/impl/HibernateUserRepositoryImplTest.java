@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +57,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void delete_invalidData_shouldReturnFalse() throws RepositoryException {
+    void delete_invalidData_shouldDeleteUser() throws RepositoryException {
         //given && when
         int userId = 5;
         //then
@@ -66,7 +67,9 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void update_validData_shouldReturnUpdatedUser() throws RepositoryException {
         //given
-        User expectedUser = new User(1, "updatedName", "updatedPassword", new Role(3, "contractor"), "updatedEmail@gmail.com", new ArrayList<>());
+        User expectedUser = User.builder().id(1).name("updatedName").password("updatedPassword")
+                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .certificates(new ArrayList<>()).build();
         //when
         User actualUser = repository.update(expectedUser);
         //then
@@ -76,7 +79,9 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_validDate_shouldReturnNewUser() throws RepositoryException {
         //given
-        User expectedUser = new User(5, "newUser", "password", new Role(2, "customer"), "newUserEmail.@gmail.com", null);
+        User expectedUser = User.builder().id(5).name("updatedName").password("updatedPassword")
+                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .certificates(new ArrayList<>()).build();
         //when
         Optional<User> actualUser = repository.add(expectedUser);
         //then
@@ -84,8 +89,10 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     private void assertUserEquals(User expectedUser, User actualUser) {
-        assertEquals(expectedUser.getId(), actualUser.getId());
-        assertEquals(expectedUser.getName(), actualUser.getName());
-        assertEquals(expectedUser.getEmail(), actualUser.getEmail());
+        assertAll(
+                () -> assertEquals(expectedUser.getId(), actualUser.getId()),
+                () -> assertEquals(expectedUser.getName(), actualUser.getName()),
+                () -> assertEquals(expectedUser.getEmail(), actualUser.getEmail())
+        );
     }
 }

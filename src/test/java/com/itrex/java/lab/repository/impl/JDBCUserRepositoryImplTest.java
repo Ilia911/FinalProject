@@ -69,7 +69,9 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void update_validData_shouldReturnUpdatedUser() throws RepositoryException {
         //given
-        User expectedUser = new User(1, "updatedName", "updatedPassword", new Role(3, "contractor"), "updatedEmail@gmail.com", new ArrayList<>());
+        User expectedUser = User.builder().id(1).name("updatedName").password("updatedPassword")
+                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .certificates(new ArrayList<>()).build();
         //when
         User actualUser = repository.update(expectedUser);
         //then
@@ -79,7 +81,9 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void add_validDate_shouldReturnNewUser() throws RepositoryException {
         //given
-        User expectedUser = new User(5, "newUser", "password", new Role(2, "customer"), "newUserEmail.@gmail.com", null);
+        User expectedUser = User.builder().id(5).name("updatedName").password("updatedPassword")
+                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .certificates(new ArrayList<>()).build();
         //when
         Optional<User> actualUser = repository.add(expectedUser);
         //then
