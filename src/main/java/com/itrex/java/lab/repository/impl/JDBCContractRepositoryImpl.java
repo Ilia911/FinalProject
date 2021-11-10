@@ -14,15 +14,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@AllArgsConstructor
 public class JDBCContractRepositoryImpl implements ContractRepository {
-
-    @Autowired
-    private final JdbcConnectionPool dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String OWNER_ID_COLUMN = "owner_id";
@@ -40,10 +38,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
     private static final String ADD_CONTRACT_QUERY
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
     private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?";
-
-    public JDBCContractRepositoryImpl(JdbcConnectionPool dataSource) {
-        this.dataSource = dataSource;
-    }
+    private final JdbcConnectionPool dataSource;
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {

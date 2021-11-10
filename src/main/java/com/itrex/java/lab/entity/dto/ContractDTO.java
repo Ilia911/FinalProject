@@ -1,11 +1,15 @@
 package com.itrex.java.lab.entity.dto;
 
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ContractDTO {
 
     private int id;
@@ -15,12 +19,4 @@ public class ContractDTO {
     private LocalDate endDate;
     private Integer startPrice;
 
-    public ContractDTO(int id, UserDTO owner, String description, LocalDate startDate, LocalDate endDate, Integer startPrice) {
-        this.id = id;
-        this.owner = owner;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startPrice = startPrice;
-    }
 }

@@ -5,11 +5,9 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserCertificateRepository {
-
-    Optional<Certificate> assignCertificate(int userId, int certificateId) throws RepositoryException;
-
-    boolean removeCertificate(int userId, int certificateId) throws RepositoryException;
+public interface CertificateRepository {
 
     List<Certificate> findAllForUser(int userId) throws RepositoryException;
+
+    Optional<Certificate> findById(int id) throws RepositoryException;
 }

@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class CertificateDTO {
 
     private int id;
     private String name;
-    private RoleDTO role;
-
 }

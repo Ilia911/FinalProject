@@ -1,14 +1,19 @@
 package com.itrex.java.lab.service.impl;
 
+import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
+import com.itrex.java.lab.entity.dto.CertificateDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
+import com.itrex.java.lab.repository.CertificateRepository;
 import com.itrex.java.lab.repository.UserRepository;
 import com.itrex.java.lab.service.TestServiceConfiguration;
 import com.itrex.java.lab.service.UserService;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,14 +34,16 @@ class UserServiceImplTest {
     @Autowired
     private UserService service;
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
+    @Autowired
+    private CertificateRepository certificateRepository;
 
     @Test
     void findAll_validData_shouldReturnUserList() throws ServiceException, RepositoryException {
         //given
         int expectedSize = 4;
         // when
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new User(), new User(), new User(), new User()));
+        Mockito.when(userRepository.findAll()).thenReturn(Arrays.asList(new User(), new User(), new User(), new User()));
         int actualSize = service.findAll().size();
         //then
         assertEquals(expectedSize, actualSize);
@@ -46,7 +53,7 @@ class UserServiceImplTest {
     void delete_validData_shouldReturnTrue() throws RepositoryException, ServiceException {
         //given && when
         int validId = 1;
-        Mockito.when(repository.delete(validId)).thenReturn(true);
+        Mockito.when(userRepository.delete(validId)).thenReturn(true);
         //then
         assertTrue(service.delete(validId));
     }
@@ -55,7 +62,7 @@ class UserServiceImplTest {
     void delete_invalidData_shouldReturnFalse() throws RepositoryException, ServiceException {
         //given && when
         int invalidId = 5;
-        Mockito.when(repository.delete(invalidId)).thenReturn(false);
+        Mockito.when(userRepository.delete(invalidId)).thenReturn(false);
         //then
         assertFalse(service.delete(invalidId));
     }
@@ -68,7 +75,7 @@ class UserServiceImplTest {
         Role role = new Role(3, "contractor");
         User user = new User(userId, name, "pass", role, "email", null);
         //when
-        Mockito.when(repository.update(user)).thenReturn(user);
+        Mockito.when(this.userRepository.update(user)).thenReturn(user);
         UserDTO actualUpdatedUser = service.update(user);
         // then
         assertAll(() -> assertEquals(userId, actualUpdatedUser.getId()),
@@ -82,7 +89,7 @@ class UserServiceImplTest {
         //given
         User user = new User(5, "newUser", "pass", new Role(2, "customer"), "email", null);
         //when
-        Mockito.when(repository.add(user)).thenReturn(Optional.of(user));
+        Mockito.when(this.userRepository.add(user)).thenReturn(Optional.of(user));
         UserDTO actualUserDTO = service.register(user).get();
         //then
         assertAll(() -> assertEquals(user.getId(), actualUserDTO.getId()),
@@ -91,22 +98,41 @@ class UserServiceImplTest {
     }
 
     @Test
-    void login_validData_shouldReturnUserDTO() throws RepositoryException, ServiceException {
+    void assignCertificate_validDate_shouldReturnCertificateList() throws RepositoryException, ServiceException {
         //given
-        String email = "castomer@gmail.com";
-        String password = "password";
-        int userId = 1;
-        String name = "customer";
-        int roleId = 2;
-        User user = new User(userId, name, password, new Role(roleId, "customer"), email, null);
+        int userId = 3;
+        int certificateId = 2;
+        String certificateName = "Installation of external networks and structures";
         //when
-        Mockito.when(repository.findByEmail(email)).thenReturn(Optional.of(user));
-        UserDTO actualUserDTO = service.login(email, password).get();
+        Mockito.when(certificateRepository.findById(certificateId))
+                .thenReturn(Optional.of(Certificate.builder().id(certificateId).build()));
+        Mockito.when(userRepository.findById(userId))
+                .thenReturn(Optional.of(User.builder().id(userId).certificates(new ArrayList<>()).build()));
+
+        Mockito.when(certificateRepository.findAllForUser(userId))
+                .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build(),
+                        Certificate.builder().build()));
+
+        List<CertificateDTO> actualCertificates = service.assignCertificate(userId, certificateId);
         //then
-        assertAll(
-                () -> assertEquals(userId, actualUserDTO.getId()),
-                () -> assertEquals(name, actualUserDTO.getName()),
-                () -> assertEquals(roleId, actualUserDTO.getRole().getId())
-        );
+        assertEquals(3, actualCertificates.size());
+
+    }
+
+    @Test
+    void removeCertificate_validData_shouldDeleteUserCertificate() throws RepositoryException, ServiceException {
+        //given
+        int userId = 3;
+        int certificateId = 1;
+        User user = User.builder().id(userId).certificates(new ArrayList<Certificate>()).build();
+        //when
+        Mockito.when(userRepository.findById(userId))
+                .thenReturn(Optional.of(User.builder()
+                        .id(userId)
+                        .certificates(Arrays.asList(Certificate.builder().id(certificateId).build())).build()));
+        Mockito.when(userRepository.update(user))
+                .thenReturn(user);
+        //then
+        assertEquals(0, service.removeCertificate(userId, certificateId).size());
     }
 }

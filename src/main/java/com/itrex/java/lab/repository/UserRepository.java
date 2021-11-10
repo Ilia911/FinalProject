@@ -9,6 +9,8 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email) throws RepositoryException;
 
+    Optional<User> findById(int id) throws RepositoryException;
+
     List<User> findAll() throws RepositoryException;
 
     boolean delete(int id) throws RepositoryException;
@@ -16,4 +18,5 @@ public interface UserRepository {
     User update(User user) throws RepositoryException;
 
     Optional<User> add(User user) throws RepositoryException;
+
 }

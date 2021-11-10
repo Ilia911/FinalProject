@@ -10,23 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository repository;
     private final ModelMapper modelMapper;
 
-    public ContractServiceImpl(@Qualifier("hibernateContractRepositoryImpl") ContractRepository repository,
-                               ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<ContractDTO> find(int id) throws ServiceException {
         ContractDTO contractDTO = null;
         try {
@@ -41,6 +38,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ContractDTO> findAll() throws ServiceException {
         List<ContractDTO> contractDTOs = new ArrayList<>();
         try {
@@ -55,6 +53,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) throws ServiceException {
         boolean result;
         try {
@@ -66,6 +65,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public ContractDTO update(Contract contract) throws ServiceException {
         ContractDTO updatedContractDTO = null;
         try {
@@ -80,6 +80,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public Optional<ContractDTO> add(Contract contract) throws ServiceException {
         ContractDTO newContractDTO = null;
         try {

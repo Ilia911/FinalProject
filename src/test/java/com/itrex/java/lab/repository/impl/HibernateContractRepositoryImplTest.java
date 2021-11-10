@@ -10,12 +10,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Transactional
 class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
 
     @Qualifier("hibernateContractRepositoryImpl")
@@ -75,8 +77,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract expectedContract = new Contract(1, contractOwner, "edited contract",
-                LocalDate.now().plusDays(2L), LocalDate.now().plusDays(5L), 50000);
+        Contract expectedContract = Contract.builder().id(1).owner(contractOwner).description("edited contract")
+                .startDate(LocalDate.now().plusDays(2L)).endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
         //when
         Contract actualContract = repository.update(expectedContract);
         //then
@@ -89,8 +91,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract expectedContract = new Contract(3, contractOwner, "new contract",
-                LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
+        Contract expectedContract = Contract.builder().id(3).owner(contractOwner).description("new contract")
+                .startDate(LocalDate.now().plusDays(1L)).endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
         //when
         Contract actualContract = repository.add(expectedContract).get();
         //then
@@ -111,8 +113,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract invalidContract = new Contract(3, contractOwner, null,
-                LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), 50000);
+        Contract invalidContract = Contract.builder().id(3).owner(contractOwner)
+                .startDate(LocalDate.now().plusDays(1L)).endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
     }
@@ -123,8 +125,9 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract invalidContract = new Contract(3, contractOwner, "null",
-                null, LocalDate.now().plusDays(1L), 50000);
+        Contract invalidContract = Contract.builder().id(3).owner(contractOwner).description("null")
+                .endDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
+
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
     }
@@ -135,8 +138,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract invalidContract = new Contract(3, contractOwner, "null",
-                LocalDate.now().plusDays(2L), null, 50000);
+        Contract invalidContract = Contract.builder().id(3).owner(contractOwner).description("null")
+                .startDate(LocalDate.now().plusDays(5L)).startPrice(50000).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
     }
@@ -147,8 +150,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract invalidContract = new Contract(3, contractOwner, "null",
-                LocalDate.now().plusDays(1L), LocalDate.now().plusDays(5L), null);
+        Contract invalidContract = Contract.builder().id(3).owner(contractOwner).description("null")
+                .startDate(LocalDate.now().plusDays(1L)).endDate(LocalDate.now().plusDays(5L)).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
     }
@@ -159,8 +162,8 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
         User contractOwner = new User();
         contractOwner.setId(1);
 
-        Contract invalidContract = new Contract(3, contractOwner, "null",
-                LocalDate.now().plusDays(10L), LocalDate.now().plusDays(5L), 50000);
+        Contract invalidContract = Contract.builder().id(3).owner(contractOwner).description("null")
+                .startDate(LocalDate.now().plusDays(10L)).endDate(LocalDate.now().plusDays(5L)).build();
         //then
         assertThrows(RepositoryException.class, () -> repository.add(invalidContract));
     }

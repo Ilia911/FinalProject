@@ -10,22 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository repository;
     private final ModelMapper modelMapper;
 
-    public OfferServiceImpl(@Qualifier("JDBCOfferRepositoryImpl") OfferRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<OfferDTO> find(int id) throws ServiceException {
         OfferDTO offerDTO = null;
         try {
@@ -40,6 +38,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OfferDTO> findAll(int contractId) throws ServiceException {
         List<OfferDTO> offersDTO = new ArrayList<>();
         try {
@@ -54,6 +53,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) throws ServiceException {
         boolean result;
         try {
@@ -65,6 +65,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    @Transactional
     public OfferDTO update(Offer offer) throws ServiceException {
         OfferDTO updatedOffer;
         try {
@@ -76,6 +77,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    @Transactional
     public Optional<OfferDTO> add(Offer offer) throws ServiceException {
 
         OfferDTO newOfferDTO = null;

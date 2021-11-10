@@ -2,7 +2,6 @@ package com.itrex.java.lab.entity;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,9 +12,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "contract", schema = "builder")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Contract {
 
     @Id
@@ -48,9 +55,6 @@ public class Contract {
         }
     }
 
-    public Contract() {
-    }
-
     public Contract(int id, User owner, String description, LocalDate startDate, LocalDate endDate, Integer startPrice) {
         this.id = id;
         this.owner = owner;
@@ -58,87 +62,5 @@ public class Contract {
         this.startDate = startDate;
         this.endDate = endDate;
         this.startPrice = startPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "Contract{" +
-                "id=" + id +
-                ", owner=" + owner +
-                ", description='" + description + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", startPrice=" + startPrice +
-                ", offers=" + offers +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Contract contract = (Contract) o;
-        return id == contract.id && Objects.equals(owner, contract.owner) && Objects.equals(description, contract.description) && Objects.equals(startDate, contract.startDate) && Objects.equals(endDate, contract.endDate) && Objects.equals(startPrice, contract.startPrice) && Objects.equals(offers, contract.offers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, owner, description, startDate, endDate, startPrice, offers);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public Integer getStartPrice() {
-        return startPrice;
-    }
-
-    public void setStartPrice(Integer startPrice) {
-        this.startPrice = startPrice;
-    }
-
-    public List<Offer> getOffers() {
-        return offers;
-    }
-
-    public void setOffers(List<Offer> offers) {
-        this.offers = offers;
     }
 }

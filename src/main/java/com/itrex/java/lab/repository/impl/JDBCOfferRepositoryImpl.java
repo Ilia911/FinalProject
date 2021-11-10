@@ -13,15 +13,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@AllArgsConstructor
 public class JDBCOfferRepositoryImpl implements OfferRepository {
-
-    @Autowired
-    private final JdbcConnectionPool dataSource;
 
     private static final String ID_COLUMN = "id";
     private static final String OFFER_OWNER_ID_COLUMN = "offer_owner_id";
@@ -36,10 +34,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
             = "UPDATE builder.offer SET price = ? WHERE id = ?";
     private static final String ADD_OFFER_QUERY
             = "INSERT INTO builder.offer(offer_owner_id, contract_id, price) VALUES (?, ?, ?)";
-
-    public JDBCOfferRepositoryImpl(JdbcConnectionPool dataSource) {
-        this.dataSource = dataSource;
-    }
+    private final JdbcConnectionPool dataSource;
 
     @Override
     public Optional<Offer> find(int id) throws RepositoryException {

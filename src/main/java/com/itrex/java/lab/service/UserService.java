@@ -1,6 +1,7 @@
 package com.itrex.java.lab.service;
 
 import com.itrex.java.lab.entity.User;
+import com.itrex.java.lab.entity.dto.CertificateDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import java.util.List;
@@ -16,5 +17,7 @@ public interface UserService {
 
     Optional<UserDTO> register(User user) throws ServiceException;
 
-    Optional<UserDTO> login(String email, String password) throws ServiceException;
+    List<CertificateDTO> assignCertificate(int userId, int certificateId) throws ServiceException;
+
+    List<CertificateDTO> removeCertificate(int userId, int certificateId) throws ServiceException;
 }

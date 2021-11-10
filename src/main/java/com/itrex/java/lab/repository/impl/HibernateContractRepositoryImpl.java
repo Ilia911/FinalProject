@@ -6,23 +6,20 @@ import com.itrex.java.lab.repository.ContractRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@AllArgsConstructor
+@Primary
 public class HibernateContractRepositoryImpl implements ContractRepository {
 
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    public HibernateContractRepositoryImpl() {
-    }
+    private final SessionFactory sessionFactory;
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {

@@ -7,19 +7,18 @@ import com.itrex.java.lab.repository.RoleRepository;
 import com.itrex.java.lab.service.RoleService;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository repository;
 
-    public RoleServiceImpl(@Qualifier("hibernateRoleRepositoryImpl") RoleRepository repository) {
-        this.repository = repository;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public Optional<Role> find(int id) throws ServiceException {
         Optional<Role> role;
         try {
@@ -31,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Role> findAll() throws ServiceException {
         List<Role> roles;
         try {

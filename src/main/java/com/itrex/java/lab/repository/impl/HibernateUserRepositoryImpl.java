@@ -5,24 +5,19 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
+@AllArgsConstructor
 public class HibernateUserRepositoryImpl implements UserRepository {
 
     private static final String FIND_USERS_QUERY = "select u from User u ";
-    private static final String FIND_USER_BY_EMAIL_QUERY = "select u from User u where email = ?0";
-    @Autowired
-    private SessionFactory sessionFactory;
+    private static final String FIND_USER_BY_EMAIL_QUERY = "select u from User u where email =:email";
 
-    public HibernateUserRepositoryImpl() {
-    }
+    private final SessionFactory sessionFactory;
 
     @Override
     public Optional<User> findByEmail(String email) throws RepositoryException {
@@ -31,7 +26,19 @@ public class HibernateUserRepositoryImpl implements UserRepository {
         try {
             Session session = sessionFactory.getCurrentSession();
             user = session.createQuery(FIND_USER_BY_EMAIL_QUERY, User.class)
-                    .setParameter(0, email).uniqueResult();
+                    .setParameter("email", email).uniqueResult();
+        } catch (Exception ex) {
+            throw new RepositoryException("Something was wrong in the repository", ex);
+        }
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public Optional<User> findById(int id) throws RepositoryException {
+        User user;
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            user = session.find(User.class, id);
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
