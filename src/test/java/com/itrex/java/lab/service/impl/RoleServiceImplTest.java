@@ -43,24 +43,24 @@ class RoleServiceImplTest {
     }
 
     @Test
-    void find_invalidData_shouldReturnEmptyOptional() throws RepositoryException {
+    void find_invalidData_shouldReturnEmptyOptional() throws RepositoryException, ServiceException {
         //given
         int roleId = -2;
         //when
         Mockito.when(repository.find(roleId)).thenReturn(Optional.empty());
-        Optional<Role> actualOptionalRole = repository.find(roleId);
+        Optional<Role> actualOptionalRole = service.find(roleId);
 
         // then
         assertTrue(actualOptionalRole.isEmpty());
     }
 
     @Test
-    void findAll_validData_shouldReturnRoleList() throws RepositoryException {
+    void findAll_validData_shouldReturnRoleList() throws RepositoryException, ServiceException {
         //given
         int expectedListSize = 2;
         //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Role(), new Role()));
-        List<Role> actualRoles = repository.findAll();
+        List<Role> actualRoles = service.findAll();
         //then
         assertEquals(expectedListSize, actualRoles.size());
     }

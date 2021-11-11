@@ -1,6 +1,5 @@
 package com.itrex.java.lab.repository.impl;
 
-import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
@@ -44,16 +43,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String ROLE_ID_IN_ROLE_TABLE_COLUMN = "id";
     private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
     private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
-    private static final String ASSIGN_CERTIFICATE_BY_USER_ID_QUERY
-            = "insert into builder.user_certificate (user_id, certificate_id) values (?, ?);";
-    private static final String REMOVE_CERTIFICATE_BY_USER_ID_QUERY
-            = "delete from builder.user_certificate where user_id = ? and certificate_id = ?;";
-    private static final String USER_ID_COLUMN = "id";
-    private static final String CERTIFICATE_NAME_COLUMN = "name";
-    private static final String FIND_CERTIFICATE_BY_USER_ID_AND_CERTIFICATE_ID_QUERY
-            = "select c.id, c.name from builder.user_certificate ulc " +
-            "join builder.certificate c on ulc.certificate_id = c.id where user_id = ? and certificate_id = ?";
-
 
     private final JdbcConnectionPool dataSource;
 
@@ -277,21 +266,5 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             role = new Role(2, "customer");
         }
         return role;
-    }
-
-    private Certificate findCertificate(Connection conn, int userId, int certificateId) throws SQLException {
-        PreparedStatement preparedStatement
-                = conn.prepareStatement(FIND_CERTIFICATE_BY_USER_ID_AND_CERTIFICATE_ID_QUERY);
-        preparedStatement.setInt(1, userId);
-        preparedStatement.setInt(2, certificateId);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        Certificate certificate = null;
-
-        if (resultSet.next()) {
-            certificate = new Certificate(resultSet.getInt(USER_ID_COLUMN),
-                    resultSet.getString(CERTIFICATE_NAME_COLUMN));
-        }
-        return certificate;
     }
 }

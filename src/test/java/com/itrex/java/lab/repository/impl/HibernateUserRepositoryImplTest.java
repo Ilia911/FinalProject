@@ -39,6 +39,17 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
+    public void findById_validData_shouldReturnExistUser() throws RepositoryException {
+        //given
+        int userId = 1;
+        User expectedUser = User.builder().id(userId).name("Customer").email("castomer@gmail.com").build();
+        //when
+        User actualUser = repository.findById(userId).get();
+        assertUserEquals(expectedUser, actualUser);
+
+    }
+
+    @Test
     public void findAll_validData_shouldReturnExistUsers() throws RepositoryException {
         //given
         int expectedUsersAmount = 4;
