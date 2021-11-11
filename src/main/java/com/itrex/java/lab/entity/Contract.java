@@ -54,13 +54,4 @@ public class Contract {
             offer.removeContract();
         }
     }
-
-    public Contract(int id, User owner, String description, LocalDate startDate, LocalDate endDate, Integer startPrice) {
-        this.id = id;
-        this.owner = owner;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startPrice = startPrice;
-    }
 }

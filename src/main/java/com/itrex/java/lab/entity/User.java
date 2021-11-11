@@ -54,12 +54,4 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Contract> contracts;
 
-    public User(int id, String name, String password, Role role, String email, List<Certificate> certificates) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.role = role;
-        this.email = email;
-        this.certificates = certificates;
-    }
 }

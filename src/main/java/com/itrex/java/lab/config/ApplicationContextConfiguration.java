@@ -90,9 +90,9 @@ public class ApplicationContextConfiguration {
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        hibernateProperties.setProperty("show_sql", "true");
-        hibernateProperties.setProperty("format_sql", "true");
+        hibernateProperties.setProperty("hibernate.dialect", hibernateDialect);
+        hibernateProperties.setProperty("show_sql", hibernateShowSqlProperty);
+        hibernateProperties.setProperty("format_sql", hibernateFormatSql);
         return hibernateProperties;
     }
 

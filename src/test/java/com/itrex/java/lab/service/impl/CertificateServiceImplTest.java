@@ -1,6 +1,7 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.entity.dto.CertificateDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.CertificateRepository;
@@ -33,7 +34,7 @@ class CertificateServiceImplTest {
         //when
         Mockito.when(repository.findAllForUser(4))
                 .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build()));
-        List<Certificate> actualList = service.findAllForUser(4);
+        List<CertificateDTO> actualList = service.findAllForUser(4);
         //then
         assertEquals(expectedListSize, actualList.size());
     }

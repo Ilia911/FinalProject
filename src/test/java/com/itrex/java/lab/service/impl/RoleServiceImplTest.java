@@ -1,6 +1,7 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Role;
+import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.RoleRepository;
@@ -36,7 +37,7 @@ class RoleServiceImplTest {
         // when
         Mockito.when(repository.find(expectedRoleId))
                 .thenReturn(Optional.of(Role.builder().id(2).name(expectedRoleName).build()));
-        Role actualRole = service.find(expectedRoleId).get();
+        RoleDTO actualRole = service.find(expectedRoleId).get();
         // then
         assertEquals(expectedRoleId, actualRole.getId());
         assertEquals(expectedRoleName, actualRole.getName());
@@ -48,7 +49,7 @@ class RoleServiceImplTest {
         int roleId = -2;
         //when
         Mockito.when(repository.find(roleId)).thenReturn(Optional.empty());
-        Optional<Role> actualOptionalRole = service.find(roleId);
+        Optional<RoleDTO> actualOptionalRole = service.find(roleId);
 
         // then
         assertTrue(actualOptionalRole.isEmpty());
@@ -60,7 +61,7 @@ class RoleServiceImplTest {
         int expectedListSize = 2;
         //when
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Role(), new Role()));
-        List<Role> actualRoles = service.findAll();
+        List<RoleDTO> actualRoles = service.findAll();
         //then
         assertEquals(expectedListSize, actualRoles.size());
     }
