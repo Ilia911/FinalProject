@@ -1,6 +1,5 @@
 package com.itrex.java.lab.service;
 
-import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import java.util.List;
@@ -14,7 +13,7 @@ public interface ContractService {
 
     boolean delete(int id) throws ServiceException;
 
-    ContractDTO update(Contract contract) throws ServiceException;
+    ContractDTO update(ContractDTO contract) throws ServiceException;
 
-    Optional<ContractDTO> add(Contract contract) throws ServiceException;
+    Optional<ContractDTO> add(ContractDTO contract) throws ServiceException;
 }

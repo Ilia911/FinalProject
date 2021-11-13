@@ -1,6 +1,5 @@
 package com.itrex.java.lab.service;
 
-import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.dto.OfferDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import java.util.List;
@@ -14,7 +13,7 @@ public interface OfferService {
 
     boolean delete(int id) throws ServiceException;
 
-    OfferDTO update(Offer offer) throws ServiceException;
+    OfferDTO update(OfferDTO offer) throws ServiceException;
 
-    Optional<OfferDTO> add(Offer offer) throws ServiceException;
+    Optional<OfferDTO> add(OfferDTO offer) throws ServiceException;
 }

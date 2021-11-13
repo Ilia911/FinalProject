@@ -5,42 +5,45 @@ import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.RoleRepository;
-import com.itrex.java.lab.service.RoleService;
-import com.itrex.java.lab.service.TestServiceConfiguration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
+@ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {
 
-    @Autowired
-    private RoleService service;
-    @Autowired
+    @InjectMocks
+    private RoleServiceImpl service;
+    @Mock
     private RoleRepository repository;
+    @Mock
+    private ModelMapper modelMapper;
 
     @Test
     void find_validData_shouldReturnRole() throws RepositoryException, ServiceException {
         //given
-        int expectedRoleId = 2;
-        String expectedRoleName = "customer";
+        int id = 2;
+        String name = "customer";
+        Role role = Role.builder().id(id).name(name).build();
+        RoleDTO roleDTO = RoleDTO.builder().id(id).name(name).build();
         // when
-        Mockito.when(repository.find(expectedRoleId))
-                .thenReturn(Optional.of(Role.builder().id(2).name(expectedRoleName).build()));
-        RoleDTO actualRole = service.find(expectedRoleId).get();
+        when(repository.find(id))
+                .thenReturn(Optional.of(Role.builder().id(2).name(name).build()));
+        when(modelMapper.map(role, RoleDTO.class)).thenReturn(roleDTO);
+        RoleDTO actualRole = service.find(id).get();
         // then
-        assertEquals(expectedRoleId, actualRole.getId());
-        assertEquals(expectedRoleName, actualRole.getName());
+        assertEquals(id, actualRole.getId());
+        assertEquals(name, actualRole.getName());
     }
 
     @Test
@@ -48,9 +51,8 @@ class RoleServiceImplTest {
         //given
         int roleId = -2;
         //when
-        Mockito.when(repository.find(roleId)).thenReturn(Optional.empty());
+        when(repository.find(roleId)).thenReturn(Optional.empty());
         Optional<RoleDTO> actualOptionalRole = service.find(roleId);
-
         // then
         assertTrue(actualOptionalRole.isEmpty());
     }
@@ -59,8 +61,11 @@ class RoleServiceImplTest {
     void findAll_validData_shouldReturnRoleList() throws RepositoryException, ServiceException {
         //given
         int expectedListSize = 2;
+        Role role = Role.builder().build();
+        RoleDTO roleDTO = RoleDTO.builder().build();
         //when
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(new Role(), new Role()));
+        when(modelMapper.map(role, RoleDTO.class)).thenReturn(roleDTO);
+        when(repository.findAll()).thenReturn(Arrays.asList(role, role));
         List<RoleDTO> actualRoles = service.findAll();
         //then
         assertEquals(expectedListSize, actualRoles.size());

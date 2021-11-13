@@ -24,14 +24,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(readOnly = true)
     public Optional<RoleDTO> find(int id) throws ServiceException {
-        Optional<RoleDTO> roleDTO;
         try {
             Optional<Role> role = repository.find(id);
-            roleDTO = role.map(this::convertRoleIntoDTO);
+            return role.map(this::convertRoleIntoDTO);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return roleDTO;
     }
 
     @Override

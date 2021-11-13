@@ -1,8 +1,10 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
+import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
@@ -29,19 +31,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() throws ServiceException {
-        List<UserDTO> usersDTO;
         try {
-            usersDTO = userRepository.findAll().stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
+            return userRepository.findAll().stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return usersDTO;
     }
 
     @Override
     @Transactional
     public boolean delete(int id) throws ServiceException {
-
         try {
             return userRepository.delete(id);
         } catch (RepositoryException ex) {
@@ -51,22 +50,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO update(User user) throws ServiceException {
-        UserDTO userDTO = null;
+    public UserDTO update(UserDTO userDTO) throws ServiceException {
+
         try {
-            User updatedUser = userRepository.update(user);
-            userDTO = convertUserToUserDTO(updatedUser);
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+            Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (userDTO.getName() != null) {
+                    user.setName(userDTO.getName());
+                }
+                if (userDTO.getPassword() != null) {
+                    user.setPassword(userDTO.getPassword());
+                }
+                if (userDTO.getEmail() != null) {
+                    user.setEmail(userDTO.getEmail());
+                }
+                if (userDTO.getRole() != null) {
+                    user.setRole(convertRoleDTOtoRole(userDTO.getRole()));
+                }
+                return convertUserToUserDTO(userRepository.update(user));
+            } else {
+                throw new ServiceException("User do not exist");
+            }
+        } catch (RepositoryException ex) {
+            throw new ServiceException(ex.getMessage(), ex);
         }
-        return userDTO;
     }
 
     @Override
     @Transactional
-    public Optional<UserDTO> register(User user) throws ServiceException {
+    public Optional<UserDTO> add(UserDTO userDTO) throws ServiceException {
         UserDTO createdUserDTO = null;
         try {
+            User user = convertUserDTOToUser(userDTO);
             Optional<User> createdUser = userRepository.add(user);
             if (createdUser.isPresent()) {
                 createdUserDTO = convertUserToUserDTO(createdUser.get());
@@ -128,7 +144,15 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
+    private User convertUserDTOToUser(UserDTO user) {
+        return modelMapper.map(user, User.class);
+    }
+
     private CertificateDTO convertCertificateToCertificateDTO(Certificate certificate) {
         return modelMapper.map(certificate, CertificateDTO.class);
+    }
+
+    private Role convertRoleDTOtoRole(RoleDTO roleDTO) {
+        return modelMapper.map(roleDTO, Role.class);
     }
 }

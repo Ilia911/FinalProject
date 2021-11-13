@@ -9,7 +9,6 @@ import com.itrex.java.lab.service.OfferService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -25,74 +24,84 @@ public class OfferServiceImpl implements OfferService {
     @Override
     @Transactional(readOnly = true)
     public Optional<OfferDTO> find(int id) throws ServiceException {
-        OfferDTO offerDTO = null;
         try {
+            OfferDTO offerDTO = null;
             Optional<Offer> offer = repository.find(id);
             if (offer.isPresent()) {
                 offerDTO = convertOfferIntoDTO(offer.get());
             }
+            return Optional.ofNullable(offerDTO);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return Optional.ofNullable(offerDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<OfferDTO> findAll(int contractId) throws ServiceException {
-        List<OfferDTO> offersDTO = new ArrayList<>();
         try {
+            List<OfferDTO> offersDTO = new ArrayList<>();
             List<Offer> offers = repository.findAll(contractId);
             if (offers.size() > 0) {
-                offersDTO = offers.stream().map(this::convertOfferIntoDTO).collect(Collectors.toList());
+                offers.forEach(offer -> offersDTO.add(convertOfferIntoDTO(offer)));
             }
+            return offersDTO;
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return offersDTO;
     }
 
     @Override
     @Transactional
     public boolean delete(int id) throws ServiceException {
-        boolean result;
         try {
-            result = repository.delete(id);
+            return repository.delete(id);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return result;
     }
 
     @Override
     @Transactional
-    public OfferDTO update(Offer offer) throws ServiceException {
-        OfferDTO updatedOffer;
+    public OfferDTO update(OfferDTO offerDTO) throws ServiceException {
         try {
-            updatedOffer = convertOfferIntoDTO(repository.update(offer));
+            Optional<Offer> optionalOffer = repository.find(offerDTO.getId());
+            if (optionalOffer.isPresent()) {
+                if (offerDTO.getPrice() != null && offerDTO.getPrice() > 0) {
+                    optionalOffer.get().setPrice(offerDTO.getPrice());
+                    return convertOfferIntoDTO(repository.update(optionalOffer.get()));
+                } else {
+                    throw new ServiceException("Offer price should be positive!");
+                }
+            }
+            throw new ServiceException(String.format("Offer with %s id does not exist", offerDTO.getId()));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return updatedOffer;
     }
 
     @Override
     @Transactional
-    public Optional<OfferDTO> add(Offer offer) throws ServiceException {
+    public Optional<OfferDTO> add(OfferDTO offerDTO) throws ServiceException {
 
         OfferDTO newOfferDTO = null;
         try {
+            Offer offer = convertOfferDTOIntoOffer(offerDTO);
             Optional<Offer> newOffer = repository.add(offer);
             if (newOffer.isPresent()) {
                 newOfferDTO = convertOfferIntoDTO(newOffer.get());
             }
+            return Optional.ofNullable(newOfferDTO);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return Optional.ofNullable(newOfferDTO);
     }
 
     private OfferDTO convertOfferIntoDTO(Offer offer) {
         return modelMapper.map(offer, OfferDTO.class);
+    }
+
+    private Offer convertOfferDTOIntoOffer(OfferDTO offerDTO) {
+        return modelMapper.map(offerDTO, Offer.class);
     }
 }

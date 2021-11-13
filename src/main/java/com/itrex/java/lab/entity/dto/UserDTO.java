@@ -1,5 +1,6 @@
 package com.itrex.java.lab.entity.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,8 @@ public class UserDTO {
 
     private int id;
     private String name;
+    private String password;
     private RoleDTO role;
-
+    private String email;
+    private List<CertificateDTO> certificates;
 }

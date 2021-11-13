@@ -23,7 +23,6 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional(readOnly = true)
     public List<CertificateDTO> findAllForUser(int userId) throws ServiceException {
-        List<Certificate> allForUser;
         try {
             return repository.findAllForUser(userId).stream()
                     .map(this::convertIntoCertificateDTO)

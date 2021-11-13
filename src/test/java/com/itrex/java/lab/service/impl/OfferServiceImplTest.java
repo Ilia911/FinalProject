@@ -9,32 +9,32 @@ import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.OfferRepository;
-import com.itrex.java.lab.service.OfferService;
-import com.itrex.java.lab.service.TestServiceConfiguration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
+@ExtendWith(MockitoExtension.class)
 class OfferServiceImplTest {
 
-    @Autowired
-    private OfferService service;
-    @Autowired
+    @InjectMocks
+    private OfferServiceImpl service;
+    @Mock
     private OfferRepository repository;
+    @Mock
+    private ModelMapper modelMapper;
 
     @Test
     void find_validData_shouldReturnOffer() throws RepositoryException, ServiceException {
@@ -45,9 +45,13 @@ class OfferServiceImplTest {
         int expectedPrice = 27500;
         User owner = User.builder().id(expectedOwnerId).build();
         Contract contract = Contract.builder().id(expectedContractId).build();
+        Offer offer = Offer.builder().id(expectedOfferId).offerOwner(owner).contract(contract).price(expectedPrice).build();
+        UserDTO ownerDTO = UserDTO.builder().id(expectedOwnerId).build();
+        ContractDTO contractDTO = ContractDTO.builder().id(expectedContractId).build();
+        OfferDTO offerDTO = OfferDTO.builder().id(expectedOfferId).offerOwner(ownerDTO).contract(contractDTO).price(expectedPrice).build();
         //when
-        Mockito.when(repository.find(expectedOfferId)).thenReturn(Optional.of(Offer.builder()
-                .id(expectedOfferId).offerOwner(owner).contract(contract).price(expectedPrice).build()));
+        when(repository.find(expectedOfferId)).thenReturn(Optional.of(offer));
+        when(modelMapper.map(offer, OfferDTO.class)).thenReturn(offerDTO);
         OfferDTO actualOffer = service.find(expectedOfferId).get();
         //then
         assertAll(
@@ -62,9 +66,12 @@ class OfferServiceImplTest {
     void findAll_validData_shouldReturnOfferList() throws RepositoryException, ServiceException {
         //given
         int expectedOfferListSize = 2;
-        //when
+        Offer offer = Offer.builder().build();
+        OfferDTO offerDTO = OfferDTO.builder().build();
         int contractId = 1;
-        Mockito.when(repository.findAll(contractId)).thenReturn(Arrays.asList(new Offer(), new Offer()));
+        //when
+        when(modelMapper.map(offer, OfferDTO.class)).thenReturn(offerDTO);
+        when(repository.findAll(contractId)).thenReturn(Arrays.asList(offer, offer));
         List<OfferDTO> actualOfferList = service.findAll(contractId);
         //then
         assertEquals(expectedOfferListSize, actualOfferList.size());
@@ -75,7 +82,7 @@ class OfferServiceImplTest {
         //given
         int offerId = 1;
         //when
-        Mockito.when(repository.delete(offerId)).thenReturn(true);
+        when(repository.delete(offerId)).thenReturn(true);
         //then
         assertTrue(service.delete(offerId));
     }
@@ -85,7 +92,7 @@ class OfferServiceImplTest {
         //given
         int offerId = 5;
         //when
-        Mockito.when(repository.delete(offerId)).thenReturn(false);
+        when(repository.delete(offerId)).thenReturn(false);
         //then
         assertFalse(service.delete(offerId));
     }
@@ -96,60 +103,66 @@ class OfferServiceImplTest {
         int expectedOfferId = 1;
         int expectedOfferOwnerId = 3;
         int expectedContractId = 1;
+        int originalPrice = 26000;
         int expectedPrice = 25000;
-
         User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
         Contract expectedContract = Contract.builder().id(expectedContractId).build();
         UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
         ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
 
-        Offer expectedUpdatedOffer = Offer.builder()
+        Offer originalOffer = Offer.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(originalPrice)
+                .build();
+        Offer offerAfterUpdate = Offer.builder()
                 .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
                 .build();
-        OfferDTO expectedUpdatedOfferDTO = OfferDTO.builder()
+        OfferDTO offerDTO = OfferDTO.builder()
                 .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
                 .build();
         //when
-        Mockito.when(repository.update(expectedUpdatedOffer)).thenReturn(expectedUpdatedOffer);
-        OfferDTO actualUpdatedOffer = service.update(expectedUpdatedOffer);
+        when(repository.find(expectedOfferId)).thenReturn(Optional.of(originalOffer));
+        when(repository.update(offerAfterUpdate)).thenReturn(offerAfterUpdate);
+        when(modelMapper.map(offerAfterUpdate, OfferDTO.class)).thenReturn(offerDTO);
+        OfferDTO actualUpdatedOffer = service.update(offerDTO);
         //then
-        assertOfferEquals(expectedUpdatedOfferDTO, actualUpdatedOffer);
+        assertOfferEquals(offerDTO, actualUpdatedOffer);
     }
 
     @Test
     void add_validData_shouldCreateOffer() throws RepositoryException, ServiceException {
         //given
-        int expectedOfferId = 3;
-        int expectedOfferOwnerId = 4;
-        int expectedContractId = 2;
-        int expectedPrice = 27000;
-
-        User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
-        Contract expectedContract = Contract.builder().id(expectedContractId).build();
-        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
-        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
-
-        Offer expectedNewOffer = Offer.builder()
-                .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
+        int id = 3;
+        int ownerId = 4;
+        int contractId = 2;
+        int price = 27000;
+        User owner = User.builder().id(ownerId).build();
+        Contract contract = Contract.builder().id(contractId).build();
+        UserDTO userDTO = UserDTO.builder().id(ownerId).build();
+        ContractDTO contractDTO = ContractDTO.builder().id(contractId).build();
+        Offer offer = Offer.builder()
+                .id(id).offerOwner(owner).contract(contract).price(price)
                 .build();
-        OfferDTO expectedNewOfferDTO = OfferDTO.builder()
-                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+        OfferDTO offerDTO = OfferDTO.builder()
+                .id(id).offerOwner(userDTO).contract(contractDTO).price(price)
                 .build();
         //when
-        Mockito.when(repository.add(expectedNewOffer)).thenReturn(Optional.of(expectedNewOffer));
-        Optional<OfferDTO> actualNewOffer = service.add(expectedNewOffer);
+        when(modelMapper.map(offerDTO, Offer.class)).thenReturn(offer);
+        when(repository.add(offer)).thenReturn(Optional.of(offer));
+        when(modelMapper.map(offer, OfferDTO.class)).thenReturn(offerDTO);
+        Optional<OfferDTO> actualNewOffer = service.add(offerDTO);
         //then
-        assertOfferEquals(expectedNewOfferDTO, actualNewOffer.get());
+        assertOfferEquals(offerDTO, actualNewOffer.get());
     }
 
     @Test
     void add_null_shouldThrowServiceException() throws RepositoryException {
         //given
         Offer offer = null;
+        OfferDTO offerDTO = null;
         //when
-        Mockito.when(repository.add(offer)).thenThrow(new RepositoryException());
+        when(repository.add(offer)).thenThrow(new RepositoryException());
         //then
-        assertThrows(ServiceException.class, () -> service.add(offer));
+        assertThrows(ServiceException.class, () -> service.add(offerDTO));
     }
 
     @Test
@@ -159,17 +172,21 @@ class OfferServiceImplTest {
         int expectedOfferOwnerId = 4;
         int expectedContractId = 2;
         Integer expectedPrice = null;
-
         User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
         Contract expectedContract = Contract.builder().id(expectedContractId).build();
-
+        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
         Offer offer = Offer.builder()
                 .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
                 .build();
+        OfferDTO offerDTO = OfferDTO.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+                .build();
         //when
-        Mockito.when(repository.add(offer)).thenThrow(new RepositoryException());
+        when(modelMapper.map(offerDTO, Offer.class)).thenReturn(offer);
+        when(repository.add(offer)).thenThrow(new RepositoryException());
         //then
-        assertThrows(ServiceException.class, () -> service.add(offer));
+        assertThrows(ServiceException.class, () -> service.add(offerDTO));
     }
 
     @Test
@@ -179,17 +196,21 @@ class OfferServiceImplTest {
         int expectedOfferOwnerId = 4;
         int expectedContractId = 2;
         Integer expectedPrice = 0;
-
         User expectedOfferOwner = User.builder().id(expectedOfferOwnerId).build();
         Contract expectedContract = Contract.builder().id(expectedContractId).build();
-
+        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
+        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
         Offer offer = Offer.builder()
                 .id(expectedOfferId).offerOwner(expectedOfferOwner).contract(expectedContract).price(expectedPrice)
                 .build();
+        OfferDTO offerDTO = OfferDTO.builder()
+                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+                .build();
         //when
-        Mockito.when(repository.add(offer)).thenThrow(new RepositoryException());
+        when(modelMapper.map(offerDTO, Offer.class)).thenReturn(offer);
+        when(repository.add(offer)).thenThrow(new RepositoryException());
         //then
-        assertThrows(ServiceException.class, () -> service.add(offer));
+        assertThrows(ServiceException.class, () -> service.add(offerDTO));
     }
 
     private void assertOfferEquals(OfferDTO expected, OfferDTO actualOffer) {

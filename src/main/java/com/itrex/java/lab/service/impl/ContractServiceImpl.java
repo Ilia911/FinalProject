@@ -55,36 +55,47 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional
     public boolean delete(int id) throws ServiceException {
-        boolean result;
         try {
-            result = repository.delete(id);
+            return repository.delete(id);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return result;
     }
 
     @Override
     @Transactional
-    public ContractDTO update(Contract contract) throws ServiceException {
-        ContractDTO updatedContractDTO = null;
+    public ContractDTO update(ContractDTO contractDTO) throws ServiceException {
         try {
-            Contract updatedContract = repository.update(contract);
-            if (updatedContract != null) {
-                updatedContractDTO = convertContractIntoContractDTO(updatedContract);
+            Optional<Contract> optionalContract = repository.find(contractDTO.getId());
+            if (optionalContract.isPresent()) {
+                Contract contract = optionalContract.get();
+                if (contractDTO.getDescription() != null) {
+                    contract.setDescription(contractDTO.getDescription());
+                }
+                if (contractDTO.getStartDate() != null) {
+                    contract.setStartDate(contractDTO.getStartDate());
+                }
+                if (contractDTO.getEndDate() != null) {
+                    contract.setEndDate(contractDTO.getEndDate());
+                }
+                if (contractDTO.getStartPrice() != null) {
+                    contract.setStartPrice(contractDTO.getStartPrice());
+                }
+                return convertContractIntoContractDTO(repository.update(contract));
+            } else {
+                throw new ServiceException(String.format("Contract with id = %d does not exist", contractDTO.getId()));
             }
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
-        return updatedContractDTO;
     }
 
     @Override
     @Transactional
-    public Optional<ContractDTO> add(Contract contract) throws ServiceException {
+    public Optional<ContractDTO> add(ContractDTO contract) throws ServiceException {
         ContractDTO newContractDTO = null;
         try {
-            Optional<Contract> newContract = repository.add(contract);
+            Optional<Contract> newContract = repository.add(convertContractDTOIntoContract(contract));
             if (newContract.isPresent()) {
                 newContractDTO = convertContractIntoContractDTO(newContract.get());
             }
@@ -96,5 +107,9 @@ public class ContractServiceImpl implements ContractService {
 
     private ContractDTO convertContractIntoContractDTO(Contract contract) {
         return modelMapper.map(contract, ContractDTO.class);
+    }
+
+    private Contract convertContractDTOIntoContract(ContractDTO contract) {
+        return modelMapper.map(contract, Contract.class);
     }
 }

@@ -4,47 +4,50 @@ import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
+import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.CertificateRepository;
 import com.itrex.java.lab.repository.UserRepository;
-import com.itrex.java.lab.service.TestServiceConfiguration;
-import com.itrex.java.lab.service.UserService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestServiceConfiguration.class)
-
+@ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    @Autowired
-    private UserService service;
-    @Autowired
+    @InjectMocks
+    private UserServiceImpl service;
+    @Mock
     private UserRepository userRepository;
-    @Autowired
+    @Mock
     private CertificateRepository certificateRepository;
+    @Mock
+    private ModelMapper modelMapper;
 
     @Test
     void findAll_validData_shouldReturnUserList() throws ServiceException, RepositoryException {
         //given
         int expectedSize = 4;
+        User user = User.builder().build();
+        UserDTO userDTO = UserDTO.builder().build();
         // when
-        Mockito.when(userRepository.findAll()).thenReturn(Arrays.asList(new User(), new User(), new User(), new User()));
+        when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
+        when(userRepository.findAll()).thenReturn(Arrays.asList(user, user, user, user));
         int actualSize = service.findAll().size();
         //then
         assertEquals(expectedSize, actualSize);
@@ -54,7 +57,7 @@ class UserServiceImplTest {
     void delete_validData_shouldReturnTrue() throws RepositoryException, ServiceException {
         //given && when
         int validId = 1;
-        Mockito.when(userRepository.delete(validId)).thenReturn(true);
+        when(userRepository.delete(validId)).thenReturn(true);
         //then
         assertTrue(service.delete(validId));
     }
@@ -63,7 +66,7 @@ class UserServiceImplTest {
     void delete_invalidData_shouldReturnFalse() throws RepositoryException, ServiceException {
         //given && when
         int invalidId = 5;
-        Mockito.when(userRepository.delete(invalidId)).thenReturn(false);
+        when(userRepository.delete(invalidId)).thenReturn(false);
         //then
         assertFalse(service.delete(invalidId));
     }
@@ -73,11 +76,16 @@ class UserServiceImplTest {
         //given
         int userId = 1;
         String name = "updatedName";
+        RoleDTO roleDTO = RoleDTO.builder().id(3).name("contractor").build();
         Role role = Role.builder().id(3).name("contractor").build();
+        UserDTO userDTO = UserDTO.builder().id(userId).name(name).password("pass").role(roleDTO).email("email").build();
         User user = User.builder().id(userId).name(name).password("pass").role(role).email("email").build();
         //when
-        Mockito.when(this.userRepository.update(user)).thenReturn(user);
-        UserDTO actualUpdatedUser = service.update(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(modelMapper.map(roleDTO, Role.class)).thenReturn(role);
+        when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
+        when(userRepository.update(user)).thenReturn(user);
+        UserDTO actualUpdatedUser = service.update(userDTO);
         // then
         assertAll(() -> assertEquals(userId, actualUpdatedUser.getId()),
                 () -> assertEquals(name, actualUpdatedUser.getName()),
@@ -86,12 +94,15 @@ class UserServiceImplTest {
     }
 
     @Test
-    void register_validData_shouldReturnNewUserDTO() throws RepositoryException, ServiceException {
+    void add_validData_shouldReturnNewUserDTO() throws RepositoryException, ServiceException {
         //given
+        UserDTO userDTO = UserDTO.builder().id(5).name("newUser").password("pass").role(RoleDTO.builder().id(2).name("customer").build()).email("email").build();
         User user = User.builder().id(5).name("newUser").password("pass").role(Role.builder().id(2).name("customer").build()).email("email").build();
         //when
-        Mockito.when(this.userRepository.add(user)).thenReturn(Optional.of(user));
-        UserDTO actualUserDTO = service.register(user).get();
+        when(modelMapper.map(userDTO, User.class)).thenReturn(user);
+        when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
+        when(userRepository.add(user)).thenReturn(Optional.of(user));
+        UserDTO actualUserDTO = service.add(userDTO).get();
         //then
         assertAll(() -> assertEquals(user.getId(), actualUserDTO.getId()),
                 () -> assertEquals(user.getName(), actualUserDTO.getName()),
@@ -104,12 +115,11 @@ class UserServiceImplTest {
         int userId = 3;
         int certificateId = 2;
         //when
-        Mockito.when(certificateRepository.findById(certificateId))
+        when(certificateRepository.findById(certificateId))
                 .thenReturn(Optional.of(Certificate.builder().id(certificateId).build()));
-        Mockito.when(userRepository.findById(userId))
+        when(userRepository.findById(userId))
                 .thenReturn(Optional.of(User.builder().id(userId).certificates(new ArrayList<>()).build()));
-
-        Mockito.when(certificateRepository.findAllForUser(userId))
+        when(certificateRepository.findAllForUser(userId))
                 .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build(),
                         Certificate.builder().build()));
 
@@ -126,12 +136,11 @@ class UserServiceImplTest {
         int certificateId = 1;
         User user = User.builder().id(userId).certificates(new ArrayList<Certificate>()).build();
         //when
-        Mockito.when(userRepository.findById(userId))
+        when(userRepository.findById(userId))
                 .thenReturn(Optional.of(User.builder()
                         .id(userId)
                         .certificates(Arrays.asList(Certificate.builder().id(certificateId).build())).build()));
-        Mockito.when(userRepository.update(user))
-                .thenReturn(user);
+        when(userRepository.update(user)).thenReturn(user);
         //then
         assertEquals(0, service.removeCertificate(userId, certificateId).size());
     }
