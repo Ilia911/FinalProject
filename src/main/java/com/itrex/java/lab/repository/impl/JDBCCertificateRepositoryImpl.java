@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
+@Primary
 public class JDBCCertificateRepositoryImpl implements CertificateRepository {
 
     private static final String CERTIFICATE_ID_COLUMN = "id";

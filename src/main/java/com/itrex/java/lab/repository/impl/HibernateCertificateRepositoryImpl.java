@@ -8,7 +8,6 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = RepositoryException.class)
 @AllArgsConstructor
-@Primary
 public class HibernateCertificateRepositoryImpl implements CertificateRepository {
 
     private static final String FIND_CERTIFICATES_BY_USER_ID_QUERY = "select * from builder.certificate c where c.id " +

@@ -8,10 +8,12 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
+@Primary
 public class HibernateUserRepositoryImpl implements UserRepository {
 
     private static final String FIND_USERS_QUERY = "select u from User u ";
@@ -47,15 +49,16 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() throws RepositoryException {
-
+//todo: edit after passing homework
         List<User> userList;
         try {
             Session session = sessionFactory.getCurrentSession();
             userList = session.createQuery(FIND_USERS_QUERY, User.class).list();
+            throw new RepositoryException("It is an exception for checking Aspect homework");
+//            return userList;
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
-        return userList;
     }
 
     @Override
@@ -102,5 +105,4 @@ public class HibernateUserRepositoryImpl implements UserRepository {
         }
         return Optional.ofNullable(newUser);
     }
-
 }
