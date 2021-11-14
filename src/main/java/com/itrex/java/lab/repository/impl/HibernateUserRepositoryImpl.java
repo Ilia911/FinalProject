@@ -49,13 +49,11 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() throws RepositoryException {
-//todo: edit after passing homework
         List<User> userList;
         try {
             Session session = sessionFactory.getCurrentSession();
             userList = session.createQuery(FIND_USERS_QUERY, User.class).list();
-            throw new RepositoryException("It is an exception for checking Aspect homework");
-//            return userList;
+            return userList;
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }

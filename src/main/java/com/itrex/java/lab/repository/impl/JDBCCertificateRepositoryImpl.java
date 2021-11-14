@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
 public class JDBCCertificateRepositoryImpl implements CertificateRepository {
 
     private static final String CERTIFICATE_ID_COLUMN = "id";
