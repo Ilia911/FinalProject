@@ -1,7 +1,11 @@
 package com.itrex.java.lab.config;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -12,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -23,6 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+@Slf4j
 public class ApplicationContextConfiguration {
 
     @Value("${database.driver}")
@@ -101,5 +107,37 @@ public class ApplicationContextConfiguration {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    @Profile("dev")
+    public void configureDevLogger() {
+
+        String log4JPropertyFile = "src/main/resources/dev_log4j.properties";
+        Properties p = new Properties();
+
+        try {
+            p.load(new FileInputStream(log4JPropertyFile));
+            PropertyConfigurator.configure(p);
+            log.info("dev_log4j.properties file successfully loaded!");
+        } catch (IOException e) {
+            log.error("dev_log4j.properties file did not load!");
+        }
+    }
+
+    @Bean
+    @Profile("prod")
+    public void configureProdLogger() {
+
+        String log4JPropertyFile = "src/main/resources/prod_log4j.properties";
+        Properties p = new Properties();
+
+        try {
+            p.load(new FileInputStream(log4JPropertyFile));
+            PropertyConfigurator.configure(p);
+            log.info("prod_log4j.properties file successfully loaded!");
+        } catch (IOException e) {
+            log.error("prod_log4j.properties file did not load!");
+        }
     }
 }

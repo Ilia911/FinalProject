@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository

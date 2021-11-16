@@ -9,6 +9,8 @@ version '1.0-SNAPSHOT'
 
 ext {
     javaMainClass = "com.itrex.java.lab.Main"
+    availableProfiles = ["dev", "prod"]
+    activeProfile = "dev"
 }
 
 application {
@@ -55,3 +57,13 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+//build {
+//    if (project.hasProperty("profile") && availableProfiles.contains(project.profile)) {
+//        activeProfile = project.profile
+//    } else {
+//        logger.warn("Profile unknown! Use default profile " + activeProfile)
+//    }
+//
+//    buildDir = "build/${activeProfile}"
+//}
