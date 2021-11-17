@@ -40,4 +40,14 @@ public class Offer {
     public void removeContract() {
         this.contract = null;
     }
+
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "id=" + id +
+                ", offerOwnerId=" + offerOwner.getId() +
+                ", contractId=" + contract.getId() +
+                ", price=" + price +
+                '}';
+    }
 }

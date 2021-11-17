@@ -54,4 +54,14 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Contract> contracts;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

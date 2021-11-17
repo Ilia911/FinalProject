@@ -54,4 +54,16 @@ public class Contract {
             offer.removeContract();
         }
     }
+
+    @Override
+    public String toString() {
+        return "Contract{" +
+                "id=" + id +
+                ", ownerId=" + owner.getId() +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", startPrice=" + startPrice +
+                '}';
+    }
 }
