@@ -5,6 +5,8 @@ import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.service.UserService;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
@@ -23,5 +25,6 @@ public class Main {
 
         log.info("info log");
         log.error("error log");
+        Logger.getRootLogger().setLevel(Level.INFO);
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SuccessfulExecutionMethodGetAdvice {
 
-    private static final String SUCCESSFUL_MESSAGE_PATTERN = "Method: %s with successfully called";
+    private static final String SUCCESSFUL_MESSAGE_PATTERN = "Method: %s was successfully called";
 
     @Pointcut("execution(* com.itrex.java.lab.service.impl.*.find*(..))")
     public void findMethodsInRepositories() {
