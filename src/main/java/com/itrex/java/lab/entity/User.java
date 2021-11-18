@@ -17,7 +17,9 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "user", schema = "builder")
@@ -48,20 +50,13 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = ("certificate_id"))})
     private List<Certificate> certificates;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "offerOwner", cascade = CascadeType.REMOVE)
     private List<Offer> offers;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Contract> contracts;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

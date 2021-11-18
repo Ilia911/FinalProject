@@ -1,8 +1,8 @@
 package com.itrex.java.lab.advice;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
@@ -18,13 +18,10 @@ public class SuccessfulExecutionMethodFindAdvice {
     public void findMethodsInRepositories() {
     }
 
-    @Around(value = "findMethodsInRepositories()")
-    public Object printSuccessfulExecutionResult(ProceedingJoinPoint jp) throws Throwable {
+    @AfterReturning(value = "findMethodsInRepositories()", returning = "entity")
+    public void printSuccessfulExecutionResult(JoinPoint jp, Object entity) {
 
-        Object result = jp.proceed();
         log.info(String.format(SUCCESSFUL_MESSAGE_PATTERN, jp.getSignature().getName()));
-        log.info(result.toString());
-
-        return result;
+        log.info(entity.toString());
     }
 }
