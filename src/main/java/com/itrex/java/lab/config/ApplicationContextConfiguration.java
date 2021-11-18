@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -20,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@Profile({"dev", "prod"})
 @ComponentScan("com.itrex.java.lab")
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement
@@ -28,15 +30,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class ApplicationContextConfiguration {
 
     @Value("${database.driver}")
-    String driverClassName;
-    @Value("${hibernate.hbm2ddl.auto.property}")
-    String hibernateHbm2ddlAutoProperty;
+    private String driverClassName;
     @Value("${hibernate.dialect.property}")
-    String hibernateDialect;
+    private String hibernateDialect;
     @Value("${hibernate.show_sql.property}")
-    String hibernateShowSqlProperty;
+    private String hibernateShowSqlProperty;
     @Value("${hibernate.format_sql.property}")
-    String hibernateFormatSql;
+    private String hibernateFormatSql;
     @Value("${database.url}")
     private String url;
     @Value("${database.login}")
