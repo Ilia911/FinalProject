@@ -27,7 +27,7 @@ public class Offer {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "offer_owner_id")
+    @JoinColumn(name = "offer_owner_id", nullable = false)
     private User offerOwner;
 
     @ManyToOne
@@ -39,15 +39,5 @@ public class Offer {
 
     public void removeContract() {
         this.contract = null;
-    }
-
-    @Override
-    public String toString() {
-        return "Offer{" +
-                "id=" + id +
-                ", offerOwnerId=" + offerOwner.getId() +
-                ", contractId=" + contract.getId() +
-                ", price=" + price +
-                '}';
     }
 }

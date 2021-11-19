@@ -1,7 +1,6 @@
 package com.itrex.java.lab.entity;
 
 import java.time.LocalDate;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,26 +41,4 @@ public class Contract {
 
     @Column(name = "start_price", nullable = false)
     private Integer startPrice;
-
-    @OneToMany(mappedBy = "contract")
-    private List<Offer> offers;
-
-    @PreRemove
-    public void preRemoveOffers() {
-        for (Offer offer : offers) {
-            offer.removeContract();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Contract{" +
-                "id=" + id +
-                ", ownerId=" + owner.getId() +
-                ", description='" + description + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", startPrice=" + startPrice +
-                '}';
-    }
 }

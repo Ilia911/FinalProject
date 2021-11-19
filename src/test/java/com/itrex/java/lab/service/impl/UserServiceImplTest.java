@@ -2,6 +2,7 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
@@ -13,6 +14,7 @@ import com.itrex.java.lab.repository.CertificateRepository;
 import com.itrex.java.lab.repository.ContractRepository;
 import com.itrex.java.lab.repository.OfferRepository;
 import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.service.ContractService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.modelmapper.ModelMapper;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +37,7 @@ import static org.mockito.Mockito.when;
 class UserServiceImplTest {
 
     @InjectMocks
-    private UserServiceImpl service;
+    private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -43,6 +46,8 @@ class UserServiceImplTest {
     private OfferRepository offerRepository;
     @Mock
     private ContractRepository contractRepository;
+    @Mock
+    ContractService contractService;
     @Mock
     private ModelMapper modelMapper;
 
@@ -55,23 +60,37 @@ class UserServiceImplTest {
         // when
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
         when(userRepository.findAll()).thenReturn(Arrays.asList(user, user, user, user));
-        int actualSize = service.findAll().size();
+        int actualSize = userService.findAll().size();
         //then
         assertEquals(expectedSize, actualSize);
     }
 
     @Test
-    void delete_validData_shouldReturnTrue() throws RepositoryException, ServiceException {
+    void delete_validUserWithContract_shouldReturnTrue() throws RepositoryException, ServiceException {
         //given
         int validId = 1;
         int contractId = 1;
         // when
         when(offerRepository.findAllByUserId(validId)).thenReturn(List.of());
         when(contractRepository.findAllByUserId(validId)).thenReturn(List.of(Contract.builder().id(contractId).build()));
-        when(contractRepository.delete(contractId)).thenReturn(true);
+        when(contractService.delete(contractId)).thenReturn(true);
         when(userRepository.delete(validId)).thenReturn(true);
         //then
-        assertTrue(service.delete(validId));
+        assertTrue(userService.delete(validId));
+    }
+
+    @Test
+    void delete_validUserWithOffer_shouldReturnTrue() throws RepositoryException, ServiceException {
+        //given
+        int validId = 3;
+        int offerId = 1;
+        Offer offer = Offer.builder().id(1).contract(Contract.builder().id(offerId).build()).build();
+        // when
+        when(offerRepository.findAllByUserId(validId)).thenReturn(List.of(offer));
+        when(offerRepository.delete(offerId)).thenReturn(true);
+        when(userRepository.delete(validId)).thenReturn(true);
+        //then
+        assertTrue(userService.delete(validId));
     }
 
     @Test
@@ -80,7 +99,7 @@ class UserServiceImplTest {
         int invalidId = 5;
         when(userRepository.delete(invalidId)).thenReturn(false);
         //then
-        assertFalse(service.delete(invalidId));
+        assertFalse(userService.delete(invalidId));
     }
 
     @Test
@@ -97,12 +116,23 @@ class UserServiceImplTest {
         when(modelMapper.map(roleDTO, Role.class)).thenReturn(role);
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
         when(userRepository.update(user)).thenReturn(user);
-        UserDTO actualUpdatedUser = service.update(userDTO);
+        UserDTO actualUpdatedUser = userService.update(userDTO);
         // then
         assertAll(() -> assertEquals(userId, actualUpdatedUser.getId()),
                 () -> assertEquals(name, actualUpdatedUser.getName()),
                 () -> assertEquals(role.getId(), actualUpdatedUser.getRole().getId())
         );
+    }
+
+    @Test
+    void update_inValidData_shouldThrowServiceException() throws RepositoryException {
+        //given
+        int invalidUserId = 9;
+        UserDTO absentUserDTO = UserDTO.builder().id(invalidUserId).build();
+        //when
+        when(userRepository.findById(invalidUserId)).thenReturn(Optional.empty());
+        // then
+        assertThrows(ServiceException.class, () -> userService.update(absentUserDTO));
     }
 
     @Test
@@ -114,7 +144,7 @@ class UserServiceImplTest {
         when(modelMapper.map(userDTO, User.class)).thenReturn(user);
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
         when(userRepository.add(user)).thenReturn(Optional.of(user));
-        UserDTO actualUserDTO = service.add(userDTO).get();
+        UserDTO actualUserDTO = userService.add(userDTO).get();
         //then
         assertAll(() -> assertEquals(user.getId(), actualUserDTO.getId()),
                 () -> assertEquals(user.getName(), actualUserDTO.getName()),
@@ -135,7 +165,7 @@ class UserServiceImplTest {
                 .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build(),
                         Certificate.builder().build()));
 
-        List<CertificateDTO> actualCertificates = service.assignCertificate(userId, certificateId);
+        List<CertificateDTO> actualCertificates = userService.assignCertificate(userId, certificateId);
         //then
         assertEquals(3, actualCertificates.size());
 
@@ -154,6 +184,6 @@ class UserServiceImplTest {
                         .certificates(List.of(Certificate.builder().id(certificateId).build())).build()));
         when(userRepository.update(user)).thenReturn(user);
         //then
-        assertEquals(0, service.removeCertificate(userId, certificateId).size());
+        assertEquals(0, userService.removeCertificate(userId, certificateId).size());
     }
 }

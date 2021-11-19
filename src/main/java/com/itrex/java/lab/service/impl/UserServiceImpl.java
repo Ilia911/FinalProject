@@ -14,6 +14,7 @@ import com.itrex.java.lab.repository.CertificateRepository;
 import com.itrex.java.lab.repository.ContractRepository;
 import com.itrex.java.lab.repository.OfferRepository;
 import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.service.ContractService;
 import com.itrex.java.lab.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final CertificateRepository certificateRepository;
     private final OfferRepository offerRepository;
     private final ContractRepository contractRepository;
+    private final ContractService contractService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
             }
             List<Contract> userContracts = contractRepository.findAllByUserId(id);
             for (Contract userContract : userContracts) {
-                contractRepository.delete(userContract.getId());
+                contractService.delete(userContract.getId());
             }
             return userRepository.delete(id);
         } catch (RepositoryException ex) {

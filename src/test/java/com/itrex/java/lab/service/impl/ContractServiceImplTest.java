@@ -1,12 +1,14 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.OfferRepository;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +31,9 @@ class ContractServiceImplTest {
     @InjectMocks
     private ContractServiceImpl service;
     @Mock
-    private ContractRepository repository;
+    private ContractRepository contractRepository;
+    @Mock
+    private OfferRepository offerRepository;
     @Mock
     private ModelMapper modelMapper;
 
@@ -53,7 +57,7 @@ class ContractServiceImplTest {
                 .id(expectedContractId).owner(ownerDTO).description(expectedDescription).startDate(expectedStartDate)
                 .endDate(expectedEndDate).startPrice(expectedPrice)
                 .build();
-        when(repository.find(expectedContractId)).thenReturn(Optional.of(contract));
+        when(contractRepository.find(expectedContractId)).thenReturn(Optional.of(contract));
         when(modelMapper.map(contract, ContractDTO.class)).thenReturn(contractDTO);
         ContractDTO actualContract = service.find(expectedContractId).get();
         //then
@@ -74,7 +78,7 @@ class ContractServiceImplTest {
         Contract contract = Contract.builder().build();
         ContractDTO contractDTO = ContractDTO.builder().build();
         //when
-        when(repository.findAll()).thenReturn(Arrays.asList(contract, contract));
+        when(contractRepository.findAll()).thenReturn(Arrays.asList(contract, contract));
         when(modelMapper.map(contract, ContractDTO.class)).thenReturn(contractDTO);
         List<ContractDTO> actualList = service.findAll();
         //then
@@ -85,8 +89,13 @@ class ContractServiceImplTest {
     void delete_validData_shouldDeleteContract() throws RepositoryException, ServiceException {
         //given
         int contractId = 1;
+        int offerId = 1;
+        Offer offer = Offer.builder().id(offerId).contract(Contract.builder().id(contractId).build()).build();
+        Offer updatedOffer = Offer.builder().id(offerId).build();
         //when
-        when(repository.delete(contractId)).thenReturn(true);
+        when(offerRepository.findAll(contractId)).thenReturn(List.of(offer));
+        when(offerRepository.update(updatedOffer)).thenReturn(updatedOffer);
+        when(contractRepository.delete(contractId)).thenReturn(true);
         //then
         assertTrue(service.delete(contractId));
     }
@@ -110,8 +119,8 @@ class ContractServiceImplTest {
                 .endDate(LocalDate.now().plusDays(5L)).startPrice(50000)
                 .build();
         //when
-        when(repository.find(contractId)).thenReturn(Optional.of(originalContract));
-        when(repository.update(expectedContract)).thenReturn(expectedContract);
+        when(contractRepository.find(contractId)).thenReturn(Optional.of(originalContract));
+        when(contractRepository.update(expectedContract)).thenReturn(expectedContract);
         when(modelMapper.map(expectedContract, ContractDTO.class)).thenReturn(expectedContractDTO);
         ContractDTO actualContractDTO = service.update(expectedContractDTO);
         //then
@@ -133,7 +142,7 @@ class ContractServiceImplTest {
         //when
         when(modelMapper.map(expectedContractDTO, Contract.class)).thenReturn(expectedContract);
         when(modelMapper.map(expectedContract, ContractDTO.class)).thenReturn(expectedContractDTO);
-        when(repository.add(expectedContract)).thenReturn(Optional.of(expectedContract));
+        when(contractRepository.add(expectedContract)).thenReturn(Optional.of(expectedContract));
         ContractDTO actualContract = service.add(expectedContractDTO).get();
         //then
         assertContractEquals(expectedContractDTO, actualContract);
