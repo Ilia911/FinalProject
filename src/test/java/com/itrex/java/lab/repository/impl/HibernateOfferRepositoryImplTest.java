@@ -68,6 +68,18 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
+    void findAllByUserId_validData_shouldReturnOfferList() throws RepositoryException {
+        //given
+        int userId = 3;
+        int expectedOfferListSize = 1;
+        //when
+
+        List<Offer> actualOfferList = repository.findAllByUserId(userId);
+        //then
+        assertEquals(expectedOfferListSize, actualOfferList.size());
+    }
+
+    @Test
     void delete_validData_shouldDeleteContract() throws RepositoryException {
         //when
         int offerId = 1;

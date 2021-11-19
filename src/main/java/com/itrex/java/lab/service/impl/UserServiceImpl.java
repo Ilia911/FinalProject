@@ -1,6 +1,8 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.entity.Contract;
+import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
@@ -9,6 +11,8 @@ import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.OfferRepository;
 import com.itrex.java.lab.repository.UserRepository;
 import com.itrex.java.lab.service.UserService;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CertificateRepository certificateRepository;
+    private final OfferRepository offerRepository;
+    private final ContractRepository contractRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -42,6 +48,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean delete(int id) throws ServiceException {
         try {
+            List<Offer> userOffers = offerRepository.findAllByUserId(id);
+            for (Offer userOffer : userOffers) {
+                offerRepository.delete(userOffer.getId());
+            }
+            List<Contract> userContracts = contractRepository.findAllByUserId(id);
+            for (Contract userContract : userContracts) {
+                contractRepository.delete(userContract.getId());
+            }
             return userRepository.delete(id);
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);

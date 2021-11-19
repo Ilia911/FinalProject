@@ -31,6 +31,8 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
     private static final String FIND_CONTRACT_BY_ID_QUERY = "SELECT * FROM builder.contract where id = ?";
     private static final String FIND_ALL_CONTRACTS_QUERY
             = "SELECT * FROM builder.contract";
+    private static final String FIND_ALL_CONTRACTS_BY_USER_ID_QUERY
+            = "SELECT * FROM builder.contract WHERE owner_id = ?";
     private static final String DELETE_CONTRACT_QUERY
             = "DELETE FROM builder.contract where id = ?;";
     private static final String UPDATE_CONTRACT_QUERY
@@ -55,6 +57,24 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
             List<Contract> resultList = new ArrayList<>();
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_CONTRACTS_QUERY);
+
+            while (resultSet.next()) {
+                Contract contract = createContract(resultSet);
+                resultList.add(contract);
+            }
+            return resultList;
+        } catch (SQLException ex) {
+            throw new RepositoryException("Can't find Contracts", ex);
+        }
+    }
+
+    @Override
+    public List<Contract> findAllByUserId(int userId) throws RepositoryException {
+        try (Connection conn = dataSource.getConnection()) {
+            List<Contract> resultList = new ArrayList<>();
+            PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CONTRACTS_BY_USER_ID_QUERY);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 Contract contract = createContract(resultSet);

@@ -1,6 +1,7 @@
 package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
+import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
@@ -9,6 +10,8 @@ import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.OfferRepository;
 import com.itrex.java.lab.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +40,10 @@ class UserServiceImplTest {
     @Mock
     private CertificateRepository certificateRepository;
     @Mock
+    private OfferRepository offerRepository;
+    @Mock
+    private ContractRepository contractRepository;
+    @Mock
     private ModelMapper modelMapper;
 
     @Test
@@ -55,8 +62,13 @@ class UserServiceImplTest {
 
     @Test
     void delete_validData_shouldReturnTrue() throws RepositoryException, ServiceException {
-        //given && when
+        //given
         int validId = 1;
+        int contractId = 1;
+        // when
+        when(offerRepository.findAllByUserId(validId)).thenReturn(List.of());
+        when(contractRepository.findAllByUserId(validId)).thenReturn(List.of(Contract.builder().id(contractId).build()));
+        when(contractRepository.delete(contractId)).thenReturn(true);
         when(userRepository.delete(validId)).thenReturn(true);
         //then
         assertTrue(service.delete(validId));
@@ -134,12 +146,12 @@ class UserServiceImplTest {
         //given
         int userId = 3;
         int certificateId = 1;
-        User user = User.builder().id(userId).certificates(new ArrayList<Certificate>()).build();
+        User user = User.builder().id(userId).certificates(new ArrayList<>()).build();
         //when
         when(userRepository.findById(userId))
                 .thenReturn(Optional.of(User.builder()
                         .id(userId)
-                        .certificates(Arrays.asList(Certificate.builder().id(certificateId).build())).build()));
+                        .certificates(List.of(Certificate.builder().id(certificateId).build())).build()));
         when(userRepository.update(user)).thenReturn(user);
         //then
         assertEquals(0, service.removeCertificate(userId, certificateId).size());

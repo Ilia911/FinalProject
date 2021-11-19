@@ -11,6 +11,8 @@ public interface ContractRepository {
 
     List<Contract> findAll() throws RepositoryException;
 
+    List<Contract> findAllByUserId(int userId) throws RepositoryException;
+
     boolean delete(int id) throws RepositoryException;
 
     Contract update(Contract contract) throws RepositoryException;

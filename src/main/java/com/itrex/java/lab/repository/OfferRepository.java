@@ -11,6 +11,8 @@ public interface OfferRepository {
 
     List<Offer> findAll(int contractId) throws RepositoryException;
 
+    List<Offer> findAllByUserId(int userId) throws RepositoryException;
+
     boolean delete(int id) throws RepositoryException;
 
     Offer update(Offer offer) throws RepositoryException;

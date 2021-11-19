@@ -59,6 +59,18 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
+    void findAllByUserId_shouldReturnContractList() throws RepositoryException {
+        //given
+        int userId = 1;
+        int expectedContractListSize = 1;
+        //when
+        List<Contract> actualList = repository.findAllByUserId(userId);
+        //then
+        assertEquals(expectedContractListSize, actualList.size());
+
+    }
+
+    @Test
     void delete_validData_shouldDeleteContract() throws RepositoryException {
         //when
         int contractId = 1;

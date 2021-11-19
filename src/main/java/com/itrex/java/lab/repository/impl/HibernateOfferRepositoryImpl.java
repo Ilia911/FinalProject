@@ -18,6 +18,8 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
 
     private static final String FIND_OFFERS_BY_CONTRACT_ID_QUERY
             = "select o from Offer o where o.contract.id = :contractId";
+    private static final String FIND_OFFERS_BY_USER_ID_QUERY
+            = "select o from Offer o where o.offerOwner.id = :userId";
 
     private final SessionFactory sessionFactory;
 
@@ -40,6 +42,19 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
             Session session = sessionFactory.getCurrentSession();
             offers = session.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY, Offer.class)
                     .setParameter("contractId", contractId).getResultList();
+        } catch (Exception ex) {
+            throw new RepositoryException("Can not find offer", ex);
+        }
+        return offers;
+    }
+
+    @Override
+    public List<Offer> findAllByUserId(int userId) throws RepositoryException {
+        List<Offer> offers;
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            offers = session.createQuery(FIND_OFFERS_BY_USER_ID_QUERY, Offer.class)
+                    .setParameter("userId", userId).getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);
         }

@@ -1,4 +1,4 @@
-package com.itrex.java.lab.config;
+package com.itrex.java.lab.listener;
 
 import java.io.FileInputStream;
 import java.io.IOException;

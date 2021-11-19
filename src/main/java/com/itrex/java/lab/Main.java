@@ -20,6 +20,8 @@ public class Main {
 
         UserService se = applicationContext.getBean(UserService.class);
         se.findAll();
+        se.delete(1);
+        se.findAll();
 
         Arrays.stream(applicationContext.getBean(Environment.class).getActiveProfiles()).forEach(System.out::println);
 

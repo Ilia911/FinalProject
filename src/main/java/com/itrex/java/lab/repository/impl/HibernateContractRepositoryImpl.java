@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public class HibernateContractRepositoryImpl implements ContractRepository {
 
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
+    private static final String FIND_CONTRACTS_BY_USER_ID_QUERY = "select c from Contract c where c.owner.id =:userId";
 
     private final SessionFactory sessionFactory;
 
@@ -39,6 +40,20 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
         try {
             Session session = sessionFactory.getCurrentSession();
             contracts = session.createQuery(FIND_CONTRACTS_QUERY, Contract.class).list();
+        } catch (Exception ex) {
+            throw new RepositoryException("Something was wrong in the repository", ex);
+        }
+        return contracts;
+    }
+
+    @Override
+    public List<Contract> findAllByUserId(int userId) throws RepositoryException {
+        List<Contract> contracts;
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            contracts = session.createQuery(FIND_CONTRACTS_BY_USER_ID_QUERY, Contract.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }

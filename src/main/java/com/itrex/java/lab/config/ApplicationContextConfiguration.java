@@ -21,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "default"})
 @ComponentScan("com.itrex.java.lab")
 @PropertySource("classpath:/application.properties")
 @EnableTransactionManagement

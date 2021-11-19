@@ -28,6 +28,8 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
     private static final String FIND_OFFER_BY_ID_QUERY = "SELECT * FROM builder.offer where id = ?";
     private static final String FIND_ALL_OFFERS_BY_CONTRACT_ID_QUERY
             = "SELECT * FROM builder.offer where contract_id = ?";
+    private static final String FIND_ALL_OFFERS_BY_USER_ID_QUERY
+            = "SELECT * FROM builder.offer where offer_owner_id = ?";
     private static final String DELETE_OFFER_QUERY
             = "DELETE FROM builder.offer where id = ?;";
     private static final String UPDATE_OFFER_QUERY
@@ -53,6 +55,24 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
             List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_CONTRACT_ID_QUERY);
             preparedStatement.setInt(1, contractId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Offer offer = createOffer(resultSet);
+                resultList.add(offer);
+            }
+            return resultList;
+        } catch (SQLException ex) {
+            throw new RepositoryException("Can't find Offers", ex);
+        }
+    }
+
+    @Override
+    public List<Offer> findAllByUserId(int userId) throws RepositoryException {
+        try (Connection conn = dataSource.getConnection()) {
+            List<Offer> resultList = new ArrayList<>();
+            PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_USER_ID_QUERY);
+            preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
