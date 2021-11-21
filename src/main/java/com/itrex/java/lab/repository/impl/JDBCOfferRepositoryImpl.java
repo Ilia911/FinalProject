@@ -13,13 +13,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.h2.jdbcx.JdbcConnectionPool;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class JDBCOfferRepositoryImpl implements OfferRepository {
+public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepository {
 
     private static final String ID_COLUMN = "id";
     private static final String OFFER_OWNER_ID_COLUMN = "offer_owner_id";
@@ -36,11 +35,14 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
             = "UPDATE builder.offer SET price = ? WHERE id = ?";
     private static final String ADD_OFFER_QUERY
             = "INSERT INTO builder.offer(offer_owner_id, contract_id, price) VALUES (?, ?, ?)";
-    private final JdbcConnectionPool dataSource;
+
+    public JDBCOfferRepositoryImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
 
     @Override
     public Optional<Offer> find(int id) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             Offer offerById = findOfferById(conn, id);
             return Optional.ofNullable(offerById);
         } catch (SQLException ex) {
@@ -51,7 +53,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
     @Override
     public List<Offer> findAll(int contractId) throws RepositoryException {
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_CONTRACT_ID_QUERY);
             preparedStatement.setInt(1, contractId);
@@ -69,7 +71,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
 
     @Override
     public List<Offer> findAllByUserId(int userId) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_USER_ID_QUERY);
             preparedStatement.setInt(1, userId);
@@ -87,7 +89,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
 
     @Override
     public boolean delete(int id) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_OFFER_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
@@ -101,7 +103,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
 
         validateOfferData(offer);
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             Offer updatedOffer;
             try {
                 PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
@@ -127,7 +129,7 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
 
         validateOfferData(offer);
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             try {
                 conn.setAutoCommit(false);
                 PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);

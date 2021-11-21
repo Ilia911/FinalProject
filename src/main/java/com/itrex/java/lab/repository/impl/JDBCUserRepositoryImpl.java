@@ -12,13 +12,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.h2.jdbcx.JdbcConnectionPool;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class JDBCUserRepositoryImpl implements UserRepository {
+public class JDBCUserRepositoryImpl extends JdbcDaoSupport implements UserRepository {
 
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
@@ -44,14 +43,16 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
     private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
 
-    private final JdbcConnectionPool dataSource;
+    public JDBCUserRepositoryImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
 
     @Override
     public Optional<User> findByEmail(String email) throws RepositoryException {
         if (email == null) {
             throw new RepositoryException("User field 'email' must not be null!");
         }
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -70,7 +71,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         if (id <= 0) {
             throw new RepositoryException("User field 'id' must be positive!");
         }
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             User user = find(id, conn);
             return Optional.ofNullable(user);
         } catch (SQLException ex) {
@@ -80,7 +81,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findAll() throws RepositoryException {
-        try (Connection conn = dataSource.getConnection(); Statement st = conn.createStatement()) {
+        try (Connection conn = getDataSource().getConnection(); Statement st = conn.createStatement()) {
             ResultSet resultSet = st.executeQuery(FIND_ALL_USERS_QUERY);
             List<User> userList = new ArrayList<>();
             while (resultSet.next()) {
@@ -95,7 +96,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean delete(int id) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             boolean result;
             try {
                 conn.setAutoCommit(false);
@@ -122,10 +123,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     @Override
     public User update(User user) throws RepositoryException {
 
-        validateUserData(user);
-        // todo check user email
-
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             User updatedUser;
             conn.setAutoCommit(false);
             try {
@@ -155,7 +153,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
         validateUserData(user);
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             conn.setAutoCommit(false);
             try {
                 User newUser = null;

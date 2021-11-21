@@ -5,9 +5,9 @@ import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.OfferRepository;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -21,14 +21,13 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     private static final String FIND_OFFERS_BY_USER_ID_QUERY
             = "select o from Offer o where o.offerOwner.id = :userId";
 
-    private final SessionFactory sessionFactory;
+    private final EntityManager entityManager;
 
     @Override
     public Optional<Offer> find(int id) throws RepositoryException {
         Offer offer;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            offer = session.find(Offer.class, id);
+            offer = entityManager.find(Offer.class, id);
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);
         }
@@ -39,8 +38,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     public List<Offer> findAll(int contractId) throws RepositoryException {
         List<Offer> offers;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            offers = session.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY, Offer.class)
+            offers = entityManager.createQuery(FIND_OFFERS_BY_CONTRACT_ID_QUERY, Offer.class)
                     .setParameter("contractId", contractId).getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);
@@ -52,8 +50,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     public List<Offer> findAllByUserId(int userId) throws RepositoryException {
         List<Offer> offers;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            offers = session.createQuery(FIND_OFFERS_BY_USER_ID_QUERY, Offer.class)
+            offers = entityManager.createQuery(FIND_OFFERS_BY_USER_ID_QUERY, Offer.class)
                     .setParameter("userId", userId).getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Can not find offer", ex);
@@ -62,15 +59,15 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
+
     public boolean delete(int id) throws RepositoryException {
         boolean result;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            Offer offer = session.find(Offer.class, id);
+            Offer offer = entityManager.find(Offer.class, id);
 
             if (offer != null) {
-                session.delete(offer);
-                result = (null == session.find(Offer.class, id));
+                entityManager.remove(offer);
+                result = (null == entityManager.find(Offer.class, id));
             } else {
                 result = false;
             }
@@ -86,9 +83,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
 
         Offer updatedOffer;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            session.update("Offer", offer);
-            updatedOffer = session.find(Offer.class, offer.getId());
+            updatedOffer = entityManager.merge(offer);
         } catch (Exception ex) {
             throw new RepositoryException("Can not update offer!", ex);
         }
@@ -101,7 +96,7 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
 
         Offer createdOffer;
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = entityManager.unwrap(Session.class);
             int newOfferId = (Integer) session.save("Offer", offer);
             createdOffer = session.find(Offer.class, newOfferId);
         } catch (Exception ex) {

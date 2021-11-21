@@ -11,25 +11,26 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.h2.jdbcx.JdbcConnectionPool;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class JDBCRoleRepositoryImpl implements RoleRepository {
+public class JDBCRoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
 
     private static final String FIND_ROLE_QUERY = "select * from builder.role where id = ?";
     private static final String FIND_ROLES_QUERY = "select * from builder.role";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
 
-    private final JdbcConnectionPool dataSource;
+    public JDBCRoleRepositoryImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
 
     @Override
     public Optional<Role> find(int id) throws RepositoryException {
         Role role = null;
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
 
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ROLE_QUERY);
             preparedStatement.setInt(1, id);
@@ -47,7 +48,7 @@ public class JDBCRoleRepositoryImpl implements RoleRepository {
     @Override
     public List<Role> findAll() throws RepositoryException {
         List<Role> roles = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ROLES_QUERY);
             while (resultSet.next()) {

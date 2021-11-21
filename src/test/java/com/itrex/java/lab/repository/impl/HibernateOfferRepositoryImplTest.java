@@ -80,7 +80,7 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void delete_validData_shouldDeleteContract() throws RepositoryException {
+    void delete_validData_shouldDeleteOffer() throws RepositoryException {
         //when
         int offerId = 1;
         //then
@@ -88,7 +88,7 @@ class HibernateOfferRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void delete_invalidData_shouldDeleteContract() throws RepositoryException {
+    void delete_invalidData_shouldDeleteOffer() throws RepositoryException {
         //when
         int offerId = 5;
         //then

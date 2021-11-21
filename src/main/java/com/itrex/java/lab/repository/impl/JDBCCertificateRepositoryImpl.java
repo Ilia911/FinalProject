@@ -10,13 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.h2.jdbcx.JdbcConnectionPool;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class JDBCCertificateRepositoryImpl implements CertificateRepository {
+public class JDBCCertificateRepositoryImpl extends JdbcDaoSupport implements CertificateRepository {
 
     private static final String CERTIFICATE_ID_COLUMN = "id";
     private static final String CERTIFICATE_NAME_COLUMN = "name";
@@ -26,11 +25,13 @@ public class JDBCCertificateRepositoryImpl implements CertificateRepository {
     private static final String FIND_CERTIFICATE_BY_ID_QUERY
             = "select * from builder.certificate where id = ?";
 
-    private final JdbcConnectionPool dataSource;
+    public JDBCCertificateRepositoryImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
 
     @Override
     public List<Certificate> findAllForUser(int userId) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             List<Certificate> certificateList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CERTIFICATES_FOR_USER_QUERY);
             preparedStatement.setInt(1, userId);
@@ -48,7 +49,7 @@ public class JDBCCertificateRepositoryImpl implements CertificateRepository {
     @Override
     public Optional<Certificate> findById(int id) throws RepositoryException {
         Certificate certificate = null;
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_CERTIFICATE_BY_ID_QUERY);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();

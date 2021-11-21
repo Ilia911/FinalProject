@@ -1,32 +1,33 @@
 package com.itrex.java.lab;
 
-import com.itrex.java.lab.config.ApplicationContextConfiguration;
-import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.service.UserService;
-import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
 
-@Slf4j
-public class Main {
+@SpringBootApplication
+public class Main implements CommandLineRunner {
 
-    public static void main(String[] args) throws ServiceException {
+    @Autowired
+    private ApplicationContext context;
 
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationContextConfiguration.class);
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
 
-        UserService se = applicationContext.getBean(UserService.class);
-        se.findAll();
+    @Override
+    public void run(String... args) throws Exception {
+        UserService se = context.getBean(UserService.class);
+        Environment env = context.getBean(Environment.class);
+
+        for (String activeProfile : env.getActiveProfiles()) {
+            System.out.println(activeProfile);
+        }
+
         se.delete(1);
         se.findAll();
-
-        Arrays.stream(applicationContext.getBean(Environment.class).getActiveProfiles()).forEach(System.out::println);
-
-        log.info("info log");
-        log.error("error log");
-        Logger.getRootLogger().setLevel(Level.INFO);
     }
 }

@@ -14,13 +14,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.h2.jdbcx.JdbcConnectionPool;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@AllArgsConstructor
-public class JDBCContractRepositoryImpl implements ContractRepository {
+public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements ContractRepository {
 
     private static final String ID_COLUMN = "id";
     private static final String OWNER_ID_COLUMN = "owner_id";
@@ -40,11 +39,14 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
     private static final String ADD_CONTRACT_QUERY
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
     private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?";
-    private final JdbcConnectionPool dataSource;
+
+    public JDBCContractRepositoryImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             return Optional.ofNullable(findContractById(conn, id));
         } catch (SQLException ex) {
             throw new RepositoryException("Can't find Contracts", ex);
@@ -53,7 +55,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
     @Override
     public List<Contract> findAll() throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             List<Contract> resultList = new ArrayList<>();
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_CONTRACTS_QUERY);
@@ -70,7 +72,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
     @Override
     public List<Contract> findAllByUserId(int userId) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             List<Contract> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CONTRACTS_BY_USER_ID_QUERY);
             preparedStatement.setInt(1, userId);
@@ -88,7 +90,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
     @Override
     public boolean delete(int id) throws RepositoryException {
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             conn.setAutoCommit(false);
             boolean result;
             try {
@@ -114,7 +116,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
         validateContractData(contract);
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             Contract updatedContract;
             conn.setAutoCommit(false);
             try {
@@ -144,7 +146,7 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
         validateContractData(contract);
 
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             Contract insertedContract = null;
             conn.setAutoCommit(false);
             try {
@@ -190,18 +192,12 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
     private Contract createContract(ResultSet resultSet) throws SQLException {
         Contract contract = new Contract();
         contract.setId(resultSet.getInt(ID_COLUMN));
-        contract.setOwner(createEmptyUserWithId(resultSet.getInt(OWNER_ID_COLUMN)));
+        contract.setOwner(User.builder().id(resultSet.getInt(OWNER_ID_COLUMN)).build());
         contract.setDescription(resultSet.getString(DESCRIPTION_COLUMN));
         contract.setStartDate(LocalDate.parse(resultSet.getDate(START_DATE_COLUMN).toString()));
         contract.setEndDate(LocalDate.parse(resultSet.getDate(END_DATE_COLUMN).toString()));
         contract.setStartPrice(resultSet.getInt(START_PRICE_COLUMN));
         return contract;
-    }
-
-    private User createEmptyUserWithId(int id) {
-        User user = new User();
-        user.setId(id);
-        return user;
     }
 
     private void removeAllOffersForContract(Connection conn, int contractId) throws SQLException {

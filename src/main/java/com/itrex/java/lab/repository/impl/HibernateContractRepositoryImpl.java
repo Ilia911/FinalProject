@@ -6,9 +6,9 @@ import com.itrex.java.lab.repository.ContractRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -20,14 +20,13 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";
     private static final String FIND_CONTRACTS_BY_USER_ID_QUERY = "select c from Contract c where c.owner.id =:userId";
 
-    private final SessionFactory sessionFactory;
+    private EntityManager entityManager;
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {
         Contract contract;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            contract = session.find(Contract.class, id);
+            contract = entityManager.find(Contract.class, id);
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
@@ -38,8 +37,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     public List<Contract> findAll() throws RepositoryException {
         List<Contract> contracts;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            contracts = session.createQuery(FIND_CONTRACTS_QUERY, Contract.class).list();
+            contracts = entityManager.createQuery(FIND_CONTRACTS_QUERY, Contract.class).getResultList();
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
@@ -50,8 +48,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     public List<Contract> findAllByUserId(int userId) throws RepositoryException {
         List<Contract> contracts;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            contracts = session.createQuery(FIND_CONTRACTS_BY_USER_ID_QUERY, Contract.class)
+            contracts = entityManager.createQuery(FIND_CONTRACTS_BY_USER_ID_QUERY, Contract.class)
                     .setParameter("userId", userId)
                     .getResultList();
         } catch (Exception ex) {
@@ -64,11 +61,10 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
     public boolean delete(int id) throws RepositoryException {
         boolean result;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            Contract contract = session.find(Contract.class, id);
+            Contract contract = entityManager.find(Contract.class, id);
             if (contract != null) {
-                session.delete(contract);
-                result = (null == session.find(Contract.class, id));
+                entityManager.remove(contract);
+                result = (null == entityManager.find(Contract.class, id));
             } else {
                 result = false;
             }
@@ -84,9 +80,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
 
         Contract updatedContract;
         try {
-            Session session = sessionFactory.getCurrentSession();
-            session.update("Contract", contract);
-            updatedContract = session.find(Contract.class, contract.getId());
+            updatedContract = entityManager.merge(contract);
         } catch (Exception ex) {
             throw new RepositoryException("Something was wrong in the repository", ex);
         }
@@ -99,7 +93,7 @@ public class HibernateContractRepositoryImpl implements ContractRepository {
 
         Contract createdContract;
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = entityManager.unwrap(Session.class);
             int newContractId = (Integer) session.save("Contract", contract);
             createdContract = session.find(Contract.class, newContractId);
         } catch (Exception ex) {
