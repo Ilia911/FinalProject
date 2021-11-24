@@ -37,6 +37,26 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     @Override
+    public Optional<UserDTO> findById(int id) throws ServiceException {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            return user.map(this::convertUserToUserDTO);
+        } catch (RepositoryException ex) {
+            throw new ServiceException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public Optional<UserDTO> findByEmail(String email) throws ServiceException {
+        try {
+            Optional<User> user = userRepository.findByEmail(email);
+            return user.map(this::convertUserToUserDTO);
+        } catch (RepositoryException ex) {
+            throw new ServiceException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() throws ServiceException {
         try {

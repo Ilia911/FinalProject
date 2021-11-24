@@ -52,6 +52,37 @@ class UserServiceImplTest {
     private ModelMapper modelMapper;
 
     @Test
+    void find_validData_shouldReturnUser() throws ServiceException, RepositoryException {
+        //given
+        int userId = 1;
+        User user = User.builder().id(userId).name("Customer").email("castomer@gmail.com").build();
+        UserDTO expectedUserDTO = UserDTO.builder().id(userId).name("Customer").email("castomer@gmail.com").build();
+        // when
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(modelMapper.map(user, UserDTO.class)).thenReturn(expectedUserDTO);
+        Optional<UserDTO> actualUser = userService.findById(userId);
+        //then
+        assertUserEquals(expectedUserDTO, actualUser.get());
+    }
+
+    @Test
+    void findByEmail_validData_shouldReturnUser() throws ServiceException, RepositoryException {
+        //given
+        int userId = 1;
+        String userName = "Customer";
+        String userPassword = "password";
+        String userEmail = "castomer@gmail.com";
+        User user = User.builder().id(userId).name(userName).password(userPassword).email(userEmail).build();
+        UserDTO expectedUserDTO = UserDTO.builder().id(userId).name(userName).password(userPassword).email(userEmail).build();
+        // when
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
+        when(modelMapper.map(user, UserDTO.class)).thenReturn(expectedUserDTO);
+        Optional<UserDTO> actualUser = userService.findByEmail(userEmail);
+        //then
+        assertUserEquals(expectedUserDTO, actualUser.get());
+    }
+
+    @Test
     void findAll_validData_shouldReturnUserList() throws ServiceException, RepositoryException {
         //given
         int expectedSize = 4;
@@ -185,5 +216,13 @@ class UserServiceImplTest {
         when(userRepository.update(user)).thenReturn(user);
         //then
         assertEquals(0, userService.removeCertificate(userId, certificateId).size());
+    }
+
+    private void assertUserEquals(UserDTO expectedUser, UserDTO actualUser) {
+        assertAll(
+                () -> assertEquals(expectedUser.getId(), actualUser.getId()),
+                () -> assertEquals(expectedUser.getName(), actualUser.getName()),
+                () -> assertEquals(expectedUser.getEmail(), actualUser.getEmail())
+        );
     }
 }

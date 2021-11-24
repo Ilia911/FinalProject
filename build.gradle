@@ -25,8 +25,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-jdbc') {
         exclude module: 'spring-boot-starter-logging'
     }
-//    implementation ('org.springframework.boot:spring-boot-starter-web') {
-//        exclude module: 'commons-logging'}
+    implementation ('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-logging'
+    }
     implementation('org.springframework.boot:spring-boot-starter-aop') {
         exclude module: 'spring-boot-starter-logging'
     }

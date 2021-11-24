@@ -8,6 +8,10 @@ import java.util.Optional;
 
 public interface UserService {
 
+    Optional<UserDTO> findById(int id) throws ServiceException;
+
+    Optional<UserDTO> findByEmail(String email) throws ServiceException;
+
     List<UserDTO> findAll() throws ServiceException;
 
     boolean delete(int id) throws ServiceException;
