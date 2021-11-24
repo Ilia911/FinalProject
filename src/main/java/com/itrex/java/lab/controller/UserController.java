@@ -55,11 +55,11 @@ public class UserController {
     }
 
     @DeleteMapping("/user/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable(name = "id") int id) throws ServiceException {
+    public ResponseEntity delete(@PathVariable(name = "id") int id) throws ServiceException {
 
         boolean result = service.delete(id);
 
-        return result ? new ResponseEntity<>(result, HttpStatus.OK) : new ResponseEntity<>(result, HttpStatus.NOT_MODIFIED);
+        return result ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
     @PutMapping("user/update")

@@ -21,9 +21,9 @@ public class CertificateController {
     public ResponseEntity<List<CertificateDTO>> findAllCertificatesByUserId(@PathVariable(name = "userId") int userId)
             throws ServiceException {
 
-        List<CertificateDTO> users = service.findAllForUser(userId);
-        return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(users, HttpStatus.OK)
+        List<CertificateDTO> certificates = service.findAllForUser(userId);
+        return certificates != null && !certificates.isEmpty()
+                ? new ResponseEntity<>(certificates, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
