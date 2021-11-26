@@ -5,17 +5,12 @@ import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
-import com.itrex.java.lab.service.ContractService;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -27,18 +22,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ContractController.class)
-class ContractControllerTest {
+class ContractControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private ContractService service;
 
     @Test
     void find_validData_shouldReturnContract() throws Exception {
@@ -55,7 +45,7 @@ class ContractControllerTest {
                 .id(expectedContractId).owner(ownerDTO).description(expectedDescription).startDate(expectedStartDate)
                 .endDate(expectedEndDate).startPrice(expectedPrice)
                 .build();
-        when(service.find(expectedContractId)).thenReturn(Optional.of(expectedResponseBody));
+        when(contractService.find(expectedContractId)).thenReturn(Optional.of(expectedResponseBody));
         //then
         MvcResult mvcResult = mockMvc.perform(get("/contract/{id}", expectedContractId)
                         .contentType("application/json"))
@@ -74,8 +64,8 @@ class ContractControllerTest {
         ContractDTO contractDTO = ContractDTO.builder().build();
         List<ContractDTO> expectedResponseBody = Arrays.asList(contractDTO, contractDTO);
         //when
-        when(service.findAll()).thenReturn(expectedResponseBody);
-        List<ContractDTO> actualList = service.findAll();
+        when(contractService.findAll()).thenReturn(expectedResponseBody);
+        List<ContractDTO> actualList = contractService.findAll();
         //then
         MvcResult mvcResult = mockMvc.perform(get("/contracts")
                         .contentType("application/json"))
@@ -92,7 +82,7 @@ class ContractControllerTest {
         //given
         int contractId = 1;
         //when
-        when(service.delete(contractId)).thenReturn(true);
+        when(contractService.delete(contractId)).thenReturn(true);
         //then
         mockMvc.perform(delete("/contract/delete/{id}", contractId)
                         .contentType("application/json"))
@@ -118,7 +108,7 @@ class ContractControllerTest {
                 .endDate(LocalDate.now().plusDays(5L)).startPrice(50000)
                 .build();
         //when
-        when(service.update(expectedResponseBody)).thenReturn(expectedResponseBody);
+        when(contractService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         //then
         MvcResult mvcResult = mockMvc.perform(put("/contract/update")
                         .contentType("application/json")
@@ -138,7 +128,7 @@ class ContractControllerTest {
                 .id(3).owner(contractOwnerDTO).description("new contract").startDate(LocalDate.now().plusDays(1L))
                 .endDate(LocalDate.now().plusDays(2L)).startPrice(50000).build();
         //when
-        when(service.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
+        when(contractService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
         MvcResult mvcResult = mockMvc.perform(post("/contract/new")
                         .contentType("application/json")

@@ -2,13 +2,10 @@ package com.itrex.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.service.CertificateService;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -17,17 +14,13 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CertificateController.class)
-class CertificateControllerTest {
+class CertificateControllerTest extends BaseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @MockBean
-    private CertificateService service;
 
     @Test
     void findAllCertificatesByUserId_validInput_shouldReturnListCertificates() throws Exception {
@@ -36,7 +29,7 @@ class CertificateControllerTest {
         CertificateDTO certificateDTO = CertificateDTO.builder().build();
         List<CertificateDTO> expectedResponseBody = Arrays.asList(certificateDTO, certificateDTO, certificateDTO);
         //when
-        when(service.findAllForUser(userId)).thenReturn(expectedResponseBody);
+        when(certificateService.findAllForUser(userId)).thenReturn(expectedResponseBody);
         //then
         MvcResult mvcResult = mockMvc.perform(get("/certificates/{userId}", userId)
                         .contentType("application/json"))

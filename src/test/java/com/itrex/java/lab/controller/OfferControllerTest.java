@@ -4,16 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.OfferDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
-import com.itrex.java.lab.service.OfferService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -25,18 +20,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = OfferController.class)
-class OfferControllerTest {
+class OfferControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private OfferService service;
 
     @Test
     void find_validData_shouldReturnOffer() throws Exception {
@@ -49,7 +39,7 @@ class OfferControllerTest {
         ContractDTO contractDTO = ContractDTO.builder().id(expectedContractId).build();
         OfferDTO expectedResponseBody = OfferDTO.builder().id(expectedOfferId).offerOwner(ownerDTO).contract(contractDTO).price(expectedPrice).build();
         //when
-        when(service.find(expectedOfferId)).thenReturn(Optional.of(expectedResponseBody));
+        when(offerService.find(expectedOfferId)).thenReturn(Optional.of(expectedResponseBody));
         //then
         MvcResult mvcResult = mockMvc.perform(get("/offers/{id}", expectedOfferId)
                         .contentType("application/json"))
@@ -69,7 +59,7 @@ class OfferControllerTest {
         OfferDTO offerDTO = OfferDTO.builder().build();
         List<OfferDTO> expectedResponseBody = Arrays.asList(offerDTO, offerDTO);
         //when
-        when(service.findAll(contractId)).thenReturn(expectedResponseBody);
+        when(offerService.findAll(contractId)).thenReturn(expectedResponseBody);
         //then
         MvcResult mvcResult = mockMvc.perform(get("/contracts/offers/{contractId}", contractId)
                         .contentType("application/json"))
@@ -86,7 +76,7 @@ class OfferControllerTest {
         //given
         int offerId = 1;
         //when
-        when(service.delete(offerId)).thenReturn(true);
+        when(offerService.delete(offerId)).thenReturn(true);
         //then
         mockMvc.perform(delete("/offers/delete/{id}", offerId)
                         .contentType("application/json"))
@@ -98,7 +88,7 @@ class OfferControllerTest {
         //given
         int offerId = 5;
         //when
-        when(service.delete(offerId)).thenReturn(false);
+        when(offerService.delete(offerId)).thenReturn(false);
         //then
         mockMvc.perform(delete("/offers/delete/{id}", offerId)
                         .contentType("application/json"))
@@ -118,7 +108,7 @@ class OfferControllerTest {
                 .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
                 .build();
         //when
-        when(service.update(expectedResponseBody)).thenReturn(expectedResponseBody);
+        when(offerService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         //then
         MvcResult mvcResult = mockMvc.perform(put("/offers/update")
                         .contentType("application/json")
@@ -145,7 +135,7 @@ class OfferControllerTest {
                 .build();
 
         //when
-        when(service.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
+        when(offerService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
         MvcResult mvcResult = mockMvc.perform(post("/offer/new")
                         .contentType("application/json")
