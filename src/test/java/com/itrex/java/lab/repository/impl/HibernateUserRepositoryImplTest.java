@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,6 +61,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
+    @Rollback(value = true)
     void delete_validData_shouldDeleteUser() throws RepositoryException {
         //given && when
         int userId = 1;
