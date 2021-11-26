@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface OfferService {
 
-    Optional<OfferDTO> find(int id) throws ServiceException;
+    Optional<OfferDTO> find(int id);
 
-    List<OfferDTO> findAll(int contractId) throws ServiceException;
+    List<OfferDTO> findAll(int contractId);
 
-    boolean delete(int id) throws ServiceException;
+    boolean delete(int id);
 
     OfferDTO update(OfferDTO offer) throws ServiceException;
 
-    Optional<OfferDTO> add(OfferDTO offer) throws ServiceException;
+    Optional<OfferDTO> add(OfferDTO offer);
 }

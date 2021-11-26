@@ -2,9 +2,8 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.dto.OfferDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.data.OfferRepository;
 import com.itrex.java.lab.service.OfferService;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,78 +22,61 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<OfferDTO> find(int id) throws ServiceException {
-        try {
-            OfferDTO offerDTO = null;
-            Optional<Offer> offer = repository.find(id);
-            if (offer.isPresent()) {
-                offerDTO = convertOfferIntoDTO(offer.get());
-            }
-            return Optional.ofNullable(offerDTO);
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
+    public Optional<OfferDTO> find(int id) {
+
+        OfferDTO offerDTO = null;
+        Optional<Offer> offer = repository.findById(id);
+        if (offer.isPresent()) {
+            offerDTO = convertOfferIntoDTO(offer.get());
         }
+        return Optional.ofNullable(offerDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<OfferDTO> findAll(int contractId) throws ServiceException {
-        try {
-            List<OfferDTO> offersDTO = new ArrayList<>();
-            List<Offer> offers = repository.findAll(contractId);
-            if (offers.size() > 0) {
-                offers.forEach(offer -> offersDTO.add(convertOfferIntoDTO(offer)));
-            }
-            return offersDTO;
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
+    public List<OfferDTO> findAll(int contractId) {
+
+        List<OfferDTO> offersDTO = new ArrayList<>();
+        List<Offer> offers = repository.findAllByContractId(contractId);
+        if (offers.size() > 0) {
+            offers.forEach(offer -> offersDTO.add(convertOfferIntoDTO(offer)));
         }
+        return offersDTO;
     }
 
     @Override
     @Transactional
-    public boolean delete(int id) throws ServiceException {
-        try {
-            return repository.delete(id);
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
-        }
+    public boolean delete(int id) {
+        repository.deleteById(id);
+        return repository.findById(id).isEmpty();
     }
 
     @Override
     @Transactional
     public OfferDTO update(OfferDTO offerDTO) throws ServiceException {
-        try {
-            Optional<Offer> optionalOffer = repository.find(offerDTO.getId());
-            if (optionalOffer.isPresent()) {
-                if (offerDTO.getPrice() != null && offerDTO.getPrice() > 0) {
-                    optionalOffer.get().setPrice(offerDTO.getPrice());
-                    return convertOfferIntoDTO(repository.update(optionalOffer.get()));
-                } else {
-                    throw new ServiceException("Offer price should be positive!");
-                }
+
+        Optional<Offer> optionalOffer = repository.findById(offerDTO.getId());
+        if (optionalOffer.isPresent()) {
+            if (offerDTO.getPrice() != null && offerDTO.getPrice() > 0) {
+                optionalOffer.get().setPrice(offerDTO.getPrice());
+                repository.flush();
+                return convertOfferIntoDTO(repository.findById(offerDTO.getId()).get());
+            } else {
+                throw new ServiceException("Offer price should be positive!");
             }
-            throw new ServiceException(String.format("Offer with %s id does not exist", offerDTO.getId()));
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
         }
+        throw new ServiceException(String.format("Offer with %s id does not exist", offerDTO.getId()));
     }
 
     @Override
     @Transactional
-    public Optional<OfferDTO> add(OfferDTO offerDTO) throws ServiceException {
+    public Optional<OfferDTO> add(OfferDTO offerDTO) {
 
-        OfferDTO newOfferDTO = null;
-        try {
-            Offer offer = convertOfferDTOIntoOffer(offerDTO);
-            Optional<Offer> newOffer = repository.add(offer);
-            if (newOffer.isPresent()) {
-                newOfferDTO = convertOfferIntoDTO(newOffer.get());
-            }
-            return Optional.ofNullable(newOfferDTO);
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
-        }
+        OfferDTO newOfferDTO;
+        Offer offer = convertOfferDTOIntoOffer(offerDTO);
+        Offer newOffer = repository.save(offer);
+        newOfferDTO = convertOfferIntoDTO(newOffer);
+        return Optional.ofNullable(newOfferDTO);
     }
 
     private OfferDTO convertOfferIntoDTO(Offer offer) {

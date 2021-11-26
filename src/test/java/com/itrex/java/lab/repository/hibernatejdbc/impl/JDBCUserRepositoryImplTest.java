@@ -1,29 +1,30 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.UserRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Transactional
-class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
+public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
 
-    @Qualifier("hibernateUserRepositoryImpl")
+    @Qualifier("JDBCUserRepositoryImpl")
     @Autowired
     private UserRepository repository;
+
+    public JDBCUserRepositoryImplTest() {
+        super();
+    }
 
     @Test
     public void findByEmail_validData_shouldReturnExistUser() throws RepositoryException {
@@ -61,7 +62,6 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    @Rollback(value = true)
     void delete_validData_shouldDeleteUser() throws RepositoryException {
         //given && when
         int userId = 1;

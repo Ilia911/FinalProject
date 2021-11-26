@@ -2,9 +2,7 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.data.CertificateRepository;
 import com.itrex.java.lab.service.CertificateService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,14 +20,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CertificateDTO> findAllForUser(int userId) throws ServiceException {
-        try {
-            return repository.findAllForUser(userId).stream()
-                    .map(this::convertIntoCertificateDTO)
-                    .collect(Collectors.toList());
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
-        }
+    public List<CertificateDTO> findAllForUser(int userId) {
+
+        return repository.findAllByUserId(userId).stream()
+                .map(this::convertIntoCertificateDTO)
+                .collect(Collectors.toList());
     }
 
     private CertificateDTO convertIntoCertificateDTO(Certificate certificate) {

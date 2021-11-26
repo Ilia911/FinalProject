@@ -5,10 +5,9 @@ import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.ContractRepository;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.data.ContractRepository;
+import com.itrex.java.lab.repository.data.OfferRepository;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +37,7 @@ class ContractServiceImplTest {
     private ModelMapper modelMapper;
 
     @Test
-    void find_validData_shouldReturnContract() throws RepositoryException, ServiceException {
+    void find_validData_shouldReturnContract() {
         //given
         int expectedContractId = 1;
         int expectedOwnerId = 1;
@@ -57,7 +56,7 @@ class ContractServiceImplTest {
                 .id(expectedContractId).owner(ownerDTO).description(expectedDescription).startDate(expectedStartDate)
                 .endDate(expectedEndDate).startPrice(expectedPrice)
                 .build();
-        when(contractRepository.find(expectedContractId)).thenReturn(Optional.of(contract));
+        when(contractRepository.findById(expectedContractId)).thenReturn(Optional.of(contract));
         when(modelMapper.map(contract, ContractDTO.class)).thenReturn(contractDTO);
         ContractDTO actualContract = service.find(expectedContractId).get();
         //then
@@ -72,7 +71,7 @@ class ContractServiceImplTest {
     }
 
     @Test
-    void findAll_validData_shouldReturnContractList() throws RepositoryException, ServiceException {
+    void findAll_validData_shouldReturnContractList() {
         //given
         int expectedContractListSize = 2;
         Contract contract = Contract.builder().build();
@@ -86,22 +85,21 @@ class ContractServiceImplTest {
     }
 
     @Test
-    void delete_validData_shouldDeleteContract() throws RepositoryException, ServiceException {
+    void delete_validData_shouldDeleteContract() {
         //given
         int contractId = 1;
         int offerId = 1;
         Offer offer = Offer.builder().id(offerId).contract(Contract.builder().id(contractId).build()).build();
         Offer updatedOffer = Offer.builder().id(offerId).build();
         //when
-        when(offerRepository.findAll(contractId)).thenReturn(List.of(offer));
-        when(offerRepository.update(updatedOffer)).thenReturn(updatedOffer);
-        when(contractRepository.delete(contractId)).thenReturn(true);
+        when(offerRepository.findAllByContractId(contractId)).thenReturn(List.of(offer));
+        when(contractRepository.findById(contractId)).thenReturn(Optional.empty());
         //then
         assertTrue(service.delete(contractId));
     }
 
     @Test
-    void update_validData_shouldUpdateExistedContract() throws RepositoryException, ServiceException {
+    void update_validData_shouldUpdateExistedContract() throws ServiceException {
         //given
         int contractId = 1;
         User contractOwner = User.builder().id(1).build();
@@ -119,8 +117,8 @@ class ContractServiceImplTest {
                 .endDate(LocalDate.now().plusDays(5L)).startPrice(50000)
                 .build();
         //when
-        when(contractRepository.find(contractId)).thenReturn(Optional.of(originalContract));
-        when(contractRepository.update(expectedContract)).thenReturn(expectedContract);
+        when(contractRepository.findById(contractId)).thenReturn(Optional.of(originalContract));
+        when(contractRepository.findById(contractId)).thenReturn(Optional.of(expectedContract));
         when(modelMapper.map(expectedContract, ContractDTO.class)).thenReturn(expectedContractDTO);
         ContractDTO actualContractDTO = service.update(expectedContractDTO);
         //then
@@ -128,7 +126,7 @@ class ContractServiceImplTest {
     }
 
     @Test
-    void add_validData_shouldReturnNewCreatedContract() throws RepositoryException, ServiceException {
+    void add_validData_shouldReturnNewCreatedContract() {
         //given
         User contractOwner = User.builder().id(1).build();
         UserDTO contractOwnerDTO = UserDTO.builder().id(1).build();
@@ -142,7 +140,7 @@ class ContractServiceImplTest {
         //when
         when(modelMapper.map(expectedContractDTO, Contract.class)).thenReturn(expectedContract);
         when(modelMapper.map(expectedContract, ContractDTO.class)).thenReturn(expectedContractDTO);
-        when(contractRepository.add(expectedContract)).thenReturn(Optional.of(expectedContract));
+        when(contractRepository.save(expectedContract)).thenReturn(expectedContract);
         ContractDTO actualContract = service.add(expectedContractDTO).get();
         //then
         assertContractEquals(expectedContractDTO, actualContract);

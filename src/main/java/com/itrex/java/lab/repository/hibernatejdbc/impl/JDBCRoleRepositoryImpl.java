@@ -1,8 +1,8 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.RoleRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Deprecated
 public class JDBCRoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
 
     private static final String FIND_ROLE_QUERY = "select * from builder.role where id = ?";

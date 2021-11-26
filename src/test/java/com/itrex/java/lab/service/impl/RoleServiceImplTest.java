@@ -2,9 +2,7 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.dto.RoleDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.data.RoleRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,15 +28,14 @@ class RoleServiceImplTest {
     private ModelMapper modelMapper;
 
     @Test
-    void find_validData_shouldReturnRole() throws RepositoryException, ServiceException {
+    void find_validData_shouldReturnRole() {
         //given
         int id = 2;
         String name = "customer";
         Role role = Role.builder().id(id).name(name).build();
         RoleDTO roleDTO = RoleDTO.builder().id(id).name(name).build();
         // when
-        when(repository.find(id))
-                .thenReturn(Optional.of(Role.builder().id(2).name(name).build()));
+        when(repository.findById(id)).thenReturn(Optional.of(role));
         when(modelMapper.map(role, RoleDTO.class)).thenReturn(roleDTO);
         RoleDTO actualRole = service.find(id).get();
         // then
@@ -47,18 +44,18 @@ class RoleServiceImplTest {
     }
 
     @Test
-    void find_invalidData_shouldReturnEmptyOptional() throws RepositoryException, ServiceException {
+    void find_invalidData_shouldReturnEmptyOptional() {
         //given
         int roleId = -2;
         //when
-        when(repository.find(roleId)).thenReturn(Optional.empty());
+        when(repository.findById(roleId)).thenReturn(Optional.empty());
         Optional<RoleDTO> actualOptionalRole = service.find(roleId);
         // then
         assertTrue(actualOptionalRole.isEmpty());
     }
 
     @Test
-    void findAll_validData_shouldReturnRoleList() throws RepositoryException, ServiceException {
+    void findAll_validData_shouldReturnRoleList() {
         //given
         int expectedListSize = 2;
         Role role = Role.builder().build();

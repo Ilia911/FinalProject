@@ -1,20 +1,19 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.ContractRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
+@Deprecated
 public class HibernateContractRepositoryImpl implements ContractRepository {
 
     private static final String FIND_CONTRACTS_QUERY = "select c from Contract c ";

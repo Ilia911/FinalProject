@@ -1,11 +1,11 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.OfferRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

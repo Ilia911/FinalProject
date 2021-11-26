@@ -1,19 +1,18 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.OfferRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
+@Deprecated
 public class HibernateOfferRepositoryImpl implements OfferRepository {
 
     private static final String FIND_OFFERS_BY_CONTRACT_ID_QUERY

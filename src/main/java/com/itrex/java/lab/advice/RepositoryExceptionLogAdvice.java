@@ -13,7 +13,7 @@ public class RepositoryExceptionLogAdvice {
 
     private static final String EXCEPTION_MESSAGE_PATTERN = "There was an exception in method: %s with message: %s";
 
-    @AfterThrowing(value = "execution(* com.itrex.java.lab.repository.impl.*.*(..))", throwing = "ex")
+    @AfterThrowing(value = "execution(* com.itrex.java.lab.repository.hibernatejdbc.impl.*.*(..))", throwing = "ex")
     public void logException(JoinPoint jp, Exception ex) {
 
         log.error(String.format(EXCEPTION_MESSAGE_PATTERN, jp.getSignature().getName(), ex.getMessage()), ex);

@@ -1,9 +1,9 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.ContractRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.ContractRepository;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Deprecated
 public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements ContractRepository {
 
     private static final String ID_COLUMN = "id";

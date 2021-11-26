@@ -1,19 +1,18 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
+@Deprecated
 public class HibernateUserRepositoryImpl implements UserRepository {
 
     private static final String FIND_USERS_QUERY = "select u from User u ";

@@ -1,8 +1,8 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.CertificateRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Deprecated
 public class JDBCCertificateRepositoryImpl extends JdbcDaoSupport implements CertificateRepository {
 
     private static final String CERTIFICATE_ID_COLUMN = "id";

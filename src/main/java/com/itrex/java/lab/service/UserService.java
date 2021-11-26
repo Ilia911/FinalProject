@@ -8,19 +8,19 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<UserDTO> findById(int id) throws ServiceException;
+    Optional<UserDTO> findById(int id);
 
-    Optional<UserDTO> findByEmail(String email) throws ServiceException;
+    Optional<UserDTO> findByEmail(String email);
 
-    List<UserDTO> findAll() throws ServiceException;
+    List<UserDTO> findAll();
 
-    boolean delete(int id) throws ServiceException;
+    boolean delete(int id);
 
     UserDTO update(UserDTO user) throws ServiceException;
 
-    Optional<UserDTO> add(UserDTO user) throws ServiceException;
+    Optional<UserDTO> add(UserDTO user);
 
-    List<CertificateDTO> assignCertificate(int userId, int certificateId) throws ServiceException;
+    List<CertificateDTO> assignCertificate(int userId, int certificateId);
 
-    List<CertificateDTO> removeCertificate(int userId, int certificateId) throws ServiceException;
+    List<CertificateDTO> removeCertificate(int userId, int certificateId);
 }

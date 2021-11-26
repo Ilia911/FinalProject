@@ -1,9 +1,9 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.UserRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Deprecated
 public class JDBCUserRepositoryImpl extends JdbcDaoSupport implements UserRepository {
 
     private static final String ID_COLUMN = "id";

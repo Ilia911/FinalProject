@@ -1,18 +1,17 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.CertificateRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
+@Deprecated
 public class HibernateCertificateRepositoryImpl implements CertificateRepository {
 
     private final EntityManager entityManager;

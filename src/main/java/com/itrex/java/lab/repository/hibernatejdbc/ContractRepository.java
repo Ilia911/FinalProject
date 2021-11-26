@@ -1,4 +1,4 @@
-package com.itrex.java.lab.repository;
+package com.itrex.java.lab.repository.hibernatejdbc;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.exeption.RepositoryException;

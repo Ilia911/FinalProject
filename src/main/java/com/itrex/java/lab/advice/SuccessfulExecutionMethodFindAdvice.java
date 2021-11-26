@@ -14,7 +14,7 @@ public class SuccessfulExecutionMethodFindAdvice {
 
     private static final String SUCCESSFUL_MESSAGE_PATTERN = "Method: %s was successfully called";
 
-    @Pointcut("execution(* com.itrex.java.lab.repository.impl.*.find*(..))")
+    @Pointcut("execution(* com.itrex.java.lab.repository.hibernatejdbc.impl.*.find*(..))")
     public void findMethodsInRepositories() {
     }
 

@@ -1,18 +1,17 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-@Primary
+@Deprecated
 public class HibernateRoleRepositoryImpl implements RoleRepository {
 
     private static final String FIND_ROLES_QUERY = "select r from Role r";

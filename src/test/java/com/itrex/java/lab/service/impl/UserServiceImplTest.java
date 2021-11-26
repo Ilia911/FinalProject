@@ -8,12 +8,11 @@ import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
 import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.CertificateRepository;
-import com.itrex.java.lab.repository.ContractRepository;
-import com.itrex.java.lab.repository.OfferRepository;
-import com.itrex.java.lab.repository.UserRepository;
+import com.itrex.java.lab.repository.data.CertificateRepository;
+import com.itrex.java.lab.repository.data.ContractRepository;
+import com.itrex.java.lab.repository.data.OfferRepository;
+import com.itrex.java.lab.repository.data.UserRepository;
 import com.itrex.java.lab.service.ContractService;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +27,6 @@ import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -47,12 +45,12 @@ class UserServiceImplTest {
     @Mock
     private ContractRepository contractRepository;
     @Mock
-    ContractService contractService;
+    private ContractService contractService;
     @Mock
     private ModelMapper modelMapper;
 
     @Test
-    void find_validData_shouldReturnUser() throws ServiceException, RepositoryException {
+    void find_validData_shouldReturnUser() {
         //given
         int userId = 1;
         User user = User.builder().id(userId).name("Customer").email("castomer@gmail.com").build();
@@ -66,7 +64,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByEmail_validData_shouldReturnUser() throws ServiceException, RepositoryException {
+    void findByEmail_validData_shouldReturnUser() {
         //given
         int userId = 1;
         String userName = "Customer";
@@ -83,7 +81,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findAll_validData_shouldReturnUserList() throws ServiceException, RepositoryException {
+    void findAll_validData_shouldReturnUserList() {
         //given
         int expectedSize = 4;
         User user = User.builder().build();
@@ -97,44 +95,35 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete_validUserWithContract_shouldReturnTrue() throws RepositoryException, ServiceException {
+    void delete_validUserWithContract_shouldReturnTrue() {
         //given
         int validId = 1;
         int contractId = 1;
         // when
-        when(offerRepository.findAllByUserId(validId)).thenReturn(List.of());
-        when(contractRepository.findAllByUserId(validId)).thenReturn(List.of(Contract.builder().id(contractId).build()));
+        when(offerRepository.findByOfferOwnerId(validId)).thenReturn(List.of());
+        when(contractRepository.findAllByOwnerId(validId)).thenReturn(List.of(Contract.builder().id(contractId).build()));
         when(contractService.delete(contractId)).thenReturn(true);
-        when(userRepository.delete(validId)).thenReturn(true);
+        when(userRepository.findById(validId)).thenReturn(Optional.empty());
         //then
         assertTrue(userService.delete(validId));
     }
 
     @Test
-    void delete_validUserWithOffer_shouldReturnTrue() throws RepositoryException, ServiceException {
+    void delete_validUserWithOffer_shouldReturnTrue() {
         //given
         int validId = 3;
         int offerId = 1;
         Offer offer = Offer.builder().id(1).contract(Contract.builder().id(offerId).build()).build();
         // when
-        when(offerRepository.findAllByUserId(validId)).thenReturn(List.of(offer));
-        when(offerRepository.delete(offerId)).thenReturn(true);
-        when(userRepository.delete(validId)).thenReturn(true);
+        when(offerRepository.findByOfferOwnerId(validId)).thenReturn(List.of(offer));
+        when(contractRepository.findAllByOwnerId(validId)).thenReturn(List.of());
+        when(userRepository.findById(validId)).thenReturn(Optional.empty());
         //then
         assertTrue(userService.delete(validId));
     }
 
     @Test
-    void delete_invalidData_shouldReturnFalse() throws RepositoryException, ServiceException {
-        //given && when
-        int invalidId = 5;
-        when(userRepository.delete(invalidId)).thenReturn(false);
-        //then
-        assertFalse(userService.delete(invalidId));
-    }
-
-    @Test
-    void update_validData_shouldReturnUpdatedUserDTO() throws RepositoryException, ServiceException {
+    void update_validData_shouldReturnUpdatedUserDTO() throws ServiceException {
         //given
         int userId = 1;
         String name = "updatedName";
@@ -146,7 +135,7 @@ class UserServiceImplTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(modelMapper.map(roleDTO, Role.class)).thenReturn(role);
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
-        when(userRepository.update(user)).thenReturn(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         UserDTO actualUpdatedUser = userService.update(userDTO);
         // then
         assertAll(() -> assertEquals(userId, actualUpdatedUser.getId()),
@@ -156,7 +145,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update_inValidData_shouldThrowServiceException() throws RepositoryException {
+    void update_inValidData_shouldThrowServiceException() {
         //given
         int invalidUserId = 9;
         UserDTO absentUserDTO = UserDTO.builder().id(invalidUserId).build();
@@ -167,14 +156,15 @@ class UserServiceImplTest {
     }
 
     @Test
-    void add_validData_shouldReturnNewUserDTO() throws RepositoryException, ServiceException {
+    void add_validData_shouldReturnNewUserDTO() {
         //given
         UserDTO userDTO = UserDTO.builder().id(5).name("newUser").password("pass").role(RoleDTO.builder().id(2).name("customer").build()).email("email").build();
         User user = User.builder().id(5).name("newUser").password("pass").role(Role.builder().id(2).name("customer").build()).email("email").build();
         //when
         when(modelMapper.map(userDTO, User.class)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
-        when(userRepository.add(user)).thenReturn(Optional.of(user));
+
         UserDTO actualUserDTO = userService.add(userDTO).get();
         //then
         assertAll(() -> assertEquals(user.getId(), actualUserDTO.getId()),
@@ -183,7 +173,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void assignCertificate_validDate_shouldReturnCertificateList() throws RepositoryException, ServiceException {
+    void assignCertificate_validDate_shouldReturnCertificateList() {
         //given
         int userId = 3;
         int certificateId = 2;
@@ -192,7 +182,7 @@ class UserServiceImplTest {
                 .thenReturn(Optional.of(Certificate.builder().id(certificateId).build()));
         when(userRepository.findById(userId))
                 .thenReturn(Optional.of(User.builder().id(userId).certificates(new ArrayList<>()).build()));
-        when(certificateRepository.findAllForUser(userId))
+        when(certificateRepository.findAllByUserId(userId))
                 .thenReturn(Arrays.asList(Certificate.builder().build(), Certificate.builder().build(),
                         Certificate.builder().build()));
 
@@ -203,7 +193,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void removeCertificate_validData_shouldDeleteUserCertificate() throws RepositoryException, ServiceException {
+    void removeCertificate_validData_shouldDeleteUserCertificate() {
         //given
         int userId = 3;
         int certificateId = 1;
@@ -213,7 +203,7 @@ class UserServiceImplTest {
                 .thenReturn(Optional.of(User.builder()
                         .id(userId)
                         .certificates(List.of(Certificate.builder().id(certificateId).build())).build()));
-        when(userRepository.update(user)).thenReturn(user);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         //then
         assertEquals(0, userService.removeCertificate(userId, certificateId).size());
     }

@@ -2,9 +2,7 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.dto.RoleDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.data.RoleRepository;
 import com.itrex.java.lab.service.RoleService;
 import java.util.List;
 import java.util.Optional;
@@ -23,25 +21,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<RoleDTO> find(int id) throws ServiceException {
-        try {
-            Optional<Role> role = repository.find(id);
-            return role.map(this::convertRoleIntoDTO);
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
-        }
+    public Optional<RoleDTO> find(int id) {
+
+        Optional<Role> role = repository.findById(id);
+        return role.map(this::convertRoleIntoDTO);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<RoleDTO> findAll() throws ServiceException {
-        try {
-            return repository.findAll().stream()
-                    .map(this::convertRoleIntoDTO)
-                    .collect(Collectors.toList());
-        } catch (RepositoryException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
-        }
+    public List<RoleDTO> findAll() {
+
+        return repository.findAll().stream()
+                .map(this::convertRoleIntoDTO)
+                .collect(Collectors.toList());
     }
 
     private RoleDTO convertRoleIntoDTO(Role role) {

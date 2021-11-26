@@ -1,10 +1,10 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.repository.OfferRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.OfferRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Deprecated
 public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepository {
 
     private static final String ID_COLUMN = "id";

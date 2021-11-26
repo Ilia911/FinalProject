@@ -1,29 +1,23 @@
-package com.itrex.java.lab.repository.impl;
+package com.itrex.java.lab.repository.hibernatejdbc.impl;
 
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.exeption.RepositoryException;
 import com.itrex.java.lab.repository.BaseRepositoryTest;
-import com.itrex.java.lab.repository.RoleRepository;
+import com.itrex.java.lab.repository.hibernatejdbc.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Transactional
-class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
+class JDBCRoleRepositoryImplTest extends BaseRepositoryTest {
 
-    @Qualifier("hibernateRoleRepositoryImpl")
+    @Qualifier("JDBCRoleRepositoryImpl")
     @Autowired
     private RoleRepository repository;
-
-    HibernateRoleRepositoryImplTest() {
-        super();
-    }
 
     @Test
     void find_validData_shouldReturnRole() throws RepositoryException {
@@ -38,7 +32,7 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    void find_invalidData_shouldReturnEmptyOptional() throws RepositoryException {
+    void find_invalidData_shouldEmptyOptional() throws RepositoryException {
         //given && when
         int roleId = -2;
         Optional<Role> actualOptionalRole = repository.find(roleId);

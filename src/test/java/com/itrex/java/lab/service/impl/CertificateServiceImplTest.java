@@ -2,9 +2,7 @@ package com.itrex.java.lab.service.impl;
 
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.exeption.RepositoryException;
-import com.itrex.java.lab.exeption.ServiceException;
-import com.itrex.java.lab.repository.CertificateRepository;
+import com.itrex.java.lab.repository.data.CertificateRepository;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -28,14 +26,14 @@ class CertificateServiceImplTest {
     private ModelMapper modelMapper;
 
     @Test
-    void findAllForUser_validData_shouldReturnCertificateList() throws RepositoryException, ServiceException {
+    void findAllForUser_validData_shouldReturnCertificateList() {
         //given
         int expectedListSize = 2;
         Certificate certificate = Certificate.builder().build();
         CertificateDTO certificateDTO = CertificateDTO.builder().build();
         //when
         when(modelMapper.map(certificate, CertificateDTO.class)).thenReturn(certificateDTO);
-        when(repository.findAllForUser(4))
+        when(repository.findAllByUserId(4))
                 .thenReturn(Arrays.asList(certificate, certificate));
         List<CertificateDTO> actualList = service.findAllForUser(4);
         //then
