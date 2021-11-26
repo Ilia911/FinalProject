@@ -5,6 +5,8 @@ import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
@@ -12,7 +14,7 @@ public interface UserService {
 
     Optional<UserDTO> findByEmail(String email);
 
-    List<UserDTO> findAll();
+    Page<UserDTO> findAll(Pageable pageable);
 
     boolean delete(int id);
 

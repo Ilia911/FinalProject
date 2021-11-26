@@ -7,6 +7,8 @@ import com.itrex.java.lab.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +27,9 @@ public class UserController {
     private final UserService service;
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> findAll() throws ServiceException {
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) throws ServiceException {
 
-        List<UserDTO> users = service.findAll();
+        Page<UserDTO> users = service.findAll(pageable);
 
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(users, HttpStatus.OK)
@@ -84,8 +86,7 @@ public class UserController {
 
     @PostMapping("/user/assignCertificate")
     public ResponseEntity<List<CertificateDTO>>
-    assignCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId)
-            throws ServiceException {
+    assignCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 
         List<CertificateDTO> certificateDTOS = service.assignCertificate(userId, certificateId);
 
@@ -96,8 +97,7 @@ public class UserController {
 
     @PostMapping("/user/removeCertificate")
     public ResponseEntity<List<CertificateDTO>>
-    removeCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId)
-            throws ServiceException {
+    removeCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 
         List<CertificateDTO> certificateDTOS = service.removeCertificate(userId, certificateId);
 

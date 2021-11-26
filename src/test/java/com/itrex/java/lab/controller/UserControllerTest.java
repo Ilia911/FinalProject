@@ -10,6 +10,11 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -71,15 +76,20 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void findAll_validData_shouldReturnUserList() throws Exception {
+    void findAll_validData_shouldReturnUserPage() throws Exception {
         //given
-        UserDTO userDTO = UserDTO.builder().build();
+        UserDTO userDTO = UserDTO.builder().id(1).name("first").build();
+        UserDTO userDTO2 = UserDTO.builder().id(2).name("second").build();
+        Pageable pageable = PageRequest.of(1, 2, Sort.by("name").descending());
         // when
-        List<UserDTO> expectedResponseBody = Arrays.asList(userDTO, userDTO, userDTO, userDTO);
-        when(userService.findAll()).thenReturn(expectedResponseBody);
+        Page<UserDTO> expectedResponseBody = new PageImpl<>(Arrays.asList(userDTO, userDTO2));
+        when(userService.findAll(pageable)).thenReturn(expectedResponseBody);
         //then
         MvcResult mvcResult = mockMvc.perform(get("/users")
-                        .contentType("application/json"))
+                        .contentType("application/json")
+                        .param("page", "1")
+                        .param("size", "2")
+                        .param("sort", "name,desc"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -168,7 +178,6 @@ class UserControllerTest extends BaseControllerTest {
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(expectedResponseBody), actualResponseBody);
-
     }
 
     @Test

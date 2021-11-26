@@ -21,6 +21,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,8 +53,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
+    public Page<UserDTO> findAll(Pageable pageable) {
+        Page<User> pageUsers = userRepository.findAll(pageable);
+        List<UserDTO> users = pageUsers.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
+        return new PageImpl<>(users);
     }
 
     @Override

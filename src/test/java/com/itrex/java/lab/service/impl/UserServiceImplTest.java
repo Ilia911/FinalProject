@@ -24,6 +24,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,13 +87,14 @@ class UserServiceImplTest {
     @Test
     void findAll_validData_shouldReturnUserList() {
         //given
-        int expectedSize = 4;
+        int expectedSize = 2;
         User user = User.builder().build();
         UserDTO userDTO = UserDTO.builder().build();
+        Pageable pageable = PageRequest.of(1, 2, Sort.by("name").descending());
         // when
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
-        when(userRepository.findAll()).thenReturn(Arrays.asList(user, user, user, user));
-        int actualSize = userService.findAll().size();
+        when(userRepository.findAll(pageable)).thenReturn(new PageImpl<>(Arrays.asList(user, user)));
+        int actualSize = userService.findAll(pageable).getSize();
         //then
         assertEquals(expectedSize, actualSize);
     }
