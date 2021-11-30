@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Deprecated
-public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepository {
+public class JDBCOfferRepositoryImpl implements OfferRepository {
 
     private static final String ID_COLUMN = "id";
     private static final String OFFER_OWNER_ID_COLUMN = "offer_owner_id";
@@ -37,13 +37,20 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
     private static final String ADD_OFFER_QUERY
             = "INSERT INTO builder.offer(offer_owner_id, contract_id, price) VALUES (?, ?, ?)";
 
+    private final DataSource dataSource;
+
     public JDBCOfferRepositoryImpl(DataSource dataSource) {
-        this.setDataSource(dataSource);
+        this.dataSource = dataSource;
+    }
+
+    private Connection getDataSourceUtilsConnection() throws SQLException {
+        return DataSourceUtils.getConnection(dataSource);
     }
 
     @Override
     public Optional<Offer> find(int id) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             Offer offerById = findOfferById(conn, id);
             return Optional.ofNullable(offerById);
         } catch (SQLException ex) {
@@ -54,7 +61,8 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
     @Override
     public List<Offer> findAll(int contractId) throws RepositoryException {
 
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_CONTRACT_ID_QUERY);
             preparedStatement.setInt(1, contractId);
@@ -72,7 +80,8 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
 
     @Override
     public List<Offer> findAllByUserId(int userId) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             List<Offer> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_OFFERS_BY_USER_ID_QUERY);
             preparedStatement.setInt(1, userId);
@@ -90,7 +99,8 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
 
     @Override
     public boolean delete(int id) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_OFFER_QUERY);
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() == 1;
@@ -104,25 +114,19 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
 
         validateOfferData(offer);
 
-        try (Connection conn = getDataSource().getConnection()) {
-            Offer updatedOffer;
-            try {
-                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
-                preparedStatement.setInt(1, offer.getPrice());
-                preparedStatement.setInt(2, offer.getId());
-                preparedStatement.execute();
-                updatedOffer = findOfferById(conn, offer.getId());
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new RepositoryException("Can't update Offer", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return updatedOffer;
+
+        Offer updatedOffer;
+        try {
+            Connection conn = getDataSourceUtilsConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_OFFER_QUERY);
+            preparedStatement.setInt(1, offer.getPrice());
+            preparedStatement.setInt(2, offer.getId());
+            preparedStatement.execute();
+            updatedOffer = findOfferById(conn, offer.getId());
         } catch (SQLException ex) {
             throw new RepositoryException("Can't update Offer", ex);
         }
+        return updatedOffer;
     }
 
     @Override
@@ -130,29 +134,22 @@ public class JDBCOfferRepositoryImpl extends JdbcDaoSupport implements OfferRepo
 
         validateOfferData(offer);
 
-        try (Connection conn = getDataSource().getConnection()) {
-            try {
-                conn.setAutoCommit(false);
-                PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setInt(1, offer.getOfferOwner().getId());
-                preparedStatement.setInt(2, offer.getContract().getId());
-                preparedStatement.setInt(3, offer.getPrice());
-                int effectiveRaws = preparedStatement.executeUpdate();
+        try {
+            Connection conn = getDataSourceUtilsConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(ADD_OFFER_QUERY, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, offer.getOfferOwner().getId());
+            preparedStatement.setInt(2, offer.getContract().getId());
+            preparedStatement.setInt(3, offer.getPrice());
+            int effectiveRaws = preparedStatement.executeUpdate();
 
-                Offer newOffer = null;
-                if (effectiveRaws == 1) {
-                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        newOffer = findOfferById(conn, generatedKeys.getInt(ID_COLUMN));
-                    }
+            Offer newOffer = null;
+            if (effectiveRaws == 1) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    newOffer = findOfferById(conn, generatedKeys.getInt(ID_COLUMN));
                 }
-                return Optional.ofNullable(newOffer);
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new RepositoryException("Can't update Offer", ex);
-            } finally {
-                conn.setAutoCommit(true);
             }
+            return Optional.ofNullable(newOffer);
         } catch (SQLException ex) {
             throw new RepositoryException("Can't update Offer", ex);
         }

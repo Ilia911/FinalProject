@@ -103,7 +103,6 @@ public class JDBCUserRepositoryImplTest extends BaseRepositoryTest {
 
     private void assertUserEquals(User expectedUser, User actualUser) {
         assertAll(
-                () -> assertEquals(expectedUser.getId(), actualUser.getId()),
                 () -> assertEquals(expectedUser.getName(), actualUser.getName()),
                 () -> assertEquals(expectedUser.getEmail(), actualUser.getEmail())
         );

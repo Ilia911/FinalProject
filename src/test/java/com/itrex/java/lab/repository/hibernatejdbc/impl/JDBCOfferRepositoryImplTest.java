@@ -163,7 +163,6 @@ class JDBCOfferRepositoryImplTest extends BaseRepositoryTest {
 
     private void assertOfferEquals(Offer expected, Offer actualOffer) {
         assertAll(
-                () -> assertEquals(expected.getId(), actualOffer.getId()),
                 () -> assertEquals(expected.getOfferOwner().getId(), actualOffer.getOfferOwner().getId()),
                 () -> assertEquals(expected.getContract().getId(), actualOffer.getContract().getId()),
                 () -> assertEquals(expected.getPrice(), actualOffer.getPrice())

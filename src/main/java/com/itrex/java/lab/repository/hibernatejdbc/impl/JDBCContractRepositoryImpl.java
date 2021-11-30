@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Deprecated
-public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements ContractRepository {
+public class JDBCContractRepositoryImpl implements ContractRepository {
 
     private static final String ID_COLUMN = "id";
     private static final String OWNER_ID_COLUMN = "owner_id";
@@ -41,13 +41,20 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
             = "INSERT INTO builder.contract(owner_id, description, start_date, end_date, start_price) VALUES (?, ?, ?, ?, ?)";
     private static final String REMOVE_ALL_OFFERS_FOR_CONTRACT_QUERY = "DELETE FROM builder.offer where contract_id = ?";
 
+    private final DataSource dataSource;
+
     public JDBCContractRepositoryImpl(DataSource dataSource) {
-        this.setDataSource(dataSource);
+        this.dataSource = dataSource;
+    }
+
+    private Connection getDataSourceUtilsConnection() throws SQLException {
+        return DataSourceUtils.getConnection(dataSource);
     }
 
     @Override
     public Optional<Contract> find(int id) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             return Optional.ofNullable(findContractById(conn, id));
         } catch (SQLException ex) {
             throw new RepositoryException("Can't find Contracts", ex);
@@ -56,7 +63,8 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
 
     @Override
     public List<Contract> findAll() throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             List<Contract> resultList = new ArrayList<>();
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_CONTRACTS_QUERY);
@@ -73,7 +81,8 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
 
     @Override
     public List<Contract> findAllByUserId(int userId) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             List<Contract> resultList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CONTRACTS_BY_USER_ID_QUERY);
             preparedStatement.setInt(1, userId);
@@ -91,25 +100,18 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
 
     @Override
     public boolean delete(int id) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
-            conn.setAutoCommit(false);
-            boolean result;
-            try {
-                removeAllOffersForContract(conn, id);
-                PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
-                preparedStatement.setInt(1, id);
-                result = preparedStatement.executeUpdate() == 1;
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new RepositoryException("Can't delete Contracts", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return result;
+
+        boolean result;
+        try {
+            Connection conn = getDataSourceUtilsConnection();
+            removeAllOffersForContract(conn, id);
+            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_CONTRACT_QUERY);
+            preparedStatement.setInt(1, id);
+            result = preparedStatement.executeUpdate() == 1;
         } catch (SQLException ex) {
             throw new RepositoryException("Can't delete Contracts", ex);
         }
+        return result;
     }
 
     @Override
@@ -117,29 +119,22 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
 
         validateContractData(contract);
 
-        try (Connection conn = getDataSource().getConnection()) {
-            Contract updatedContract;
-            conn.setAutoCommit(false);
-            try {
-                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CONTRACT_QUERY);
-                preparedStatement.setString(1, contract.getDescription());
-                preparedStatement.setDate(2, Date.valueOf(contract.getStartDate().toString()));
-                preparedStatement.setDate(3, Date.valueOf(contract.getEndDate().toString()));
-                preparedStatement.setInt(4, contract.getStartPrice());
-                preparedStatement.setInt(5, contract.getId());
-                preparedStatement.execute();
-                updatedContract = findContractById(conn, contract.getId());
-                conn.commit();
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new RepositoryException("Can't update Contracts", ex);
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return updatedContract;
+
+        Contract updatedContract;
+        try {
+            Connection conn = getDataSourceUtilsConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CONTRACT_QUERY);
+            preparedStatement.setString(1, contract.getDescription());
+            preparedStatement.setDate(2, Date.valueOf(contract.getStartDate().toString()));
+            preparedStatement.setDate(3, Date.valueOf(contract.getEndDate().toString()));
+            preparedStatement.setInt(4, contract.getStartPrice());
+            preparedStatement.setInt(5, contract.getId());
+            preparedStatement.execute();
+            updatedContract = findContractById(conn, contract.getId());
         } catch (SQLException ex) {
             throw new RepositoryException("Can't update Contracts", ex);
         }
+        return updatedContract;
     }
 
     @Override
@@ -147,33 +142,25 @@ public class JDBCContractRepositoryImpl extends JdbcDaoSupport implements Contra
 
         validateContractData(contract);
 
-        try (Connection conn = getDataSource().getConnection()) {
-            Contract insertedContract = null;
-            conn.setAutoCommit(false);
-            try {
-                PreparedStatement preparedSt = conn.prepareStatement(ADD_CONTRACT_QUERY, Statement.RETURN_GENERATED_KEYS);
-                preparedSt.setInt(1, contract.getOwner().getId());
-                preparedSt.setString(2, contract.getDescription());
-                preparedSt.setDate(3, Date.valueOf(contract.getStartDate().toString()));
-                preparedSt.setDate(4, Date.valueOf(contract.getEndDate().toString()));
-                preparedSt.setInt(5, contract.getStartPrice());
+        Contract insertedContract = null;
+        try {
+            Connection conn = getDataSourceUtilsConnection();
+            PreparedStatement preparedSt = conn.prepareStatement(ADD_CONTRACT_QUERY, Statement.RETURN_GENERATED_KEYS);
+            preparedSt.setInt(1, contract.getOwner().getId());
+            preparedSt.setString(2, contract.getDescription());
+            preparedSt.setDate(3, Date.valueOf(contract.getStartDate().toString()));
+            preparedSt.setDate(4, Date.valueOf(contract.getEndDate().toString()));
+            preparedSt.setInt(5, contract.getStartPrice());
 
-                int effectiveRaws = preparedSt.executeUpdate();
+            int effectiveRaws = preparedSt.executeUpdate();
 
-                if (effectiveRaws == 1) {
-                    ResultSet generatedKeys = preparedSt.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        insertedContract = findContractById(conn, generatedKeys.getInt(ID_COLUMN));
-                    }
+            if (effectiveRaws == 1) {
+                ResultSet generatedKeys = preparedSt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    insertedContract = findContractById(conn, generatedKeys.getInt(ID_COLUMN));
                 }
-                conn.commit();
-                return Optional.ofNullable(insertedContract);
-            } catch (SQLException ex) {
-                conn.rollback();
-                throw new RepositoryException("Can't add Contract", ex);
-            } finally {
-                conn.setAutoCommit(true);
             }
+            return Optional.ofNullable(insertedContract);
         } catch (SQLException ex) {
             throw new RepositoryException("Can't add Contract", ex);
         }

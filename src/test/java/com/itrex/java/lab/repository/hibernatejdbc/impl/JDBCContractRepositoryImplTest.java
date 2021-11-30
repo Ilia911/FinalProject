@@ -167,7 +167,6 @@ class JDBCContractRepositoryImplTest extends BaseRepositoryTest {
 
     private void assertContractEquals(Contract expectedContract, Contract actualContract) {
         assertAll(
-                () -> assertEquals(expectedContract.getId(), actualContract.getId()),
                 () -> assertEquals(expectedContract.getOwner().getId(), actualContract.getOwner().getId()),
                 () -> assertEquals(expectedContract.getDescription(), actualContract.getDescription()),
                 () -> assertEquals(expectedContract.getStartDate(), actualContract.getStartDate()),

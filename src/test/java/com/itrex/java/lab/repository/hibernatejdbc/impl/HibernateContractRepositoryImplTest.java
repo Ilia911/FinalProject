@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -72,7 +71,6 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    @Rollback(value = true)
     void delete_validData_shouldDeleteContract() throws RepositoryException {
         //when
         int contractId = 1;
@@ -121,7 +119,6 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    @Rollback(value = true)
     void add_contractWithNullDescription_shouldThrowsRepositoryException() {
         //given && when
         User contractOwner = User.builder().id(1).build();
@@ -152,7 +149,6 @@ class HibernateContractRepositoryImplTest extends BaseRepositoryTest {
     }
 
     @Test
-    @Rollback(value = true)
     void add_contractWithNullStartPrice_shouldThrowsRepositoryException() {
         //given && when
         User contractOwner = User.builder().id(1).build();

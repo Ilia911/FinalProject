@@ -12,27 +12,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Deprecated
-public class JDBCRoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
+public class JDBCRoleRepositoryImpl implements RoleRepository {
 
     private static final String FIND_ROLE_QUERY = "select * from builder.role where id = ?";
     private static final String FIND_ROLES_QUERY = "select * from builder.role";
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
 
+    private final DataSource dataSource;
+
     public JDBCRoleRepositoryImpl(DataSource dataSource) {
-        this.setDataSource(dataSource);
+        this.dataSource = dataSource;
+    }
+
+    private Connection getDataSourceUtilsConnection() throws SQLException {
+        return DataSourceUtils.getConnection(dataSource);
     }
 
     @Override
     public Optional<Role> find(int id) throws RepositoryException {
         Role role = null;
-        try (Connection conn = getDataSource().getConnection()) {
-
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ROLE_QUERY);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -49,7 +55,8 @@ public class JDBCRoleRepositoryImpl extends JdbcDaoSupport implements RoleReposi
     @Override
     public List<Role> findAll() throws RepositoryException {
         List<Role> roles = new ArrayList<>();
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ROLES_QUERY);
             while (resultSet.next()) {

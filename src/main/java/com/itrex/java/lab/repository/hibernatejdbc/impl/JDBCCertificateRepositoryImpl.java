@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Deprecated
-public class JDBCCertificateRepositoryImpl extends JdbcDaoSupport implements CertificateRepository {
+public class JDBCCertificateRepositoryImpl implements CertificateRepository {
 
     private static final String CERTIFICATE_ID_COLUMN = "id";
     private static final String CERTIFICATE_NAME_COLUMN = "name";
@@ -26,13 +26,20 @@ public class JDBCCertificateRepositoryImpl extends JdbcDaoSupport implements Cer
     private static final String FIND_CERTIFICATE_BY_ID_QUERY
             = "select * from builder.certificate where id = ?";
 
+    private final DataSource dataSource;
+
     public JDBCCertificateRepositoryImpl(DataSource dataSource) {
-        this.setDataSource(dataSource);
+        this.dataSource = dataSource;
+    }
+
+    private Connection getDataSourceUtilsConnection() throws SQLException {
+        return DataSourceUtils.getConnection(dataSource);
     }
 
     @Override
     public List<Certificate> findAllForUser(int userId) throws RepositoryException {
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             List<Certificate> certificateList = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_ALL_CERTIFICATES_FOR_USER_QUERY);
             preparedStatement.setInt(1, userId);
@@ -50,7 +57,8 @@ public class JDBCCertificateRepositoryImpl extends JdbcDaoSupport implements Cer
     @Override
     public Optional<Certificate> findById(int id) throws RepositoryException {
         Certificate certificate = null;
-        try (Connection conn = getDataSource().getConnection()) {
+        try {
+            Connection conn = getDataSourceUtilsConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_CERTIFICATE_BY_ID_QUERY);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
