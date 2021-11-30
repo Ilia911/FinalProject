@@ -32,7 +32,7 @@ class RoleControllerTest extends BaseControllerTest {
         // when
         when(roleService.find(id)).thenReturn(Optional.of(expectedResponseBody));
         // then
-        MvcResult mvcResult = mockMvc.perform(get("/role/{id}", id).contentType("application/json"))
+        MvcResult mvcResult = mockMvc.perform(get("/roles/{id}", id).contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
@@ -47,13 +47,13 @@ class RoleControllerTest extends BaseControllerTest {
         // when
         when(roleService.find(id)).thenReturn(Optional.empty());
         // then
-        MvcResult mvcResult = mockMvc.perform(get("/role/{id}", id).contentType("application/json"))
+        mockMvc.perform(get("/roles/{id}", id).contentType("application/json"))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
 
     @Test
-    void findAllCertificates_validData_shouldReturnRoleList() throws Exception {
+    void findAllRoles_validData_shouldReturnRoleList() throws Exception {
         //given
         RoleDTO roleDTO = RoleDTO.builder().build();
         List<RoleDTO> expectedResponseBody = Arrays.asList(roleDTO, roleDTO);

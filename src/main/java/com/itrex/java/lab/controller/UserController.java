@@ -17,17 +17,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService service;
 
-    @GetMapping("/users")
-    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) throws ServiceException {
+    @GetMapping
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
 
         Page<UserDTO> users = service.findAll(pageable);
 
@@ -36,36 +38,35 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<UserDTO> findById(@PathVariable(name = "id") int id) throws ServiceException {
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> findById(@PathVariable(name = "id") int id) {
 
         Optional<UserDTO> user = service.findById(id);
 
-        return user.isPresent()
-                ? new ResponseEntity<>(user.get(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return user.map(userDTO -> new ResponseEntity<>(userDTO, HttpStatus.OK)).
+                orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<UserDTO> findByEmail(@RequestParam(name = "email") String email) throws ServiceException {
+    @GetMapping("/email")
+    public ResponseEntity<UserDTO> findByEmail(@RequestParam(name = "email") String email) {
 
         Optional<UserDTO> user = service.findByEmail(email);
 
-        return user.isPresent()
-                ? new ResponseEntity<>(user.get(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return user.map(userDTO -> new ResponseEntity<>(userDTO, HttpStatus.OK)).
+                orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/user/delete/{id}")
-    public ResponseEntity delete(@PathVariable(name = "id") int id) throws ServiceException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable(name = "id") int id) {
 
         boolean result = service.delete(id);
 
         return result ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PutMapping("user/update")
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO) throws ServiceException {
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable(name = "id") int id,
+                                          @RequestBody UserDTO userDTO) throws ServiceException {
 
         UserDTO updatedContract = service.update(userDTO);
 
@@ -74,17 +75,16 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping("/user/new")
+    @PostMapping
     public ResponseEntity<UserDTO> add(@RequestBody UserDTO userDTO) throws ServiceException {
 
         Optional<UserDTO> newUser = service.add(userDTO);
 
-        return newUser.isPresent()
-                ? new ResponseEntity<>(newUser.get(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return newUser.map(dto -> new ResponseEntity<>(dto, HttpStatus.OK)).
+                orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
     }
 
-    @PostMapping("/user/assignCertificate")
+    @PostMapping("/assignCertificate")
     public ResponseEntity<List<CertificateDTO>>
     assignCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 
@@ -95,7 +95,7 @@ public class UserController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping("/user/removeCertificate")
+    @PostMapping("/removeCertificate")
     public ResponseEntity<List<CertificateDTO>>
     removeCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 

@@ -43,7 +43,7 @@ class UserControllerTest extends BaseControllerTest {
         // when
         when(userService.findById(userId)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/user/{id}", userId)
+        MvcResult mvcResult = mockMvc.perform(get("/users/{id}", userId)
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -64,7 +64,7 @@ class UserControllerTest extends BaseControllerTest {
         // when
         when(userService.findByEmail(userEmail)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/user")
+        MvcResult mvcResult = mockMvc.perform(get("/users/email")
                         .contentType("application/json")
                         .param("email", userEmail))
                 .andExpect(status().isOk())
@@ -105,7 +105,7 @@ class UserControllerTest extends BaseControllerTest {
         // when
         when(userService.delete(id)).thenReturn(true);
         //then
-        mockMvc.perform(delete("/user/delete/{id}", id)
+        mockMvc.perform(delete("/users/{id}", id)
                         .contentType("application/json"))
                 .andExpect(status().isOk());
     }
@@ -116,7 +116,7 @@ class UserControllerTest extends BaseControllerTest {
         int invalidId = 5;
         when(userService.delete(invalidId)).thenReturn(false);
         //then
-        mockMvc.perform(delete("/user/delete/{id}", invalidId)
+        mockMvc.perform(delete("/users/{id}", invalidId)
                         .contentType("application/json"))
                 .andExpect(status().isNotModified());
     }
@@ -131,7 +131,7 @@ class UserControllerTest extends BaseControllerTest {
         //when
         when(userService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         // then
-        MvcResult mvcResult = mockMvc.perform(put("/user/update")
+        MvcResult mvcResult = mockMvc.perform(put("/users/{id}", userId)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())
@@ -148,7 +148,7 @@ class UserControllerTest extends BaseControllerTest {
         //when
         when(userService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/user/new")
+        MvcResult mvcResult = mockMvc.perform(post("/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())
@@ -169,7 +169,7 @@ class UserControllerTest extends BaseControllerTest {
         when(userService.assignCertificate(userId, certificateId))
                 .thenReturn(expectedResponseBody);
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/user/assignCertificate")
+        MvcResult mvcResult = mockMvc.perform(post("/users/assignCertificate")
                         .contentType("application/json")
                         .param("userId", String.valueOf(userId))
                         .param("certificateId", String.valueOf(certificateId)))
@@ -191,7 +191,7 @@ class UserControllerTest extends BaseControllerTest {
         when(userService.removeCertificate(userId, certificateId))
                 .thenReturn(expectedResponseBody);
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/user/removeCertificate")
+        MvcResult mvcResult = mockMvc.perform(post("/users/removeCertificate")
                         .contentType("application/json")
                         .param("userId", String.valueOf(userId))
                         .param("certificateId", String.valueOf(certificateId)))

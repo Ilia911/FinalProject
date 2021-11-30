@@ -14,36 +14,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/offers")
 @RequiredArgsConstructor
 public class OfferController {
 
     private final OfferService service;
 
-    @GetMapping("/contracts/offers/{contractId}")
-    public ResponseEntity<List<OfferDTO>> findAllForGivenContract(@PathVariable(name = "contractId") int contractId) throws ServiceException {
+    @GetMapping("/contracts/{id}")
+    public ResponseEntity<List<OfferDTO>> findAllForGivenContract(@PathVariable(name = "id") int id) {
 
-        List<OfferDTO> offers = service.findAll(contractId);
+        List<OfferDTO> offers = service.findAll(id);
 
         return offers != null && !offers.isEmpty()
                 ? new ResponseEntity<>(offers, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/offers/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<OfferDTO> find(@PathVariable(name = "id") int id) throws ServiceException {
 
         Optional<OfferDTO> offerDTO = service.find(id);
 
-        return offerDTO.isPresent()
-                ? new ResponseEntity<>(offerDTO.get(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return offerDTO.map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/offers/delete/{id}")
-    public ResponseEntity delete(@PathVariable(name = "id") int id) throws ServiceException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable(name = "id") int id) {
 
         boolean result = service.delete(id);
 
@@ -52,8 +53,8 @@ public class OfferController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PutMapping("/offers/update")
-    public ResponseEntity<OfferDTO> update(@RequestBody OfferDTO offer) throws ServiceException {
+    @PutMapping("/{id}")
+    public ResponseEntity<OfferDTO> update(@PathVariable(name = "id") int id, @RequestBody OfferDTO offer) throws ServiceException {
 
         OfferDTO updatedOffer = service.update(offer);
 
@@ -62,13 +63,12 @@ public class OfferController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PostMapping("/offer/new")
-    public ResponseEntity<OfferDTO> add(@RequestBody OfferDTO offer) throws ServiceException {
+    @PostMapping
+    public ResponseEntity<OfferDTO> add(@RequestBody OfferDTO offer) {
 
         Optional<OfferDTO> newOffer = service.add(offer);
 
-        return newOffer.isPresent()
-                ? new ResponseEntity<>(newOffer.get(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return newOffer.map(offerDTO -> new ResponseEntity<>(offerDTO, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE));
     }
 }

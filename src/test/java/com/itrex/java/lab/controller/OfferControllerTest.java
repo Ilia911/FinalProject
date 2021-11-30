@@ -45,7 +45,6 @@ class OfferControllerTest extends BaseControllerTest {
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
-
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(expectedResponseBody), actualResponseBody);
@@ -55,17 +54,16 @@ class OfferControllerTest extends BaseControllerTest {
     @Test
     void findAllForGivenContract_validData_shouldReturnOfferList() throws Exception {
         //given
-        int contractId = 1;
+        int id = 1;
         OfferDTO offerDTO = OfferDTO.builder().build();
         List<OfferDTO> expectedResponseBody = Arrays.asList(offerDTO, offerDTO);
         //when
-        when(offerService.findAll(contractId)).thenReturn(expectedResponseBody);
+        when(offerService.findAll(id)).thenReturn(expectedResponseBody);
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/contracts/offers/{contractId}", contractId)
+        MvcResult mvcResult = mockMvc.perform(get("/offers/contracts/{id}", id)
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
-
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(expectedResponseBody), actualResponseBody);
@@ -78,7 +76,7 @@ class OfferControllerTest extends BaseControllerTest {
         //when
         when(offerService.delete(offerId)).thenReturn(true);
         //then
-        mockMvc.perform(delete("/offers/delete/{id}", offerId)
+        mockMvc.perform(delete("/offers/{id}", offerId)
                         .contentType("application/json"))
                 .andExpect(status().isOk());
     }
@@ -90,7 +88,7 @@ class OfferControllerTest extends BaseControllerTest {
         //when
         when(offerService.delete(offerId)).thenReturn(false);
         //then
-        mockMvc.perform(delete("/offers/delete/{id}", offerId)
+        mockMvc.perform(delete("/offers/{id}", offerId)
                         .contentType("application/json"))
                 .andExpect(status().isNotModified());
     }
@@ -110,7 +108,7 @@ class OfferControllerTest extends BaseControllerTest {
         //when
         when(offerService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         //then
-        MvcResult mvcResult = mockMvc.perform(put("/offers/update")
+        MvcResult mvcResult = mockMvc.perform(put("/offers/{id}", expectedOfferId)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())
@@ -133,11 +131,10 @@ class OfferControllerTest extends BaseControllerTest {
         OfferDTO expectedResponseBody = OfferDTO.builder()
                 .id(id).offerOwner(userDTO).contract(contractDTO).price(price)
                 .build();
-
         //when
         when(offerService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/offer/new")
+        MvcResult mvcResult = mockMvc.perform(post("/offers")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())

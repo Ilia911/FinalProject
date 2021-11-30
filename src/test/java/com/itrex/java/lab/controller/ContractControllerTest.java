@@ -1,8 +1,6 @@
 package com.itrex.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itrex.java.lab.entity.Contract;
-import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import java.time.LocalDate;
@@ -47,7 +45,7 @@ class ContractControllerTest extends BaseControllerTest {
                 .build();
         when(contractService.find(expectedContractId)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(get("/contract/{id}", expectedContractId)
+        MvcResult mvcResult = mockMvc.perform(get("/contracts/{id}", expectedContractId)
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -60,7 +58,6 @@ class ContractControllerTest extends BaseControllerTest {
     @Test
     void findAll_validData_shouldReturnContractList() throws Exception {
         //given
-
         ContractDTO contractDTO = ContractDTO.builder().build();
         List<ContractDTO> expectedResponseBody = Arrays.asList(contractDTO, contractDTO);
         //when
@@ -84,7 +81,7 @@ class ContractControllerTest extends BaseControllerTest {
         //when
         when(contractService.delete(contractId)).thenReturn(true);
         //then
-        mockMvc.perform(delete("/contract/delete/{id}", contractId)
+        mockMvc.perform(delete("/contracts/{id}", contractId)
                         .contentType("application/json"))
                 .andExpect(status().isOk());
     }
@@ -93,16 +90,7 @@ class ContractControllerTest extends BaseControllerTest {
     void update_validData_shouldUpdateExistedContract() throws Exception {
         //given
         int contractId = 1;
-        User contractOwner = User.builder().id(1).build();
         UserDTO contractOwnerDTO = UserDTO.builder().id(1).build();
-        Contract originalContract = Contract.builder()
-                .id(contractId).owner(contractOwner).description("original name").startDate(LocalDate.now().plusDays(1L))
-                .endDate(LocalDate.now().plusDays(2L)).startPrice(40000)
-                .build();
-        Contract expectedContract = Contract.builder()
-                .id(contractId).owner(contractOwner).description("edited contract").startDate(LocalDate.now().plusDays(2L))
-                .endDate(LocalDate.now().plusDays(5L)).startPrice(50000)
-                .build();
         ContractDTO expectedResponseBody = ContractDTO.builder()
                 .id(contractId).owner(contractOwnerDTO).description("edited contract").startDate(LocalDate.now().plusDays(2L))
                 .endDate(LocalDate.now().plusDays(5L)).startPrice(50000)
@@ -110,7 +98,7 @@ class ContractControllerTest extends BaseControllerTest {
         //when
         when(contractService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         //then
-        MvcResult mvcResult = mockMvc.perform(put("/contract/update")
+        MvcResult mvcResult = mockMvc.perform(put("/contracts/{id}", contractId)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())
@@ -130,7 +118,7 @@ class ContractControllerTest extends BaseControllerTest {
         //when
         when(contractService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/contract/new")
+        MvcResult mvcResult = mockMvc.perform(post("/contracts")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(expectedResponseBody)))
                 .andExpect(status().isOk())
