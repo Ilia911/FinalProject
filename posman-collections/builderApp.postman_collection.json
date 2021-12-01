@@ -37,7 +37,17 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/roles/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"roles",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
@@ -46,7 +56,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"roles"
+							]
+						}
 					},
 					"response": []
 				}
@@ -60,7 +79,18 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/offers/contracts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"contracts",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -69,34 +99,91 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/offers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Delete offer by offer id",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/offers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Update offer",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": 23000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/offers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Add new offer",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 80,\r\n    \"offerOwner\": {\r\n        \"id\": 3\r\n    },\r\n    \"contract\": {\r\n        \"id\": 2\r\n    },\r\n    \"price\": 15000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/offers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers"
+							]
+						}
 					},
 					"response": []
 				}
@@ -110,7 +197,17 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/contracts/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
@@ -119,34 +216,90 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/contracts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Delete contract by id",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/contracts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Update contract",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"description\": \"updated contract\",\r\n    \"startDate\": \"2022-03-09\",\r\n    \"endDate\": \"2022-08-30\",\r\n    \"startPrice\": 25000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/contracts/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Add new contract",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"owner\": {\r\n        \"id\": 2\r\n    },\r\n    \"description\": \"new added contract\",\r\n    \"startDate\": \"2022-03-01\",\r\n    \"endDate\": \"2022-09-30\",\r\n    \"startPrice\": 50000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/contracts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts"
+							]
+						}
 					},
 					"response": []
 				}
@@ -160,7 +313,17 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/users/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -169,52 +332,162 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "sort",
+									"value": "name,desc"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Delete user by id",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Update user",
 					"request": {
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Name\",\r\n    \"password\": \"updatedPassword\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"certificates\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Add new user",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"password\": \"password\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"newUser@gmail.com\",\r\n    \"certificates\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Assign certificate",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/users/assignCertificate?userId=3&certificateId=2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"assignCertificate"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3"
+								},
+								{
+									"key": "certificateId",
+									"value": "2"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Remove certificate Copy",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "localhost:8080/users/removeCertificate?userId=3&certificateId=6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"removeCertificate"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3"
+								},
+								{
+									"key": "certificateId",
+									"value": "6"
+								}
+							]
+						}
 					},
 					"response": []
 				}
