@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -29,6 +30,7 @@ class ContractControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER", "CONTRACTOR"})
     void find_validData_shouldReturnContract() throws Exception {
         //given
         int expectedContractId = 1;
@@ -56,6 +58,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
     void findAll_validData_shouldReturnContractList() throws Exception {
         //given
         ContractDTO contractDTO = ContractDTO.builder().build();
@@ -75,6 +78,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
     void delete_validData_shouldDeleteContract() throws Exception {
         //given
         int contractId = 1;
@@ -87,6 +91,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
     void update_validData_shouldUpdateExistedContract() throws Exception {
         //given
         int contractId = 1;
@@ -109,6 +114,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
     void add_validData_shouldReturnNewCreatedContract() throws Exception {
         //given
         UserDTO contractOwnerDTO = UserDTO.builder().id(1).build();

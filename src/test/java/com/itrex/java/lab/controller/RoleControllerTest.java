@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockUser(username = "Admin", roles = {"ADMIN"})
 class RoleControllerTest extends BaseControllerTest {
 
     @Autowired
@@ -27,7 +29,7 @@ class RoleControllerTest extends BaseControllerTest {
     void find_validData_shouldReturnRole() throws Exception {
         //given
         int id = 2;
-        String name = "customer";
+        String name = "ROLE_CUSTOMER";
         RoleDTO expectedResponseBody = RoleDTO.builder().id(id).name(name).build();
         // when
         when(roleService.find(id)).thenReturn(Optional.of(expectedResponseBody));

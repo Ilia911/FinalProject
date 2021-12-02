@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -23,6 +24,7 @@ class CertificateControllerTest extends BaseControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
     void findAllCertificatesByUserId_validInput_shouldReturnListCertificates() throws Exception {
         //given
         int userId = 4;
