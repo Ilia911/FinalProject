@@ -328,20 +328,26 @@
 					"response": []
 				},
 				{
-					"name": "Find all users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users"
-							],
-							"query": [
+                  "name": "Find all users (Autotization role : customer)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MzgzNjcwODQsImV4cCI6MTYzODk2NzA4NH0.436gEAve8Xi0yd3cQWpCw5DoV7vkRvHtec27C0e1HIU",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "users"
+                      ],
+                      "query": [
 								{
 									"key": "page",
 									"value": "1"
@@ -482,16 +488,122 @@
 									"key": "userId",
 									"value": "3"
 								},
-								{
-									"key": "certificateId",
-									"value": "6"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+                              {
+                                "key": "certificateId",
+                                "value": "6"
+                              }
+                            ]
+                        }
+                    },
+                  "response": []
+                }
+            ]
+        },
+      {
+        "name": "login with customer role",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "localhost:8080/login",
+            "host": [
+              "localhost"
+            ],
+            "port": "8080",
+            "path": [
+              "login"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "login with admin role",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "localhost:8080/login",
+            "host": [
+              "localhost"
+            ],
+            "port": "8080",
+            "path": [
+              "login"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "login with contractor role",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"email\": \"contractor@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "url": {
+            "raw": "localhost:8080/login",
+            "host": [
+              "localhost"
+            ],
+            "port": "8080",
+            "path": [
+              "login"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "just test request",
+        "request": {
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg0MjM3MDgsImV4cCI6MTYzOTAyMzcwOH0.Jsw9THDEYJmN7PUXYw5L8sQW7cMwVsbA0NDxFXdDWoA",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "localhost:8080/users/5",
+            "host": [
+              "localhost"
+            ],
+            "port": "8080",
+            "path": [
+              "users",
+              "5"
+            ]
+          }
+        },
+        "response": []
+      }
+    ]
 }

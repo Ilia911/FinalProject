@@ -6,6 +6,7 @@ import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.service.UserService;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
+    @RolesAllowed({"CUSTOMER", "CONTRACTOR", "ADMIN"})
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
 
         Page<UserDTO> users = service.findAll(pageable);
@@ -39,6 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({"CUSTOMER", "CONTRACTOR", "ADMIN"})
     public ResponseEntity<UserDTO> findById(@PathVariable(name = "id") int id) {
 
         Optional<UserDTO> user = service.findById(id);
@@ -48,6 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<UserDTO> findByEmail(@RequestParam(name = "email") String email) {
 
         Optional<UserDTO> user = service.findByEmail(email);
@@ -57,6 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity delete(@PathVariable(name = "id") int id) {
 
         boolean result = service.delete(id);
@@ -65,6 +70,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<UserDTO> update(@PathVariable(name = "id") int id,
                                           @RequestBody UserDTO userDTO) throws ServiceException {
 
@@ -76,6 +82,7 @@ public class UserController {
     }
 
     @PostMapping
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<UserDTO> add(@RequestBody UserDTO userDTO) throws ServiceException {
 
         Optional<UserDTO> newUser = service.add(userDTO);
@@ -85,6 +92,7 @@ public class UserController {
     }
 
     @PostMapping("/assignCertificate")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<List<CertificateDTO>>
     assignCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 
@@ -96,6 +104,7 @@ public class UserController {
     }
 
     @PostMapping("/removeCertificate")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<List<CertificateDTO>>
     removeCertificate(@RequestParam(name = "userId") int userId, @RequestParam(name = "certificateId") int certificateId) {
 

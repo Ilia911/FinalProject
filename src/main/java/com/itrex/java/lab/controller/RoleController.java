@@ -4,6 +4,7 @@ import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.service.RoleService;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<List<RoleDTO>> findAllRoles() {
 
         List<RoleDTO> roles = service.findAll();
@@ -30,6 +32,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<RoleDTO> find(@PathVariable(name = "id") int id) {
         Optional<RoleDTO> roleDTO = service.find(id);
 

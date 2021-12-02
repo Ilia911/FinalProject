@@ -13,11 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Deprecated
+@RequiredArgsConstructor
 public class JDBCUserRepositoryImpl implements UserRepository {
 
     private static final String ID_COLUMN = "id";
@@ -46,10 +48,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
 
     private final DataSource dataSource;
 
-    public JDBCUserRepositoryImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
     private Connection getDataSourceUtilsConnection() throws SQLException {
         return DataSourceUtils.getConnection(dataSource);
     }
@@ -59,7 +57,6 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         if (email == null) {
             throw new RepositoryException("User field 'email' must not be null!");
         }
-
         try {
             Connection conn = getDataSourceUtilsConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY);

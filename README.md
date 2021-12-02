@@ -5,12 +5,14 @@
 1. Main business logic: customers announce contract with information about building or renovation what they needed.
    Contractors browse contracts and chose one that they interested in, create offer for it. Then customers browse
    suggested offers and chose the most attractive one.
-2. Roles: contractor, customer
+2. Roles: CONTRACTOR, CUSTOMER, ADMIN
 3. Customer functions: can create an application (Contract) for the needed building work (name of the work, description,
-   start and end of execution, starting price), change own contract, delete own contract. Browse suggested offers for
-   own contract.
+   start and end of execution, starting price), change own contract, delete own contract. Browse all suggested offers
+   for own contract. Browse one specific offer for own contract. Find all certificates by user id.
 4. Contractor functions: view the list of contracts; submit, modify, delete own offer.
-5. Common functions: view users (pageable function); view, edit, delete own profile.
+5. Admin functions: create, update, delete user, assign certificate, remove certificate, find user by email; find all
+   Roles, find Role by id.
+6. Common functions: view users (pageable function); view one user. Log in, Lot out.
 
 Contractors are certified to perform work (many-to-many relationship).
 

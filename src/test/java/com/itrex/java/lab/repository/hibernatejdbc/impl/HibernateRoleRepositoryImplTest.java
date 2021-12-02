@@ -29,7 +29,7 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     void find_validData_shouldReturnRole() throws RepositoryException {
         //given
         int expectedRoleId = 2;
-        String expectedRoleName = "customer";
+        String expectedRoleName = "ROLE_CUSTOMER";
         // when
         Role actualRole = repository.find(expectedRoleId).get();
         // then
@@ -49,7 +49,7 @@ class HibernateRoleRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void findAll_validData_shouldReturnRoleList() throws RepositoryException {
         //given
-        int expectedListSize = 2;
+        int expectedListSize = 3;
         //when
         List<Role> actualRoles = repository.findAll();
         //then

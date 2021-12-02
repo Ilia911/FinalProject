@@ -28,7 +28,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     public void findByEmail_validData_shouldReturnExistUser() throws RepositoryException {
         //given
         String userName = "Customer";
-        String userPassword = "password";
+        String userPassword = "$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC";
         String userEmail = "castomer@gmail.com";
         //when
         User actualUser = repository.findByEmail("castomer@gmail.com").get();
@@ -52,7 +52,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     public void findAll_validData_shouldReturnExistUsers() throws RepositoryException {
         //given
-        int expectedUsersAmount = 4;
+        int expectedUsersAmount = 5;
         //when
         int actualUsersAmount = repository.findAll().size();
         //then
@@ -70,7 +70,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     @Test
     void delete_invalidData_shouldDeleteUser() throws RepositoryException {
         //given && when
-        int userId = 5;
+        int userId = 10;
         //then
         assertFalse(repository.delete(userId));
     }

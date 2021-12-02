@@ -17,3 +17,7 @@ server:
   error:
     include-stacktrace: always
     include-message: always
+jwt:
+  secret: secret
+  expiration: 600000
+  header: Authorization

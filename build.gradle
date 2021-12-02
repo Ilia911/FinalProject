@@ -25,10 +25,13 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-jdbc') {
         exclude module: 'spring-boot-starter-logging'
     }
-    implementation ('org.springframework.boot:spring-boot-starter-web') {
+    implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: 'spring-boot-starter-logging'
     }
     implementation('org.springframework.boot:spring-boot-starter-aop') {
+        exclude module: 'spring-boot-starter-logging'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-security') {
         exclude module: 'spring-boot-starter-logging'
     }
     implementation 'org.flywaydb:flyway-core'
@@ -38,10 +41,17 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'spring-boot-starter-logging'
+//        exclude something
+    }
+    testImplementation('org.springframework.security:spring-security-test') {
+        exclude module: 'spring-boot-starter-logging'
     }
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
+
 }
 
 test {

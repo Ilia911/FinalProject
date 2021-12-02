@@ -5,6 +5,7 @@ import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.service.OfferService;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class OfferController {
     private final OfferService service;
 
     @GetMapping("/contracts/{id}")
+    @RolesAllowed("CUSTOMER")
     public ResponseEntity<List<OfferDTO>> findAllForGivenContract(@PathVariable(name = "id") int id) {
 
         List<OfferDTO> offers = service.findAll(id);
@@ -35,6 +37,7 @@ public class OfferController {
     }
 
     @GetMapping("/{id}")
+    @RolesAllowed({"CUSTOMER", "CONTRACTOR"})
     public ResponseEntity<OfferDTO> find(@PathVariable(name = "id") int id) throws ServiceException {
 
         Optional<OfferDTO> offerDTO = service.find(id);
@@ -44,6 +47,7 @@ public class OfferController {
     }
 
     @DeleteMapping("/{id}")
+    @RolesAllowed("CONTRACTOR")
     public ResponseEntity delete(@PathVariable(name = "id") int id) {
 
         boolean result = service.delete(id);
@@ -54,6 +58,7 @@ public class OfferController {
     }
 
     @PutMapping("/{id}")
+    @RolesAllowed("CONTRACTOR")
     public ResponseEntity<OfferDTO> update(@PathVariable(name = "id") int id, @RequestBody OfferDTO offer) throws ServiceException {
 
         OfferDTO updatedOffer = service.update(offer);
@@ -64,6 +69,7 @@ public class OfferController {
     }
 
     @PostMapping
+    @RolesAllowed("CONTRACTOR")
     public ResponseEntity<OfferDTO> add(@RequestBody OfferDTO offer) {
 
         Optional<OfferDTO> newOffer = service.add(offer);
