@@ -1,4 +1,4 @@
-package com.itrex.java.lab.security.dto;
+package com.itrex.java.lab.security.entity;
 
 import lombok.Data;
 

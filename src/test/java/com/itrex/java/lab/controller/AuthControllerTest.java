@@ -2,6 +2,7 @@ package com.itrex.java.lab.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,7 +29,7 @@ class AuthControllerTest extends BaseControllerTest {
 
     @Test
     @WithAnonymousUser
-    void login_invalidData_shouldLogIn() throws Exception {
+    void login_invalidData_shouldNotLogIn() throws Exception {
         //given
         String loginPath = "/login";
         String username = "admin@gmail.com";
@@ -38,9 +39,11 @@ class AuthControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @PreAuthorize("authenticated")
     void logout_validData_shouldLogOut() throws Exception {
         //given
         String logoutPath = "/logout";
-        mockMvc.perform(logout(logoutPath));
+        //when & then
+        mockMvc.perform(logout(logoutPath)).andExpect(unauthenticated());
     }
 }

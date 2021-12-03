@@ -1,7 +1,8 @@
-package com.itrex.java.lab.security;
+package com.itrex.java.lab.security.service;
 
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.repository.data.UserRepository;
+import com.itrex.java.lab.security.entity.SecurityUserDetails;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

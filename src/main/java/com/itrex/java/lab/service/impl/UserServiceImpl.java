@@ -153,7 +153,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDTO convertUserToUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
+        modelMapper.typeMap(User.class, UserDTO.class);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        userDTO.setPassword("hidden");
+        return userDTO;
     }
 
     private User convertUserDTOToUser(UserDTO user) {

@@ -1,9 +1,7 @@
 package com.itrex.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.entity.dto.OfferDTO;
-import com.itrex.java.lab.entity.dto.UserDTO;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +32,10 @@ class OfferControllerTest extends BaseControllerTest {
     void find_validData_shouldReturnOffer() throws Exception {
         //given
         int expectedOfferId = 1;
-        int expectedOwnerId = 3;
-        int expectedContractId = 1;
+        int ownerId = 3;
+        int contractId = 1;
         int expectedPrice = 27500;
-        UserDTO ownerDTO = UserDTO.builder().id(expectedOwnerId).build();
-        ContractDTO contractDTO = ContractDTO.builder().id(expectedContractId).build();
-        OfferDTO expectedResponseBody = OfferDTO.builder().id(expectedOfferId).offerOwner(ownerDTO).contract(contractDTO).price(expectedPrice).build();
+        OfferDTO expectedResponseBody = OfferDTO.builder().id(expectedOfferId).offerOwnerId(ownerId).contractId(contractId).price(expectedPrice).build();
         //when
         when(offerService.find(expectedOfferId)).thenReturn(Optional.of(expectedResponseBody));
         //then
@@ -103,13 +99,11 @@ class OfferControllerTest extends BaseControllerTest {
     void update_validData_shouldUpdateOffer() throws Exception {
         //given
         int expectedOfferId = 1;
-        int expectedOfferOwnerId = 3;
-        int expectedContractId = 1;
+        int offerOwnerId = 3;
+        int contractId = 1;
         int expectedPrice = 25000;
-        UserDTO expectedOfferOwnerDTO = UserDTO.builder().id(expectedOfferOwnerId).build();
-        ContractDTO expectedContractDTO = ContractDTO.builder().id(expectedContractId).build();
         OfferDTO expectedResponseBody = OfferDTO.builder()
-                .id(expectedOfferId).offerOwner(expectedOfferOwnerDTO).contract(expectedContractDTO).price(expectedPrice)
+                .id(expectedOfferId).offerOwnerId(offerOwnerId).contractId(contractId).price(expectedPrice)
                 .build();
         //when
         when(offerService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
@@ -132,11 +126,8 @@ class OfferControllerTest extends BaseControllerTest {
         int ownerId = 4;
         int contractId = 2;
         int price = 27000;
-        UserDTO userDTO = UserDTO.builder().id(ownerId).build();
-        ContractDTO contractDTO = ContractDTO.builder().id(contractId).build();
-
         OfferDTO expectedResponseBody = OfferDTO.builder()
-                .id(id).offerOwner(userDTO).contract(contractDTO).price(price)
+                .id(id).offerOwnerId(ownerId).contractId(contractId).price(price)
                 .build();
         //when
         when(offerService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));

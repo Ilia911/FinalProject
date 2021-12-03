@@ -6,6 +6,7 @@ import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.data.ContractRepository;
 import com.itrex.java.lab.repository.data.OfferRepository;
+import com.itrex.java.lab.repository.data.UserRepository;
 import com.itrex.java.lab.service.ContractService;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository contractRepository;
     private final OfferRepository offerRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -31,7 +33,7 @@ public class ContractServiceImpl implements ContractService {
 
         Optional<Contract> contract = contractRepository.findById(id);
         if (contract.isPresent()) {
-            contractDTO = convertContractIntoContractDTO(contract.get());
+            contractDTO = ContractDTO.convertFromContract(contract.get());
         }
         return Optional.ofNullable(contractDTO);
     }
@@ -43,7 +45,7 @@ public class ContractServiceImpl implements ContractService {
 
         List<Contract> contracts = contractRepository.findAll();
         if (contracts.size() > 0) {
-            contractDTOs = contracts.stream().map(this::convertContractIntoContractDTO).collect(Collectors.toList());
+            contractDTOs = contracts.stream().map(ContractDTO::convertFromContract).collect(Collectors.toList());
         }
         return contractDTOs;
     }
@@ -81,7 +83,7 @@ public class ContractServiceImpl implements ContractService {
                 contract.setStartPrice(contractDTO.getStartPrice());
             }
             contractRepository.flush();
-            return convertContractIntoContractDTO(contractRepository.findById(contractDTO.getId()).get());
+            return ContractDTO.convertFromContract(contractRepository.findById(contractDTO.getId()).get());
         } else {
             throw new ServiceException(String.format("Contract with id = %d does not exist", contractDTO.getId()));
         }
@@ -89,19 +91,11 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     @Transactional
-    public Optional<ContractDTO> add(ContractDTO contract) {
+    public Optional<ContractDTO> add(ContractDTO contractDTO) {
         ContractDTO newContractDTO;
-
-        Contract newContract = contractRepository.save(convertContractDTOIntoContract(contract));
-        newContractDTO = convertContractIntoContractDTO(newContract);
+        Contract contract = ContractDTO.convertToContract(contractDTO);
+        Contract newContract = contractRepository.save(contract);
+        newContractDTO = ContractDTO.convertFromContract(newContract);
         return Optional.ofNullable(newContractDTO);
-    }
-
-    private ContractDTO convertContractIntoContractDTO(Contract contract) {
-        return modelMapper.map(contract, ContractDTO.class);
-    }
-
-    private Contract convertContractDTOIntoContract(ContractDTO contract) {
-        return modelMapper.map(contract, Contract.class);
     }
 }

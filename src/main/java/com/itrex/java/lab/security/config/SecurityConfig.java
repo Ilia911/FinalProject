@@ -1,4 +1,4 @@
-package com.itrex.java.lab.security;
+package com.itrex.java.lab.security.config;
 
 import com.itrex.java.lab.security.jwt.JwtConfigurer;
 import javax.servlet.http.HttpServletResponse;

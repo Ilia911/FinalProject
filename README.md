@@ -16,6 +16,8 @@
 
 Contractors are certified to perform work (many-to-many relationship).
 
+### To run: just run com.itrex.java.lab.Main
+
 Приложение для потребителей и поставщиков строительных работ.
 
 1. Общая информация: заказчики создают заявку на выполнение строительных работ. Подрядчики просматривают заявки и на

@@ -1,4 +1,4 @@
-package com.itrex.java.lab.security;
+package com.itrex.java.lab.security.entity;
 
 import com.itrex.java.lab.entity.User;
 import java.util.Collection;

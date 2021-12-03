@@ -1,7 +1,7 @@
 package com.itrex.java.lab.controller;
 
 import com.itrex.java.lab.entity.dto.UserDTO;
-import com.itrex.java.lab.security.dto.AuthenticationRequestDTO;
+import com.itrex.java.lab.security.entity.AuthenticationRequestDTO;
 import com.itrex.java.lab.security.jwt.JwtTokenProvider;
 import com.itrex.java.lab.service.UserService;
 import java.util.HashMap;

@@ -11,18 +11,24 @@
 				{
 					"name": "get Certificates by user id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/certificates/3",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"certificates",
-								"3"
-							]
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUzMjY5OSwiZXhwIjoxNjM5MTMyNjk5fQ.jOA_Efq7dHQK_HS5urgHJZtXzzQ60-m7EJHh3Z68HIY",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/certificates/3",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "certificates",
+                          "3"
+                        ]
 						}
 					},
 					"response": []
@@ -35,18 +41,24 @@
 				{
 					"name": "Find role by id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/roles/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"roles",
-								"2"
-							]
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/roles/2",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "roles",
+                          "2"
+                        ]
 						}
 					},
 					"response": []
@@ -54,18 +66,24 @@
 				{
 					"name": "Find all roles",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/roles",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"roles"
-							]
-						}
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/roles",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "roles"
+                        ]
+                      }
 					},
 					"response": []
 				}
@@ -77,18 +95,24 @@
 				{
 					"name": "Find all offers for given contract id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/offers/contracts/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"offers",
-								"contracts",
-								"1"
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxODMwMywiZXhwIjoxNjM5MTE4MzAzfQ.Wk6jmmkM01FJjE3rx_3XGX7NaRn-2UlFMVyyPgd2EUw",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/offers/contracts/1",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "offers",
+                          "contracts",
+                          "1"
 							]
 						}
 					},
@@ -97,18 +121,24 @@
 				{
 					"name": "Find offer by id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/offers/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"offers",
-								"2"
-							]
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxOTUyOSwiZXhwIjoxNjM5MTE5NTI5fQ.DZWgDWJeANPh10bIivbnI3YCnmAVbXAgKl80GGxO8Mk",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/offers/2",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "offers",
+                          "2"
+                        ]
 						}
 					},
 					"response": []
@@ -116,18 +146,24 @@
 				{
 					"name": "Delete offer by offer id",
 					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/offers/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"offers",
-								"1"
-							]
+                      "method": "DELETE",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/offers/1",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "offers",
+                          "1"
+                        ]
 						}
 					},
 					"response": []
@@ -135,18 +171,24 @@
 				{
 					"name": "Update offer",
 					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": 23000\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "PUT",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"id\": 2,\r\n    \"price\": 23000\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/offers/2",
 							"host": [
 								"localhost"
@@ -163,18 +205,24 @@
 				{
 					"name": "Add new offer",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 80,\r\n    \"offerOwner\": {\r\n        \"id\": 3\r\n    },\r\n    \"contract\": {\r\n        \"id\": 2\r\n    },\r\n    \"price\": 15000\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1Mzk1OTksImV4cCI6MTYzOTEzOTU5OX0.t6FXlaeCMKNFzVjlIC-Tc09bthSXirha5tp1397Bdu0",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"offerOwnerId\": 4,\r\n    \"contractId\": 1,\r\n    \"price\": 10000\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/offers",
 							"host": [
 								"localhost"
@@ -195,18 +243,24 @@
 				{
 					"name": "Find by id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/contracts/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"contracts",
-								"2"
-							]
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODU0MDQyNiwiZXhwIjoxNjM5MTQwNDI2fQ.JmBQJiZwkAew-JxIhaR5HoQ_6m7vSBEJhVDe4AnJYUI",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/contracts/2",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "contracts",
+                          "2"
+                        ]
 						}
 					},
 					"response": []
@@ -214,18 +268,24 @@
 				{
 					"name": "Find all contracts",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/contracts",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"contracts"
-							]
-						}
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxODMwMywiZXhwIjoxNjM5MTE4MzAzfQ.Wk6jmmkM01FJjE3rx_3XGX7NaRn-2UlFMVyyPgd2EUw",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/contracts",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "contracts"
+                        ]
+                      }
 					},
 					"response": []
 				},
@@ -251,18 +311,24 @@
 				{
 					"name": "Update contract",
 					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"description\": \"updated contract\",\r\n    \"startDate\": \"2022-03-09\",\r\n    \"endDate\": \"2022-08-30\",\r\n    \"startPrice\": 25000\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "PUT",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODU0MjU4OSwiZXhwIjoxNjM5MTQyNTg5fQ.p9HVDPzReqOLQAGbP0VvrNsz27aE8H8TFuGWzJkhEII",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"id\": 2,\r\n    \"description\": \"updated contract\",\r\n    \"startDate\": \"2022-03-09\",\r\n    \"endDate\": \"2022-08-30\",\r\n    \"startPrice\": 25000\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/contracts/2",
 							"host": [
 								"localhost"
@@ -279,18 +345,24 @@
 				{
 					"name": "Add new contract",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"owner\": {\r\n        \"id\": 2\r\n    },\r\n    \"description\": \"new added contract\",\r\n    \"startDate\": \"2022-03-01\",\r\n    \"endDate\": \"2022-09-30\",\r\n    \"startPrice\": 50000\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUzOTQ2NywiZXhwIjoxNjM5MTM5NDY3fQ.s7pG72qisFc-zGYvyuX2yZxALKFqsg61sGu8OGxhgus",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"ownerId\": 2,\r\n    \"description\": \"new added contract\",\r\n    \"startDate\": \"2022-03-01\",\r\n    \"endDate\": \"2022-09-30\",\r\n    \"startPrice\": 50000\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/contracts",
 							"host": [
 								"localhost"
@@ -311,53 +383,59 @@
 				{
 					"name": "Find by id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/users/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"1"
-							]
-						}
+                      "method": "GET",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUyODk4MCwiZXhwIjoxNjM5MTI4OTgwfQ.3weStX7ceXmgD8KVxf8z4qYKf4QhJDsppvIOxddmCAs",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/users/2",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "users",
+                          "2"
+                        ]
+                      }
 					},
 					"response": []
 				},
-				{
-                  "name": "Find all users (Autotization role : customer)",
-                  "request": {
-                    "method": "GET",
-                    "header": [
-                      {
-                        "key": "Authorization",
-                        "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MzgzNjcwODQsImV4cCI6MTYzODk2NzA4NH0.436gEAve8Xi0yd3cQWpCw5DoV7vkRvHtec27C0e1HIU",
-                        "type": "text"
-                      }
+              {
+                "name": "Find all users (Autotization role : customer)",
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MzgzNjcwODQsImV4cCI6MTYzODk2NzA4NH0.436gEAve8Xi0yd3cQWpCw5DoV7vkRvHtec27C0e1HIU",
+                      "type": "text"
+                    }
+                  ],
+                  "url": {
+                    "raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
+                    "host": [
+                      "localhost"
                     ],
-                    "url": {
-                      "raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
-                      "host": [
-                        "localhost"
-                      ],
-                      "port": "8080",
-                      "path": [
-                        "users"
-                      ],
-                      "query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "size",
-									"value": "2"
-								},
-								{
-									"key": "sort",
+                    "port": "8080",
+                    "path": [
+                      "users"
+                    ],
+                    "query": [
+                      {
+                        "key": "page",
+                        "value": "1"
+                      },
+                      {
+                        "key": "size",
+                        "value": "2"
+                      },
+                      {
+                        "key": "sort",
 									"value": "name,desc"
 								}
 							]
@@ -368,37 +446,49 @@
 				{
 					"name": "Delete user by id",
 					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/users/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"2"
-							]
-						}
+                      "method": "DELETE",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/users/3",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "users",
+                          "3"
+                        ]
+                      }
 					},
 					"response": []
 				},
 				{
 					"name": "Update user",
 					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Name\",\r\n    \"password\": \"updatedPassword\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"certificates\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "PUT",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Name\",\r\n    \"password\": \"updatedPassword\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"certificates\": []\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/users/1",
 							"host": [
 								"localhost"
@@ -415,18 +505,24 @@
 				{
 					"name": "Add new user",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"password\": \"password\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"newUser@gmail.com\",\r\n    \"certificates\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+                          "type": "text"
+                        }
+                      ],
+                      "body": {
+                        "mode": "raw",
+                        "raw": "{\r\n    \"name\": \"Customer\",\r\n    \"password\": \"password\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"newUser@gmail.com\",\r\n    \"certificates\": []\r\n}",
+                        "options": {
+                          "raw": {
+                            "language": "json"
+                          }
+                        }
+                      },
+                      "url": {
 							"raw": "localhost:8080/users",
 							"host": [
 								"localhost"
@@ -442,18 +538,24 @@
 				{
 					"name": "Assign certificate",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/users/assignCertificate?userId=3&certificateId=2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"assignCertificate"
-							],
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+                          "type": "text"
+                        }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/users/assignCertificate?userId=3&certificateId=2",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "users",
+                          "assignCertificate"
+                        ],
 							"query": [
 								{
 									"key": "userId",
@@ -471,32 +573,73 @@
 				{
 					"name": "Remove certificate Copy",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/users/removeCertificate?userId=3&certificateId=6",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"removeCertificate"
-							],
-							"query": [
-								{
-									"key": "userId",
-									"value": "3"
-								},
-                              {
-                                "key": "certificateId",
-                                "value": "6"
-                              }
-                            ]
+                      "method": "POST",
+                      "header": [
+                        {
+                          "key": "Authorization",
+                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+                          "type": "text"
                         }
+                      ],
+                      "url": {
+                        "raw": "localhost:8080/users/removeCertificate?userId=3&certificateId=6&",
+                        "host": [
+                          "localhost"
+                        ],
+                        "port": "8080",
+                        "path": [
+                          "users",
+                          "removeCertificate"
+                        ],
+                        "query": [
+                          {
+                            "key": "userId",
+                            "value": "3"
+                          },
+                          {
+                            "key": "certificateId",
+                            "value": "6"
+                          },
+                          {
+                            "key": "",
+                            "value": null
+                          }
+                        ]
+                      }
                     },
                   "response": []
-                }
+                },
+              {
+                "name": "Find user by Email",
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUyOTQyNSwiZXhwIjoxNjM5MTI5NDI1fQ.b75dxtNM1o-Edn3cAuOmbC9ewt8nRdZTegf8f4VBV3s",
+                      "type": "text"
+                    }
+                  ],
+                  "url": {
+                    "raw": "localhost:8080/users/email?email=secondCastomer@gmail.com",
+                    "host": [
+                      "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                      "users",
+                      "email"
+                    ],
+                    "query": [
+                      {
+                        "key": "email",
+                        "value": "secondCastomer@gmail.com"
+                      }
+                    ]
+                  }
+                },
+                "response": []
+              }
             ]
         },
       {

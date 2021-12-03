@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class OfferServiceImpl implements OfferService {
 
     private final OfferRepository repository;
-    private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -27,7 +25,7 @@ public class OfferServiceImpl implements OfferService {
         OfferDTO offerDTO = null;
         Optional<Offer> offer = repository.findById(id);
         if (offer.isPresent()) {
-            offerDTO = convertOfferIntoDTO(offer.get());
+            offerDTO = OfferDTO.convertFromOffer(offer.get());
         }
         return Optional.ofNullable(offerDTO);
     }
@@ -39,7 +37,7 @@ public class OfferServiceImpl implements OfferService {
         List<OfferDTO> offersDTO = new ArrayList<>();
         List<Offer> offers = repository.findAllByContractId(contractId);
         if (offers.size() > 0) {
-            offers.forEach(offer -> offersDTO.add(convertOfferIntoDTO(offer)));
+            offers.forEach(offer -> offersDTO.add(OfferDTO.convertFromOffer(offer)));
         }
         return offersDTO;
     }
@@ -60,7 +58,7 @@ public class OfferServiceImpl implements OfferService {
             if (offerDTO.getPrice() != null && offerDTO.getPrice() > 0) {
                 optionalOffer.get().setPrice(offerDTO.getPrice());
                 repository.flush();
-                return convertOfferIntoDTO(repository.findById(offerDTO.getId()).get());
+                return OfferDTO.convertFromOffer(repository.findById(offerDTO.getId()).get());
             } else {
                 throw new ServiceException("Offer price should be positive!");
             }
@@ -73,17 +71,9 @@ public class OfferServiceImpl implements OfferService {
     public Optional<OfferDTO> add(OfferDTO offerDTO) {
 
         OfferDTO newOfferDTO;
-        Offer offer = convertOfferDTOIntoOffer(offerDTO);
+        Offer offer = OfferDTO.convertIntoOffer(offerDTO);
         Offer newOffer = repository.save(offer);
-        newOfferDTO = convertOfferIntoDTO(newOffer);
+        newOfferDTO = OfferDTO.convertFromOffer(newOffer);
         return Optional.ofNullable(newOfferDTO);
-    }
-
-    private OfferDTO convertOfferIntoDTO(Offer offer) {
-        return modelMapper.map(offer, OfferDTO.class);
-    }
-
-    private Offer convertOfferDTOIntoOffer(OfferDTO offerDTO) {
-        return modelMapper.map(offerDTO, Offer.class);
     }
 }
