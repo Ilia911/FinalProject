@@ -18,15 +18,4 @@ public class UserDTO {
     private RoleDTO role;
     private String email;
     private List<CertificateDTO> certificates;
-//
-//    public static UserDTO convertIntoUser(User user) {
-//        return UserDTO.builder()
-//                .id(user.getId())
-//                .name(user.getName())
-//                .password("hidden")
-//                .role(user.getRole())
-//                .email(user.getEmail())
-//                .certificates(user.getCertificates())
-//                .build();
-//    }
 }
