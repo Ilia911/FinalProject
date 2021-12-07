@@ -58,7 +58,6 @@ public class HibernateOfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
-
     public boolean delete(int id) throws RepositoryException {
         boolean result;
         try {

@@ -119,7 +119,6 @@ public class JDBCContractRepositoryImpl implements ContractRepository {
 
         validateContractData(contract);
 
-
         Contract updatedContract;
         try {
             Connection conn = getDataSourceUtilsConnection();

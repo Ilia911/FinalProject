@@ -114,7 +114,6 @@ public class JDBCOfferRepositoryImpl implements OfferRepository {
 
         validateOfferData(offer);
 
-
         Offer updatedOffer;
         try {
             Connection conn = getDataSourceUtilsConnection();

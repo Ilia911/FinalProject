@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findById(int id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(this::convertUserToUserDTO);
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         return user.map(this::convertUserToUserDTO);

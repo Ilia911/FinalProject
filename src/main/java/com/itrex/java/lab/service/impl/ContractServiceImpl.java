@@ -6,14 +6,12 @@ import com.itrex.java.lab.entity.dto.ContractDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.data.ContractRepository;
 import com.itrex.java.lab.repository.data.OfferRepository;
-import com.itrex.java.lab.repository.data.UserRepository;
 import com.itrex.java.lab.service.ContractService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +21,6 @@ public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository contractRepository;
     private final OfferRepository offerRepository;
-    private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     @Transactional(readOnly = true)
