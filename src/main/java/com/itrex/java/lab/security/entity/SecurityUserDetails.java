@@ -1,11 +1,13 @@
 package com.itrex.java.lab.security.entity;
 
+import com.itrex.java.lab.entity.Status;
 import com.itrex.java.lab.entity.User;
 import java.util.Collection;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
@@ -14,10 +16,18 @@ public class SecurityUserDetails implements UserDetails {
 
     private final String username;
     private final String password;
-    private final List<GrantedAuthority> authorities;
+    private final List<SimpleGrantedAuthority> authorities;
+    private final boolean isActive;
 
     public static UserDetails fromUser(User user) {
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true, true, true, List.of(user.getRole()));
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getRole().getAuthorities());
     }
 
     @Override
@@ -37,21 +47,21 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isActive;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isActive;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isActive;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive;
     }
 }

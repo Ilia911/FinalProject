@@ -79,7 +79,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     void update_validData_shouldReturnUpdatedUser() throws RepositoryException {
         //given
         User expectedUser = User.builder().id(1).name("updatedName").password("updatedPassword")
-                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .role(Role.CONTRACTOR).email("updatedEmail@gmail.com")
                 .certificates(new ArrayList<>()).build();
         //when
         User actualUser = repository.update(expectedUser);
@@ -91,7 +91,7 @@ class HibernateUserRepositoryImplTest extends BaseRepositoryTest {
     void add_validDate_shouldReturnNewUser() throws RepositoryException {
         //given
         User expectedUser = User.builder().id(5).name("updatedName").password("updatedPassword")
-                .role(Role.builder().id(3).name("contractor").build()).email("updatedEmail@gmail.com")
+                .role(Role.CONTRACTOR).email("updatedEmail@gmail.com")
                 .certificates(new ArrayList<>()).build();
         //when
         Optional<User> actualUser = repository.add(expectedUser);

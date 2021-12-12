@@ -24,7 +24,7 @@ class CertificateControllerTest extends BaseControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:read")
     void findAllCertificatesByUserId_validInput_shouldReturnListCertificates() throws Exception {
         //given
         int userId = 4;

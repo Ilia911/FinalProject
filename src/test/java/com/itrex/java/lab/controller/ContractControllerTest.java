@@ -29,7 +29,7 @@ class ContractControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER", "CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "contract:read")
     void find_validData_shouldReturnContract() throws Exception {
         //given
         int expectedContractId = 1;
@@ -56,7 +56,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "contract:read")
     void findAll_validData_shouldReturnContractList() throws Exception {
         //given
         ContractDTO contractDTO = ContractDTO.builder().build();
@@ -76,7 +76,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
+    @WithMockUser(username = "Unnecessary", authorities = "contract:crud")
     void delete_validData_shouldDeleteContract() throws Exception {
         //given
         int contractId = 1;
@@ -89,7 +89,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
+    @WithMockUser(username = "Unnecessary", authorities = "contract:crud")
     void update_validData_shouldUpdateExistedContract() throws Exception {
         //given
         int contractId = 1;
@@ -112,7 +112,7 @@ class ContractControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
+    @WithMockUser(username = "Unnecessary", authorities = "contract:crud")
     void add_validData_shouldReturnNewCreatedContract() throws Exception {
         //given
         int ownerId = 1;

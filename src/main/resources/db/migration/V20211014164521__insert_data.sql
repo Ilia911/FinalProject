@@ -1,9 +1,3 @@
-INSERT INTO BUILDER.ROLE (ID, NAME)
-VALUES ('1', 'ROLE_ADMIN');
-INSERT INTO BUILDER.ROLE (ID, NAME)
-VALUES ('2', 'ROLE_CUSTOMER');
-INSERT INTO BUILDER.ROLE (ID, NAME)
-VALUES ('3', 'ROLE_CONTRACTOR');
 
 INSERT INTO builder.certificate (ID, NAME)
 VALUES ('1', 'Filling window and door openings');
@@ -24,16 +18,17 @@ INSERT INTO builder.certificate (ID, NAME)
 VALUES ('7', 'Performing work on the installation of thermal insulation ' ||
              'of the enclosing structures of buildings and structures');
 
-INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL)
-VALUES ('Customer', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', '2', 'castomer@gmail.com');
-INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL)
-VALUES ('SecondCustomer', 'password', '2', 'secondCastomer@gmail.com');
-INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL)
-VALUES ('Contractor', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', '3', 'contractor@gmail.com');
-INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL)
-VALUES ('SecondContractor', 'password', '3', 'SecondContractor@gmail.com');
-INSERT INTO builder.user (NAME, PASSWORD, ROLE_ID, EMAIL)
-VALUES ('Admin', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', '1', 'admin@gmail.com');
+INSERT INTO builder.user (NAME, PASSWORD, ROLE, EMAIL)
+VALUES ('Customer', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', 'CUSTOMER', 'castomer@gmail.com');
+INSERT INTO builder.user (NAME, PASSWORD, ROLE, EMAIL)
+VALUES ('SecondCustomer', 'password', 'CUSTOMER', 'secondCastomer@gmail.com');
+INSERT INTO builder.user (NAME, PASSWORD, ROLE, EMAIL)
+VALUES ('Contractor', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', 'CONTRACTOR',
+        'contractor@gmail.com');
+INSERT INTO builder.user (NAME, PASSWORD, ROLE, EMAIL)
+VALUES ('SecondContractor', 'password', 'CONTRACTOR', 'SecondContractor@gmail.com');
+INSERT INTO builder.user (NAME, PASSWORD, ROLE, EMAIL)
+VALUES ('Admin', '$2a$12$ma0C6gCWmZL/d3FSt78mF.FCcLdfBqc4XXyRrDBv54EbWEPcj3OIC', 'ADMIN', 'admin@gmail.com');
 
 INSERT INTO builder.contract (OWNER_ID, DESCRIPTION, START_DATE, END_DATE, START_PRICE)
 VALUES ('1', 'first contract', '2022-01-01', '2022-12-31', '28000');

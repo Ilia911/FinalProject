@@ -36,7 +36,7 @@ public class AuthController {
             if (user.isEmpty()) {
                 return new ResponseEntity<>("User doesn't exists", HttpStatus.NOT_FOUND);
             }
-            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().getName());
+            String token = jwtTokenProvider.createToken(request.getEmail(), user.get().getRole().name());
             Map<Object, Object> response = new HashMap<>();
             response.put("login", request.getEmail());
             response.put("token", token);

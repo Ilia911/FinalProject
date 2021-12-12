@@ -6,7 +6,6 @@ import com.itrex.java.lab.entity.Offer;
 import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.data.CertificateRepository;
@@ -132,20 +131,17 @@ class UserServiceImplTest {
         //given
         int userId = 1;
         String name = "updatedName";
-        RoleDTO roleDTO = RoleDTO.builder().id(3).name("contractor").build();
-        Role role = Role.builder().id(3).name("contractor").build();
-        UserDTO userDTO = UserDTO.builder().id(userId).name(name).password("pass").role(roleDTO).email("email").build();
-        User user = User.builder().id(userId).name(name).password("pass").role(role).email("email").build();
+        UserDTO userDTO = UserDTO.builder().id(userId).name(name).password("pass").role(Role.CONTRACTOR).email("email").build();
+        User user = User.builder().id(userId).name(name).password("pass").role(Role.CONTRACTOR).email("email").build();
         //when
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(modelMapper.map(roleDTO, Role.class)).thenReturn(role);
         when(modelMapper.map(user, UserDTO.class)).thenReturn(userDTO);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         UserDTO actualUpdatedUser = userService.update(userDTO);
         // then
         assertAll(() -> assertEquals(userId, actualUpdatedUser.getId()),
                 () -> assertEquals(name, actualUpdatedUser.getName()),
-                () -> assertEquals(role.getId(), actualUpdatedUser.getRole().getId())
+                () -> assertEquals(Role.CONTRACTOR, actualUpdatedUser.getRole())
         );
     }
 
@@ -163,8 +159,8 @@ class UserServiceImplTest {
     @Test
     void add_validData_shouldReturnNewUserDTO() {
         //given
-        UserDTO userDTO = UserDTO.builder().id(5).name("newUser").password("pass").role(RoleDTO.builder().id(2).name("customer").build()).email("email").build();
-        User user = User.builder().id(5).name("newUser").password("pass").role(Role.builder().id(2).name("customer").build()).email("email").build();
+        UserDTO userDTO = UserDTO.builder().id(5).name("newUser").password("pass").role(Role.CUSTOMER).email("email").build();
+        User user = User.builder().id(5).name("newUser").password("pass").role(Role.CUSTOMER).email("email").build();
         //when
         when(modelMapper.map(userDTO, User.class)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
@@ -174,7 +170,7 @@ class UserServiceImplTest {
         //then
         assertAll(() -> assertEquals(user.getId(), actualUserDTO.getId()),
                 () -> assertEquals(user.getName(), actualUserDTO.getName()),
-                () -> assertEquals(user.getRole().getId(), actualUserDTO.getRole().getId()));
+                () -> assertEquals(user.getRole(), actualUserDTO.getRole()));
     }
 
     @Test

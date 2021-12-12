@@ -1,26 +1,21 @@
 drop schema if exists builder cascade;
 create schema IF NOT EXISTS `builder`;
 
-CREATE TABLE IF NOT EXISTS `builder`.`role` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`));
-
 CREATE TABLE IF NOT EXISTS `builder`.`certificate` (
   `id` INT NOT NULL,
   `name` VARCHAR(200) NULL,
   PRIMARY KEY (`id`)
   );
 
-CREATE TABLE IF NOT EXISTS `builder`.`user` (
-  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `role_id` INT NOT NULL ,
-  `email` VARCHAR(100) NOT NULL,
-  CONSTRAINT `unique_user_email` UNIQUE (`email`),
-  CONSTRAINT `fk_role_id` FOREIGN KEY (`role_id`) REFERENCES `builder`.`role` (`id`)
-  );
+CREATE TABLE IF NOT EXISTS `builder`.`user`(
+                                               `id`       INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                               `name`     VARCHAR(100) NOT NULL,
+                                               `password` VARCHAR(255) NOT NULL,
+                                               `email`    VARCHAR(100) NOT NULL,
+                                               `role`     VARCHAR(30) default 'CUSTOMER',
+                                               `status`   VARCHAR(30) default 'ACTIVE',
+                                               CONSTRAINT `unique_user_email` UNIQUE (`email`)
+);
 
 CREATE TABLE IF NOT EXISTS `builder`.`contract` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

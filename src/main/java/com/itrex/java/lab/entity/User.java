@@ -3,6 +3,8 @@ package com.itrex.java.lab.entity;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +36,13 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToOne
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "role")
     private Role role;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;

@@ -3,10 +3,8 @@ package com.itrex.java.lab.service.impl;
 import com.itrex.java.lab.entity.Certificate;
 import com.itrex.java.lab.entity.Contract;
 import com.itrex.java.lab.entity.Offer;
-import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.User;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.repository.data.CertificateRepository;
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
                 user.setEmail(userDTO.getEmail());
             }
             if (userDTO.getRole() != null) {
-                user.setRole(convertRoleDTOtoRole(userDTO.getRole()));
+                user.setRole(userDTO.getRole());
             }
             userRepository.flush();
             return convertUserToUserDTO(userRepository.findById(userDTO.getId()).get());
@@ -167,9 +165,5 @@ public class UserServiceImpl implements UserService {
 
     private CertificateDTO convertCertificateToCertificateDTO(Certificate certificate) {
         return modelMapper.map(certificate, CertificateDTO.class);
-    }
-
-    private Role convertRoleDTOtoRole(RoleDTO roleDTO) {
-        return modelMapper.map(roleDTO, Role.class);
     }
 }

@@ -5,10 +5,10 @@ import com.itrex.java.lab.exeption.ServiceException;
 import com.itrex.java.lab.service.ContractService;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +26,7 @@ public class ContractController {
     private final ContractService service;
 
     @GetMapping("/{id}")
-    @RolesAllowed({"CUSTOMER", "CONTRACTOR"})
+    @PreAuthorize("hasAuthority('contract:read')")
     public ResponseEntity<ContractDTO> find(@PathVariable(name = "id") int id) {
 
         Optional<ContractDTO> contractDTO = service.find(id);
@@ -36,7 +36,7 @@ public class ContractController {
     }
 
     @GetMapping
-    @RolesAllowed({"CUSTOMER", "CONTRACTOR"})
+    @PreAuthorize("hasAuthority('contract:read')")
     public ResponseEntity<List<ContractDTO>> findAll() throws ServiceException {
 
         List<ContractDTO> contracts = service.findAll();
@@ -47,7 +47,7 @@ public class ContractController {
     }
 
     @DeleteMapping("/{id}")
-    @RolesAllowed("CUSTOMER")
+    @PreAuthorize("hasAuthority('contract:crud')")
     public ResponseEntity<Boolean> delete(@PathVariable(name = "id") int id) {
 
         boolean result = service.delete(id);
@@ -56,7 +56,7 @@ public class ContractController {
     }
 
     @PutMapping("/{id}")
-    @RolesAllowed("CUSTOMER")
+    @PreAuthorize("hasAuthority('contract:crud')")
     public ResponseEntity<ContractDTO> update(@PathVariable(name = "id") int id, @RequestBody ContractDTO contractDTO) throws ServiceException {
 
         ContractDTO updatedContract = service.update(contractDTO);
@@ -67,7 +67,7 @@ public class ContractController {
     }
 
     @PostMapping
-    @RolesAllowed("CUSTOMER")
+    @PreAuthorize("hasAuthority('contract:crud')")
     public ResponseEntity<ContractDTO> add(@RequestBody ContractDTO contractDTO) {
 
         Optional<ContractDTO> newContract = service.add(contractDTO);

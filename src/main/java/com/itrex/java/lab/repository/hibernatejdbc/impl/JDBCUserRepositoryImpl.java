@@ -25,7 +25,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String PASSWORD_COLUMN = "password";
-    private static final String ROLE_COLUMN = "role_id";
+    private static final String ROLE_COLUMN = "role";
     private static final String EMAIL_COLUMN = "email";
     private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT * FROM builder.user where email = ?";
     private static final String FIND_USER_BY_ID_QUERY = "SELECT * FROM builder.user where id = ?";
@@ -33,18 +33,15 @@ public class JDBCUserRepositoryImpl implements UserRepository {
     private static final String DELETE_USER_QUERY
             = "DELETE FROM builder.user where id = ?;";
     private static final String UPDATE_USER_QUERY
-            = "UPDATE builder.user SET name = ?, password = ?, role_id = ?, email = ? WHERE id = ?";
+            = "UPDATE builder.user SET name = ?, password = ?, role = ?, email = ? WHERE id = ?";
     private static final String ADD_USER_QUERY
-            = "INSERT INTO builder.user(name, password, role_id, email ) VALUES (?, ?, ?, ?)";
+            = "INSERT INTO builder.user(name, password, role, email ) VALUES (?, ?, ?, ?)";
     private static final String REMOVE_ALL_USER_CONTRACTS_QUERY = "DELETE FROM builder.contract where owner_id = ?";
     private static final String REMOVE_ALL_USER_OFFERS_QUERY = "DELETE FROM builder.offer where offer_owner_id = ?";
     private static final String REMOVE_ALL_OFFERS_FOR_USER_CONTRACT_QUERY
             = "DELETE FROM builder.offer where contract_id = any (select contract_id from BUILDER.OFFER " +
             "join (select id from BUILDER.CONTRACT where OWNER_ID = ?) as ubc on CONTRACT_ID = ubc.id)";
     private static final String REMOVE_ALL_USER_CERTIFICATES_QUERY = "delete from builder.user_certificate where user_id = ?";
-    private static final String ROLE_ID_IN_ROLE_TABLE_COLUMN = "id";
-    private static final String ROLE_NAME_IN_ROLE_TABLE_COLUMN = "name";
-    private static final String FIND_ROLE_BY_ID_QUERY = "SELECT * FROM builder.role where id = ?";
 
     private final DataSource dataSource;
 
@@ -130,7 +127,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_USER_QUERY);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole().getId());
+            preparedStatement.setString(3, user.getRole().name());
             preparedStatement.setString(4, user.getEmail());
             preparedStatement.setInt(5, user.getId());
             preparedStatement.execute();
@@ -152,7 +149,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = conn.prepareStatement(ADD_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getRole().getId());
+            preparedStatement.setString(3, user.getRole().name());
             preparedStatement.setString(4, user.getEmail());
 
             int effectiveRows = preparedStatement.executeUpdate();
@@ -188,7 +185,7 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         if (isSetPassword) {
             user.setPassword(rs.getString(PASSWORD_COLUMN));
         }
-        user.setRole(createRoleById(conn, rs.getInt(ROLE_COLUMN)));
+        user.setRole(Role.valueOf(rs.getString(ROLE_COLUMN)));
         user.setEmail(rs.getString(EMAIL_COLUMN));
         return user;
     }
@@ -233,21 +230,5 @@ public class JDBCUserRepositoryImpl implements UserRepository {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new RepositoryException("User field 'email' mustn't be null or empty");
         }
-    }
-
-    private Role createRoleById(Connection conn, int id) throws SQLException {
-        PreparedStatement preparedStatement = conn.prepareStatement(FIND_ROLE_BY_ID_QUERY);
-        preparedStatement.setInt(1, id);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        Role role;
-        if (resultSet.next()) {
-            role = new Role();
-            role.setId(resultSet.getInt(ROLE_ID_IN_ROLE_TABLE_COLUMN));
-            role.setName(resultSet.getString(ROLE_NAME_IN_ROLE_TABLE_COLUMN));
-        } else {
-            role = new Role(2, "customer");
-        }
-        return role;
     }
 }

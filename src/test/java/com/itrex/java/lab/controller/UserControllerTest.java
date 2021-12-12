@@ -1,8 +1,8 @@
 package com.itrex.java.lab.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itrex.java.lab.entity.Role;
 import com.itrex.java.lab.entity.dto.CertificateDTO;
-import com.itrex.java.lab.entity.dto.RoleDTO;
 import com.itrex.java.lab.entity.dto.UserDTO;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +35,7 @@ class UserControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"ADMIN", "CUSTOMER", "CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:read")
     void findById_validData_shouldReturnUser() throws Exception {
         //given
         int userId = 1;
@@ -54,7 +54,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void findByEmail_validData_shouldReturnUser() throws Exception {
         //given
         int userId = 1;
@@ -77,7 +77,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"ADMIN", "CUSTOMER", "CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:read")
     void findAll_validData_shouldReturnUserPage() throws Exception {
         //given
         UserDTO userDTO = UserDTO.builder().id(1).name("first").build();
@@ -101,7 +101,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void delete_validUserWithContract_shouldReturnTrue() throws Exception {
         //given
         int id = 1;
@@ -114,7 +114,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void delete_invalidData_shouldReturnFalse() throws Exception {
         //given && when
         int invalidId = 5;
@@ -126,13 +126,12 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void update_validData_shouldReturnUpdatedUserDTO() throws Exception {
         //given
         int userId = 1;
         String name = "updatedName";
-        RoleDTO roleDTO = RoleDTO.builder().id(3).name("contractor").build();
-        UserDTO expectedResponseBody = UserDTO.builder().id(userId).name(name).password("pass").role(roleDTO).email("email").build();
+        UserDTO expectedResponseBody = UserDTO.builder().id(userId).name(name).password("pass").role(Role.CONTRACTOR).email("email").build();
         //when
         when(userService.update(expectedResponseBody)).thenReturn(expectedResponseBody);
         // then
@@ -147,10 +146,10 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void add_validData_shouldReturnNewUserDTO() throws Exception {
         //given
-        UserDTO expectedResponseBody = UserDTO.builder().id(5).name("newUser").password("pass").role(RoleDTO.builder().id(2).name("customer").build()).email("email").build();
+        UserDTO expectedResponseBody = UserDTO.builder().id(5).name("newUser").password("pass").role(Role.CUSTOMER).email("email").build();
         //when
         when(userService.add(expectedResponseBody)).thenReturn(Optional.of(expectedResponseBody));
         //then
@@ -165,7 +164,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void assignCertificate_validDate_shouldReturnCertificateList() throws Exception {
         //given
         int userId = 3;
@@ -188,7 +187,7 @@ class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Admin", roles = {"ADMIN"})
+    @WithMockUser(username = "Unnecessary", authorities = "user:crud")
     void removeCertificate_validData_shouldDeleteUserCertificate() throws Exception {
         //given
         int userId = 3;

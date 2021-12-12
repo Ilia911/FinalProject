@@ -28,7 +28,7 @@ class OfferControllerTest extends BaseControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER", "CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:read")
     void find_validData_shouldReturnOffer() throws Exception {
         //given
         int expectedOfferId = 1;
@@ -50,7 +50,7 @@ class OfferControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CUSTOMER"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:read")
     void findAllForGivenContract_validData_shouldReturnOfferList() throws Exception {
         //given
         int id = 1;
@@ -69,7 +69,7 @@ class OfferControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:crud")
     void delete_validData_shouldReturnResponseCode200() throws Exception {
         //given
         int offerId = 1;
@@ -82,7 +82,7 @@ class OfferControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:crud")
     void delete_invalidData_shouldReturnResponseCode304() throws Exception {
         //given
         int offerId = 5;
@@ -95,7 +95,7 @@ class OfferControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:crud")
     void update_validData_shouldUpdateOffer() throws Exception {
         //given
         int expectedOfferId = 1;
@@ -119,7 +119,7 @@ class OfferControllerTest extends BaseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Unnecessary", roles = {"CONTRACTOR"})
+    @WithMockUser(username = "Unnecessary", authorities = "offer:crud")
     void add_validData_shouldCreateOffer() throws Exception {
         //given
         int id = 3;
