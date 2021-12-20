@@ -20,6 +20,8 @@ Contractors are certified to perform work (many-to-many relationship).
 
 Continue in internship!
 
+Commit in 'authorities' branch
+
 Приложение для потребителей и поставщиков строительных работ.
 
 1. Общая информация: заказчики создают заявку на выполнение строительных работ. Подрядчики просматривают заявки и на
