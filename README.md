@@ -22,6 +22,8 @@ Continue in internship!
 
 Commit in 'authorities' branch
 
+One more feature in the 'authorities' branch for rejecting.
+
 Приложение для потребителей и поставщиков строительных работ.
 
 1. Общая информация: заказчики создают заявку на выполнение строительных работ. Подрядчики просматривают заявки и на
