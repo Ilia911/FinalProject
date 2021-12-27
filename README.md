@@ -20,9 +20,7 @@ Contractors are certified to perform work (many-to-many relationship).
 
 Continue in internship!
 
-Commit in 'authorities' branch
-
-One more feature in the 'authorities' branch for rejecting.
+in 'test' branch
 
 Приложение для потребителей и поставщиков строительных работ.
 
