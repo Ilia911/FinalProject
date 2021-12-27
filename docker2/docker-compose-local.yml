@@ -1,0 +1,10 @@
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: 'builder'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
