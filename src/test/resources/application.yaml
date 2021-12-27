@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/builder
+    username: user
+    password: password
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: validate
+    properties.hibernate.dialect: org.hibernate.dialect.Postgres
+  aop:
+    proxy-target-class: false
+logging:
+  config: src/main/resources/log4j2-spring.xml
+#  level.root: info
+server:
+  error:
+    include-stacktrace: always
+    include-message: always
+jwt:
+  secret: secret
+  expiration: 600000
+  header: Authorization
