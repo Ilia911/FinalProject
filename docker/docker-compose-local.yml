@@ -9,7 +9,8 @@ services:
       - POSTGRES_DB=builder
       - APP_DB_NAME=builder
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./db/data.sql:/docker-entrypoint-initdb.d/2-data.sql
     ports:
       - 5432:5432
 # docker compose -f docker-compose-local.yml up -d    /up database
