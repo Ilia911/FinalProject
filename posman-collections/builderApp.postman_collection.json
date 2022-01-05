@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ecbd6cce-791c-4685-a4f1-b02b2d5c7d16",
+		"_postman_id": "39d42c55-19ae-4fa3-96d1-45da7ace70c8",
 		"name": "builderApp",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,24 +11,24 @@
 				{
 					"name": "get Certificates by user id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUzMjY5OSwiZXhwIjoxNjM5MTMyNjk5fQ.jOA_Efq7dHQK_HS5urgHJZtXzzQ60-m7EJHh3Z68HIY",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/certificates/3",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "certificates",
-                          "3"
-                        ]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUzMjY5OSwiZXhwIjoxNjM5MTMyNjk5fQ.jOA_Efq7dHQK_HS5urgHJZtXzzQ60-m7EJHh3Z68HIY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/certificates/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"certificates",
+								"3"
+							]
 						}
 					},
 					"response": []
@@ -41,24 +41,24 @@
 				{
 					"name": "Find role by id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/roles/2",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "roles",
-                          "2"
-                        ]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/roles/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"roles",
+								"2"
+							]
 						}
 					},
 					"response": []
@@ -66,24 +66,24 @@
 				{
 					"name": "Find all roles",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/roles",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "roles"
-                        ]
-                      }
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUzMjgzNSwiZXhwIjoxNjM5MTMyODM1fQ.hv9G9AmX-LMgQzXj1tlWmZlwaAQvUd7T0et9jPwMdfQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/roles",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"roles"
+							]
+						}
 					},
 					"response": []
 				}
@@ -95,24 +95,24 @@
 				{
 					"name": "Find all offers for given contract id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxODMwMywiZXhwIjoxNjM5MTE4MzAzfQ.Wk6jmmkM01FJjE3rx_3XGX7NaRn-2UlFMVyyPgd2EUw",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/offers/contracts/1",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "offers",
-                          "contracts",
-                          "1"
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxODMwMywiZXhwIjoxNjM5MTE4MzAzfQ.Wk6jmmkM01FJjE3rx_3XGX7NaRn-2UlFMVyyPgd2EUw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/offers/contracts/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"contracts",
+								"1"
 							]
 						}
 					},
@@ -121,24 +121,24 @@
 				{
 					"name": "Find offer by id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxOTUyOSwiZXhwIjoxNjM5MTE5NTI5fQ.DZWgDWJeANPh10bIivbnI3YCnmAVbXAgKl80GGxO8Mk",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/offers/2",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "offers",
-                          "2"
-                        ]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxOTUyOSwiZXhwIjoxNjM5MTE5NTI5fQ.DZWgDWJeANPh10bIivbnI3YCnmAVbXAgKl80GGxO8Mk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/offers/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"2"
+							]
 						}
 					},
 					"response": []
@@ -146,24 +146,24 @@
 				{
 					"name": "Delete offer by offer id",
 					"request": {
-                      "method": "DELETE",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/offers/1",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "offers",
-                          "1"
-                        ]
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/offers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"offers",
+								"1"
+							]
 						}
 					},
 					"response": []
@@ -171,24 +171,24 @@
 				{
 					"name": "Update offer",
 					"request": {
-                      "method": "PUT",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"id\": 2,\r\n    \"price\": 23000\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1MzMwNTEsImV4cCI6MTYzOTEzMzA1MX0.RIajWhB7iix_ALlrUgQfXICAjuYd4wp6tO25j1brOjI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": 23000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/offers/2",
 							"host": [
 								"localhost"
@@ -205,24 +205,24 @@
 				{
 					"name": "Add new offer",
 					"request": {
-                      "method": "POST",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg1Mzk1OTksImV4cCI6MTYzOTEzOTU5OX0.t6FXlaeCMKNFzVjlIC-Tc09bthSXirha5tp1397Bdu0",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"offerOwnerId\": 4,\r\n    \"contractId\": 1,\r\n    \"price\": 10000\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{contractor_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"offerOwnerId\": 4,\r\n    \"contractId\": 20,\r\n    \"price\": 10000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/offers",
 							"host": [
 								"localhost"
@@ -243,24 +243,24 @@
 				{
 					"name": "Find by id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODU0MDQyNiwiZXhwIjoxNjM5MTQwNDI2fQ.JmBQJiZwkAew-JxIhaR5HoQ_6m7vSBEJhVDe4AnJYUI",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/contracts/2",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "contracts",
-                          "2"
-                        ]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJDT05UUkFDVE9SIiwiaWF0IjoxNjQxMTk5NDkwLCJleHAiOjE2NDE3OTk0OTB9.vS4JRlzlECuJxAZvj2Nly93Zj-DA7Ly35s4sB7ZKJXY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/contracts/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts",
+								"2"
+							]
 						}
 					},
 					"response": []
@@ -268,24 +268,24 @@
 				{
 					"name": "Find all contracts",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUxODMwMywiZXhwIjoxNjM5MTE4MzAzfQ.Wk6jmmkM01FJjE3rx_3XGX7NaRn-2UlFMVyyPgd2EUw",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/contracts",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "contracts"
-                        ]
-                      }
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/contracts",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"contracts"
+							]
+						}
 					},
 					"response": []
 				},
@@ -311,24 +311,24 @@
 				{
 					"name": "Update contract",
 					"request": {
-                      "method": "PUT",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODU0MjU4OSwiZXhwIjoxNjM5MTQyNTg5fQ.p9HVDPzReqOLQAGbP0VvrNsz27aE8H8TFuGWzJkhEII",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"id\": 2,\r\n    \"description\": \"updated contract\",\r\n    \"startDate\": \"2022-03-09\",\r\n    \"endDate\": \"2022-08-30\",\r\n    \"startPrice\": 25000\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODU0MjU4OSwiZXhwIjoxNjM5MTQyNTg5fQ.p9HVDPzReqOLQAGbP0VvrNsz27aE8H8TFuGWzJkhEII",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"description\": \"updated contract\",\r\n    \"startDate\": \"2022-03-09\",\r\n    \"endDate\": \"2022-08-30\",\r\n    \"startPrice\": 25000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/contracts/2",
 							"host": [
 								"localhost"
@@ -345,24 +345,24 @@
 				{
 					"name": "Add new contract",
 					"request": {
-                      "method": "POST",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUzOTQ2NywiZXhwIjoxNjM5MTM5NDY3fQ.s7pG72qisFc-zGYvyuX2yZxALKFqsg61sGu8OGxhgus",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"ownerId\": 2,\r\n    \"description\": \"new added contract\",\r\n    \"startDate\": \"2022-03-01\",\r\n    \"endDate\": \"2022-09-30\",\r\n    \"startPrice\": 50000\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{contractor_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ownerId\": 2,\r\n    \"description\": \"new added contract\",\r\n    \"startDate\": \"2022-03-01\",\r\n    \"endDate\": \"2022-09-30\",\r\n    \"startPrice\": 50000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/contracts",
 							"host": [
 								"localhost"
@@ -383,59 +383,59 @@
 				{
 					"name": "Find by id",
 					"request": {
-                      "method": "GET",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9DVVNUT01FUiIsImlhdCI6MTYzODUyODk4MCwiZXhwIjoxNjM5MTI4OTgwfQ.3weStX7ceXmgD8KVxf8z4qYKf4QhJDsppvIOxddmCAs",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/users/2",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "users",
-                          "2"
-                        ]
-                      }
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
-              {
-                "name": "Find all users (Autotization role : customer)",
-                "request": {
-                  "method": "GET",
-                  "header": [
-                    {
-                      "key": "Authorization",
-                      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXN0b21lckBnbWFpbC5jb20iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2MzgzNjcwODQsImV4cCI6MTYzODk2NzA4NH0.436gEAve8Xi0yd3cQWpCw5DoV7vkRvHtec27C0e1HIU",
-                      "type": "text"
-                    }
-                  ],
-                  "url": {
-                    "raw": "localhost:8080/users?page=1&size=2&sort=name,desc",
-                    "host": [
-                      "localhost"
-                    ],
-                    "port": "8080",
-                    "path": [
-                      "users"
-                    ],
-                    "query": [
-                      {
-                        "key": "page",
-                        "value": "1"
-                      },
-                      {
-                        "key": "size",
-                        "value": "2"
-                      },
-                      {
-                        "key": "sort",
+				{
+					"name": "Find all users (Autotization role : customer)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDEyMDA2NDksImV4cCI6MTY0MTgwMDY0OX0.uKM-l8DjIhtbWlXt673-E-u8d-Ge5T6bzS3jfT70Y1c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users?page=10&size=3&sort=name,desc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "10"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								},
+								{
+									"key": "sort",
 									"value": "name,desc"
 								}
 							]
@@ -446,49 +446,49 @@
 				{
 					"name": "Delete user by id",
 					"request": {
-                      "method": "DELETE",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/users/3",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "users",
-                          "3"
-                        ]
-                      }
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"3"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Update user",
 					"request": {
-                      "method": "PUT",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Name\",\r\n    \"password\": \"updatedPassword\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"certificates\": []\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Updated Name\",\r\n    \"password\": \"updatedPassword\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"certificates\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/users/1",
 							"host": [
 								"localhost"
@@ -505,24 +505,24 @@
 				{
 					"name": "Add new user",
 					"request": {
-                      "method": "POST",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
-                          "type": "text"
-                        }
-                      ],
-                      "body": {
-                        "mode": "raw",
-                        "raw": "{\r\n    \"name\": \"Customer\",\r\n    \"password\": \"password\",\r\n    \"role\": {\r\n        \"id\": 2,\r\n        \"name\": \"customer\"\r\n    },\r\n    \"email\": \"newUser@gmail.com\",\r\n    \"certificates\": []\r\n}",
-                        "options": {
-                          "raw": {
-                            "language": "json"
-                          }
-                        }
-                      },
-                      "url": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"new User\",\r\n    \"password\": \"password\",\r\n    \"role\": \"CUSTOMER\",\r\n    \"email\": \"anotherNewCustomer2@gmail.com\",\r\n    \"certificates\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
 							"raw": "localhost:8080/users",
 							"host": [
 								"localhost"
@@ -538,24 +538,24 @@
 				{
 					"name": "Assign certificate",
 					"request": {
-                      "method": "POST",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/users/assignCertificate?userId=3&certificateId=2",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "users",
-                          "assignCertificate"
-                        ],
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/assignCertificate?userId=3&certificateId=2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"assignCertificate"
+							],
 							"query": [
 								{
 									"key": "userId",
@@ -573,180 +573,311 @@
 				{
 					"name": "Remove certificate Copy",
 					"request": {
-                      "method": "POST",
-                      "header": [
-                        {
-                          "key": "Authorization",
-                          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
-                          "type": "text"
-                        }
-                      ],
-                      "url": {
-                        "raw": "localhost:8080/users/removeCertificate?userId=3&certificateId=6&",
-                        "host": [
-                          "localhost"
-                        ],
-                        "port": "8080",
-                        "path": [
-                          "users",
-                          "removeCertificate"
-                        ],
-                        "query": [
-                          {
-                            "key": "userId",
-                            "value": "3"
-                          },
-                          {
-                            "key": "certificateId",
-                            "value": "6"
-                          },
-                          {
-                            "key": "",
-                            "value": null
-                          }
-                        ]
-                      }
-                    },
-                  "response": []
-                },
-              {
-                "name": "Find user by Email",
-                "request": {
-                  "method": "GET",
-                  "header": [
-                    {
-                      "key": "Authorization",
-                      "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUyOTQyNSwiZXhwIjoxNjM5MTI5NDI1fQ.b75dxtNM1o-Edn3cAuOmbC9ewt8nRdZTegf8f4VBV3s",
-                      "type": "text"
-                    }
-                  ],
-                  "url": {
-                    "raw": "localhost:8080/users/email?email=secondCastomer@gmail.com",
-                    "host": [
-                      "localhost"
-                    ],
-                    "port": "8080",
-                    "path": [
-                      "users",
-                      "email"
-                    ],
-                    "query": [
-                      {
-                        "key": "email",
-                        "value": "secondCastomer@gmail.com"
-                      }
-                    ]
-                  }
-                },
-                "response": []
-              }
-            ]
-        },
-      {
-        "name": "login with customer role",
-        "request": {
-          "method": "POST",
-          "header": [],
-          "body": {
-            "mode": "raw",
-            "raw": "{\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
-            "options": {
-              "raw": {
-                "language": "json"
-              }
-            }
-          },
-          "url": {
-            "raw": "localhost:8080/login",
-            "host": [
-              "localhost"
-            ],
-            "port": "8080",
-            "path": [
-              "login"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "login with admin role",
-        "request": {
-          "method": "POST",
-          "header": [],
-          "body": {
-            "mode": "raw",
-            "raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
-            "options": {
-              "raw": {
-                "language": "json"
-              }
-            }
-          },
-          "url": {
-            "raw": "localhost:8080/login",
-            "host": [
-              "localhost"
-            ],
-            "port": "8080",
-            "path": [
-              "login"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "login with contractor role",
-        "request": {
-          "method": "POST",
-          "header": [],
-          "body": {
-            "mode": "raw",
-            "raw": "{\r\n    \"email\": \"contractor@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
-            "options": {
-              "raw": {
-                "language": "json"
-              }
-            }
-          },
-          "url": {
-            "raw": "localhost:8080/login",
-            "host": [
-              "localhost"
-            ],
-            "port": "8080",
-            "path": [
-              "login"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "just test request",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJST0xFX0NPTlRSQUNUT1IiLCJpYXQiOjE2Mzg0MjM3MDgsImV4cCI6MTYzOTAyMzcwOH0.Jsw9THDEYJmN7PUXYw5L8sQW7cMwVsbA0NDxFXdDWoA",
-              "type": "text"
-            }
-          ],
-          "url": {
-            "raw": "localhost:8080/users/5",
-            "host": [
-              "localhost"
-            ],
-            "port": "8080",
-            "path": [
-              "users",
-              "5"
-            ]
-          }
-        },
-        "response": []
-      }
-    ]
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODU0MjY5MiwiZXhwIjoxNjM5MTQyNjkyfQ.BQ5yDEOkHPunwGG_goaY-YP1Aom5ZxhXsSIcvmez5JY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/removeCertificate?userId=3&certificateId=6&",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"removeCertificate"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "3"
+								},
+								{
+									"key": "certificateId",
+									"value": "6"
+								},
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find user by Email",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTYzODUyOTQyNSwiZXhwIjoxNjM5MTI5NDI1fQ.b75dxtNM1o-Edn3cAuOmbC9ewt8nRdZTegf8f4VBV3s",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/users/email?email=secondCastomer@gmail.com",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "secondCastomer@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report resources",
+			"item": [
+				{
+					"name": "customer_report",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/report/customers?firstStartContractDate=2022-02-01&lastStartContractDate=2022-03-01&startWithContractCount=2&size=50",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"report",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "firstStartContractDate",
+									"value": "2022-02-01"
+								},
+								{
+									"key": "lastStartContractDate",
+									"value": "2022-03-01"
+								},
+								{
+									"key": "startWithContractCount",
+									"value": "2"
+								},
+								{
+									"key": "size",
+									"value": "50"
+								},
+								{
+									"key": "orderBy",
+									"value": "sumPrice",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer_report Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "string"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:8080/report/offers?firstStartContractDate=2022-01-01&lastStartContractDate=2022-03-01&startWithContractId=10&size=5",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"report",
+								"offers"
+							],
+							"query": [
+								{
+									"key": "firstStartContractDate",
+									"value": "2022-01-01"
+								},
+								{
+									"key": "lastStartContractDate",
+									"value": "2022-03-01"
+								},
+								{
+									"key": "startWithContractId",
+									"value": "10"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "orderBy",
+									"value": "sumPrice",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login with customer role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"castomer@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login with admin role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login with contractor role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"contractor@gmail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "admin_token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDEzMTA0MjIsImV4cCI6MTY0MTkxMDQyMn0.qh23Y6XuzvS3m5Ru8nAVp-u50_EetifNdoYr1l2xRoY"
+		},
+		{
+			"key": "contractor_token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJDT05UUkFDVE9SIiwiaWF0IjoxNjQwNzg4NDMwLCJleHAiOjE2NDEzODg0MzB9.Vq9B7c_NDqM0oxnClsoYH7-ayo73Nk5Q_-vctZhUioI",
+			"type": "string"
+		}
+	]
 }
