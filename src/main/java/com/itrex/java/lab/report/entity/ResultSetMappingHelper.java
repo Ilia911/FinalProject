@@ -1,12 +1,5 @@
 package com.itrex.java.lab.report.entity;
 
-import javax.persistence.ColumnResult;
-import javax.persistence.ConstructorResult;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.SqlResultSetMapping;
-
 //@MappedSuperclass
 //@SqlResultSetMapping(
 //        name="CustomerReportDTOMapping",
