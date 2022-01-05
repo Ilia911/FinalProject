@@ -8,7 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public enum Role {
 
     OWNER(Set.of()),
-    ADMIN(Set.of(Permission.USER_READ, Permission.USER_CRUD, Permission.CONTRACT_READ, Permission.OFFER_READ)),
+    ADMIN(Set.of(Permission.USER_READ, Permission.USER_CRUD, Permission.CONTRACT_READ, Permission.OFFER_READ,
+            Permission.REPORT_READ)),
     CUSTOMER(Set.of(Permission.USER_READ, Permission.CONTRACT_READ, Permission.CONTRACT_CRUD, Permission.OFFER_READ)),
     CONTRACTOR(Set.of(Permission.USER_READ, Permission.CONTRACT_READ, Permission.OFFER_READ, Permission.OFFER_CRUD));
 

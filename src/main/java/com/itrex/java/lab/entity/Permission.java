@@ -6,7 +6,8 @@ public enum Permission {
     OFFER_READ("offer:read"),
     OFFER_CRUD("offer:crud"),
     USER_READ("user:read"),
-    USER_CRUD("user:crud");
+    USER_CRUD("user:crud"),
+    REPORT_READ("report:read");
 
     private final String permission;
 

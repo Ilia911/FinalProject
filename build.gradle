@@ -34,12 +34,12 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-security') {
         exclude module: 'spring-boot-starter-logging'
     }
-    testImplementation 'org.flywaydb:flyway-core'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
-    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.flywaydb:flyway-core'
+    testImplementation 'com.h2database:h2'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'spring-boot-starter-logging'
     }
