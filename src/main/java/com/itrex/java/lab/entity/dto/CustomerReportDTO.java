@@ -1,4 +1,4 @@
-package com.itrex.java.lab.report.entity;
+package com.itrex.java.lab.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -9,7 +9,7 @@ public enum Role {
 
     OWNER(Set.of()),
     ADMIN(Set.of(Permission.USER_READ, Permission.USER_CRUD, Permission.CONTRACT_READ, Permission.OFFER_READ,
-            Permission.REPORT_READ)),
+            Permission.REPORT_READ, Permission.DATABASE_FILL)),
     CUSTOMER(Set.of(Permission.USER_READ, Permission.CONTRACT_READ, Permission.CONTRACT_CRUD, Permission.OFFER_READ)),
     CONTRACTOR(Set.of(Permission.USER_READ, Permission.CONTRACT_READ, Permission.OFFER_READ, Permission.OFFER_CRUD));
 

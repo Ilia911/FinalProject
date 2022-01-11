@@ -1,6 +1,6 @@
 package com.itrex.java.lab.controller;
 
-import com.itrex.java.lab.report.service.ReporterService;
+import com.itrex.java.lab.service.ReporterService;
 import com.itrex.java.lab.security.jwt.JwtConfigurer;
 import com.itrex.java.lab.security.jwt.JwtTokenProvider;
 import com.itrex.java.lab.service.CertificateService;
@@ -22,6 +22,8 @@ public abstract class BaseControllerTest {
     protected UserService userService;
     @MockBean
     protected ReporterService reporterService;
+    @MockBean
+    protected TestDatabaseFillingController testDatabaseFillingController;
     @MockBean
     protected JwtConfigurer jwtConfigurer;
     @MockBean

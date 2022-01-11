@@ -1,7 +1,7 @@
-package com.itrex.java.lab.report.service;
+package com.itrex.java.lab.service;
 
-import com.itrex.java.lab.report.entity.CustomerReportDTO;
-import com.itrex.java.lab.report.entity.OfferReportDTO;
+import com.itrex.java.lab.entity.dto.CustomerReportDTO;
+import com.itrex.java.lab.entity.dto.OfferReportDTO;
 
 import java.time.LocalDate;
 import java.util.List;

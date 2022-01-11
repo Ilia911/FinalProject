@@ -412,7 +412,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDEyMDA2NDksImV4cCI6MTY0MTgwMDY0OX0.uKM-l8DjIhtbWlXt673-E-u8d-Ge5T6bzS3jfT70Y1c",
+								"value": "{{admin_token}}",
 								"type": "text"
 							}
 						],
@@ -768,6 +768,151 @@
 			]
 		},
 		{
+			"name": "Test Fill Database",
+			"item": [
+				{
+					"name": "fil user CUSTOMER",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/add/users?role=CUSTOMER&userAmount=50",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"add",
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "CUSTOMER"
+								},
+								{
+									"key": "userAmount",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fill user CONTRACTOR",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/add/users?role=CONTRACTOR&userAmount=100",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"add",
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "CONTRACTOR"
+								},
+								{
+									"key": "userAmount",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fill contracts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/add/contracts?minContractAmount=5&maxContractAmount=20",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"add",
+								"contracts"
+							],
+							"query": [
+								{
+									"key": "minContractAmount",
+									"value": "5"
+								},
+								{
+									"key": "maxContractAmount",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fill offers",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{admin_token}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/add/offers?minOfferAmount=5&maxOfferAmount=20",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"add",
+								"offers"
+							],
+							"query": [
+								{
+									"key": "minOfferAmount",
+									"value": "5"
+								},
+								{
+									"key": "maxOfferAmount",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "login with customer role",
 			"request": {
 				"method": "POST",
@@ -872,7 +1017,7 @@
 	"variable": [
 		{
 			"key": "admin_token",
-			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDEzMTA0MjIsImV4cCI6MTY0MTkxMDQyMn0.qh23Y6XuzvS3m5Ru8nAVp-u50_EetifNdoYr1l2xRoY"
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDE4ODkwOTIsImV4cCI6MTY0MjQ4OTA5Mn0.7oTrU_1g2QKPMj4bdCG2hTKT4fEAQHvFQrlM7N9CFNs"
 		},
 		{
 			"key": "contractor_token",
