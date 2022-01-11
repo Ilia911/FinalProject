@@ -4,7 +4,6 @@ import com.itrex.java.lab.entity.dto.CustomerReportDTO;
 import com.itrex.java.lab.entity.dto.OfferReportDTO;
 import com.itrex.java.lab.service.ReporterService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReporterController {
 
-    @Autowired
-    private ReporterService service;
+    private final ReporterService service;
 
     @GetMapping("/customers")
     @PreAuthorize("hasAuthority('report:read')")

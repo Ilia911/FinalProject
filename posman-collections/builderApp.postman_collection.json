@@ -664,17 +664,17 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "localhost:8080/report/customers?firstStartContractDate=2022-02-01&lastStartContractDate=2022-03-01&startWithContractCount=2&size=50",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"report",
-								"customers"
-							],
-							"query": [
-								{
+                          "raw": "localhost:8080/report/customers?firstStartContractDate=2022-02-01&lastStartContractDate=2022-03-01&startWithContractCount=20&size=50",
+                          "host": [
+                            "localhost"
+                          ],
+                          "port": "8080",
+                          "path": [
+                            "report",
+                            "customers"
+                          ],
+                          "query": [
+                            {
 									"key": "firstStartContractDate",
 									"value": "2022-02-01"
 								},
@@ -684,7 +684,7 @@
 								},
 								{
 									"key": "startWithContractCount",
-									"value": "2"
+                                  "value": "20"
 								},
 								{
 									"key": "size",
@@ -770,141 +770,37 @@
 		{
 			"name": "Test Fill Database",
 			"item": [
-				{
-					"name": "fil user CUSTOMER",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{admin_token}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "localhost:8080/add/users?role=CUSTOMER&userAmount=50",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"add",
-								"users"
-							],
-							"query": [
-								{
-									"key": "role",
-									"value": "CUSTOMER"
-								},
-								{
-									"key": "userAmount",
-									"value": "50"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fill user CONTRACTOR",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{admin_token}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "localhost:8080/add/users?role=CONTRACTOR&userAmount=100",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"add",
-								"users"
-							],
-							"query": [
-								{
-									"key": "role",
-									"value": "CONTRACTOR"
-								},
-								{
-									"key": "userAmount",
-									"value": "100"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fill contracts",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{admin_token}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "localhost:8080/add/contracts?minContractAmount=5&maxContractAmount=20",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"add",
-								"contracts"
-							],
-							"query": [
-								{
-									"key": "minContractAmount",
-									"value": "5"
-								},
-								{
-									"key": "maxContractAmount",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fill offers",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{admin_token}}",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "localhost:8080/add/offers?minOfferAmount=5&maxOfferAmount=20",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"add",
-								"offers"
-							],
-							"query": [
-								{
-									"key": "minOfferAmount",
-									"value": "5"
-								},
-								{
-									"key": "maxOfferAmount",
-									"value": "20"
-								}
+              {
+                "name": "fil database",
+                "request": {
+                  "method": "POST",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "{{admin_token}}",
+                      "type": "default"
+                    }
+                  ],
+                  "url": {
+                    "raw": "localhost:8080/fill",
+                    "host": [
+                      "localhost"
+                    ],
+                    "port": "8080",
+                    "path": [
+                      "fill"
+                    ],
+                    "query": [
+                      {
+                        "key": "",
+                        "value": "",
+                        "disabled": true
+                      },
+                      {
+                        "key": "",
+                        "value": "",
+                        "disabled": true
+                      }
 							]
 						}
 					},
