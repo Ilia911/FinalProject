@@ -2,7 +2,7 @@ package com.itrex.java.lab.repository.report.impl;
 
 import com.itrex.java.lab.entity.dto.CustomerReportDTO;
 import com.itrex.java.lab.repository.report.ReportRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReportRepositoryImpl implements ReportRepository {
 
     private static final String REPORT_QUERY = "select new com.itrex.java.lab.entity.dto.CustomerReportDTO" +
@@ -20,7 +20,7 @@ public class ReportRepositoryImpl implements ReportRepository {
             "where u.role = 'CUSTOMER' and c.startDate between :startDate and :endDate " +
             "group by u.id, u.name having count(c.id) <= :count order by count(c.id) desc ";
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Override
     public List<CustomerReportDTO> getCustomerReport(LocalDate startDate, LocalDate endDate,
