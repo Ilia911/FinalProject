@@ -664,7 +664,7 @@
 							"raw": ""
 						},
 						"url": {
-                          "raw": "localhost:8080/report/customers?firstStartContractDate=2022-02-01&lastStartContractDate=2022-03-01&startWithContractCount=20&size=50",
+                          "raw": "localhost:8080/report/customers?firstStartContractDate=2022-01-01&lastStartContractDate=2022-03-01&startWithContractCount=20&size=5",
                           "host": [
                             "localhost"
                           ],
@@ -675,20 +675,20 @@
                           ],
                           "query": [
                             {
-									"key": "firstStartContractDate",
-									"value": "2022-02-01"
-								},
-								{
-									"key": "lastStartContractDate",
-									"value": "2022-03-01"
-								},
-								{
-									"key": "startWithContractCount",
-                                  "value": "20"
+                              "key": "firstStartContractDate",
+                              "value": "2022-01-01"
+                            },
+                            {
+                              "key": "lastStartContractDate",
+                              "value": "2022-03-01"
+                            },
+                            {
+                              "key": "startWithContractCount",
+                              "value": "20"
 								},
 								{
 									"key": "size",
-									"value": "50"
+                                  "value": "5"
 								},
 								{
 									"key": "orderBy",
@@ -705,18 +705,18 @@
 					},
 					"response": []
 				},
-				{
-					"name": "customer_report Copy",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{admin_token}}",
-								"type": "string"
+              {
+                "name": "offer_report",
+                "protocolProfileBehavior": {
+                  "disableBodyPruning": true
+                },
+                "request": {
+                  "method": "GET",
+                  "header": [
+                    {
+                      "key": "Authorization",
+                      "value": "{{admin_token}}",
+                      "type": "string"
 							}
 						],
 						"body": {
@@ -801,12 +801,12 @@
                         "value": "",
                         "disabled": true
                       }
-							]
-						}
-					},
-					"response": []
-				}
-			]
+                    ]
+                  }
+                },
+                "response": []
+              }
+            ]
 		},
 		{
 			"name": "login with customer role",
@@ -913,12 +913,12 @@
 	"variable": [
 		{
 			"key": "admin_token",
-			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDE4ODkwOTIsImV4cCI6MTY0MjQ4OTA5Mn0.7oTrU_1g2QKPMj4bdCG2hTKT4fEAQHvFQrlM7N9CFNs"
+          "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE2NDI0OTUzMzIsImV4cCI6MTY0MzA5NTMzMn0.28HvalLv2a8wQp3V2ZVOfwTOG4FYPvhMbW-YWzVI0KU"
 		},
-		{
-			"key": "contractor_token",
-			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJDT05UUkFDVE9SIiwiaWF0IjoxNjQwNzg4NDMwLCJleHAiOjE2NDEzODg0MzB9.Vq9B7c_NDqM0oxnClsoYH7-ayo73Nk5Q_-vctZhUioI",
-			"type": "string"
-		}
+      {
+        "key": "contractor_token",
+        "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjb250cmFjdG9yQGdtYWlsLmNvbSIsInJvbGUiOiJDT05UUkFDVE9SIiwiaWF0IjoxNjQyNTE1NTI3LCJleHAiOjE2NDMxMTU1Mjd9.5eE_M7FUHnrSR3hcb4yYdqSjuKnulFPcrcHY1pmjE8s",
+        "type": "string"
+      }
 	]
 }
