@@ -15,7 +15,7 @@ logging:
 #  level.root: info
 server:
   error:
-    include-stacktrace: always
+    include-stacktrace: never
     include-message: always
 jwt:
   secret: secret
