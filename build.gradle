@@ -14,6 +14,10 @@ configurations {
     }
 }
 
+ext {
+    set('springCloudVersion', "2021.0.0")
+}
+
 repositories {
     mavenCentral()
 }
@@ -32,6 +36,9 @@ dependencies {
         exclude module: 'spring-boot-starter-logging'
     }
     implementation('org.springframework.boot:spring-boot-starter-security') {
+        exclude module: 'spring-boot-starter-logging'
+    }
+    implementation ('org.springframework.cloud:spring-cloud-starter-config') {
         exclude module: 'spring-boot-starter-logging'
     }
     compileOnly 'org.projectlombok:lombok'
@@ -53,6 +60,12 @@ dependencies {
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '2.3.3'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 test {
