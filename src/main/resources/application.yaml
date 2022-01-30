@@ -6,3 +6,4 @@ spring:
     username: user_name
     password: password
   profiles.active: default
+management.endpoints.web.exposure.include: "*"
