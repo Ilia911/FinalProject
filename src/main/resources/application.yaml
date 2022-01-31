@@ -7,3 +7,5 @@ spring:
     password: password
   profiles.active: default
 management.endpoints.web.exposure.include: "*"
+encrypt:
+  key: s3cr3tv
