@@ -6,3 +6,5 @@ spring:
     username: user_name
     password: password
   profiles.active: test
+encrypt:
+  key: s3cr3tv
