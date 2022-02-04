@@ -13,4 +13,3 @@ services:
       - ./db/data.sql:/docker-entrypoint-initdb.d/2-data.sql
     ports:
       - 5432:5432
-# docker compose -f docker-compose-local.yml up -d    /up database

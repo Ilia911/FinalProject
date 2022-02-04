@@ -1,6 +1,0 @@
-logging:
-  config: src/main/resources/log4j2-spring-prod.xml
-#  level.root: WARN
-spring:
-  jpa:
-    show-sql: false
