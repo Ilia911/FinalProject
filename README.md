@@ -16,7 +16,10 @@
 
 Contractors are certified to perform work (many-to-many relationship).
 
-### To run: just run com.itrex.java.lab.Main
+### To run: 
+1. download and run [builder-app-config-server](https://github.com/Ilia911/builder-app-config-server)
+2. run docker and write command in main directory docker-compose -f docker/docker-compose-local.yml up -d
+3. run com.itrex.java.lab.Main
 
 Приложение для потребителей и поставщиков строительных работ.
 
